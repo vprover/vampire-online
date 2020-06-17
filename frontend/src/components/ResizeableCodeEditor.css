@@ -1,0 +1,12 @@
+.resizable {
+  overflow: hidden;
+  resize: both;
+}
+
+.border-black {
+  border: '2px solid black';
+}
+
+.border-gray {
+  border: '2px solid lightgray';
+}

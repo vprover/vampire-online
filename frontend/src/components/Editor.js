@@ -17,10 +17,19 @@ export default class Editor extends React.Component {
     super(props)
     this.state = {
       prevOrientation: props.settings.orientation,
+      value: "",
       height: props.settings.orientation === "row" ? 550 : 300,
       width: props.settings.orientation === "row" ? 500 : 900,
     }
     this.resize = this.resize.bind(this);
+    this.onUserInput = this.onUserInput.bind(this);
+  }
+
+  onUserInput(value) {
+    this.setState({
+      value: value
+    });
+    this.props.updateInput(value);
   }
 
   resize(e, dir, ref, d) {
@@ -30,6 +39,10 @@ export default class Editor extends React.Component {
     }));
   }
 
+  shouldComponentUpdate(nextProps, nextState) {
+    return this.state.value === nextState.value || this.props.output !== nextProps.output;
+  }
+
   componentDidUpdate = (prevProps) => {
     if (prevProps.settings.orientation !== this.props.settings.orientation) {
       this.setState({
@@ -37,6 +50,21 @@ export default class Editor extends React.Component {
         width: this.props.settings.orientation === "row" ? 500 : 900,
       });
     }
+  }
+
+  getErrorAnnotations() {
+    if (this.props.errors) {
+      const annots = this.props.errors.lines.map(l => {
+        return {
+          row: l - 1,
+          column: 0,
+          type: "error",
+          text: "-"
+        }
+      });
+      return annots;
+    }
+    return;
   }
 
   render() {
@@ -55,8 +83,11 @@ export default class Editor extends React.Component {
           height={this.state.height}
           width={this.state.width}
           readOnly={this.props.readOnly}
+          value={this.props.readOnly ? this.props.value : this.state.value}
           fontSize={this.props.settings.fontSize}
           theme={this.props.settings.darkTheme ? "terminal" : "github"}
+          onChange={this.onUserInput}
+          annotations={this.getErrorAnnotations()}
         />
       </Resizable>
     )

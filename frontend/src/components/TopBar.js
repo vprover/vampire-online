@@ -4,6 +4,7 @@ import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import SettingsIcon from '@material-ui/icons/Settings';
 import Brightness5Icon from '@material-ui/icons/Brightness5';
 import BrightnessHighIcon from '@material-ui/icons/BrightnessHigh';
+import axios from 'axios';
 
 export default class TopBar extends React.Component {
   constructor(props) {
@@ -17,6 +18,7 @@ export default class TopBar extends React.Component {
     this.onSelectedColorMode = this.onSelectedColorMode.bind(this);
     this.onSelectedOrientation = this.onSelectedOrientation.bind(this);
     this.onSelectedFontSize = this.onSelectedFontSize.bind(this);
+    this.callSolveAPI = this.callSolveAPI.bind(this);
   }
 
   openEditorMenu(event) {
@@ -44,11 +46,22 @@ export default class TopBar extends React.Component {
     });
   }
 
+  callSolveAPI() {
+    axios.post("http://localhost:8000/solve", {
+        clauses: JSON.stringify(this.props.input),
+        args: []
+    })
+      .then(res => {
+        console.log(res);
+        this.props.updateOutput(res.data)
+      });
+  }
+
   render() {
     return (
       <AppBar position="static" style={{ margin: "1em" }}>
         <Toolbar>
-          <IconButton edge="start" color="secondary" aria-controls="editor-settings"
+          <IconButton edge="start" aria-controls="editor-settings"
             aria-haspopup="true" onClick={this.openEditorMenu}>
             <SettingsIcon />
           </IconButton>
@@ -99,7 +112,7 @@ export default class TopBar extends React.Component {
             </Grid>
 
           </Menu>
-          <Button variant="contained" color="white" endIcon={<PlayArrowIcon />}>Run</Button>
+          <Button variant="contained" color="white" endIcon={<PlayArrowIcon />} onClick={this.callSolveAPI}>Run</Button>
         </Toolbar>
       </AppBar>
     );

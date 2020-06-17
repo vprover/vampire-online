@@ -15,7 +15,7 @@ export default class App extends React.Component {
         orientation: "row"
       },
       input: "",
-      output: "",
+      output: {},
     }
   }
 
@@ -35,9 +35,10 @@ export default class App extends React.Component {
   }
 
   updateVampireOutput = (output) => {
+    console.log(output);
     this.setState({
       output: output
-    })
+    });
   }
 
   render() {
@@ -45,16 +46,16 @@ export default class App extends React.Component {
       <Container flex className="top-container">
         <div className="App">
 
-          <TopBar applySettings={this.updateEditorSettings} settings={this.state.editorSettings} />
+          <TopBar applySettings={this.updateEditorSettings} settings={this.state.editorSettings} input={this.state.input} updateOutput={this.updateVampireOutput} />
 
           <Grid container direction={this.state.editorSettings.orientation} justify="space-evenly" alignItems="center" spacing={3}>
 
             <Grid item>
-              <Editor settings={this.state.editorSettings} />
+              <Editor settings={this.state.editorSettings} updateInput={this.updateUserInput} errors={this.state.output.errors} />
             </Grid>
 
             <Grid item>
-              <Editor settings={this.state.editorSettings} readOnly={true} />
+              <Editor settings={this.state.editorSettings} value={this.state.output.rawOutput} readOnly={true} />
             </Grid>
 
           </Grid>

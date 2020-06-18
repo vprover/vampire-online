@@ -3,7 +3,8 @@ import AceEditor from 'react-ace';
 import { Resizable } from 're-resizable'
 import "ace-builds/src-noconflict/theme-github";
 import "ace-builds/src-noconflict/theme-terminal";
-import "./ResizeableCodeEditor.css";
+import "./Editor.css";
+import axios from 'axios';
 
 const style = {
   alignItems: "center",
@@ -18,11 +19,23 @@ export default class Editor extends React.Component {
     this.state = {
       prevOrientation: props.settings.orientation,
       value: "",
+      error: {},
       height: props.settings.orientation === "row" ? 550 : 300,
       width: props.settings.orientation === "row" ? 500 : 900,
     }
     this.resize = this.resize.bind(this);
     this.onUserInput = this.onUserInput.bind(this);
+    this.callParseAPI = this.callParseAPI.bind(this);
+  }
+
+  callParseAPI(val) {
+    axios.post("http://localhost:8000/parse", { clauses: JSON.stringify(val) })
+      .then(res => {
+        console.log(res);
+        this.setState({
+          error: res.data.error
+        })
+      });
   }
 
   onUserInput(value) {
@@ -30,6 +43,9 @@ export default class Editor extends React.Component {
       value: value
     });
     this.props.updateInput(value);
+    if (!this.props.readOnly) {
+      this.callParseAPI(value);
+    }
   }
 
   resize(e, dir, ref, d) {
@@ -53,16 +69,15 @@ export default class Editor extends React.Component {
   }
 
   getErrorAnnotations() {
-    if (this.props.errors) {
-      const annots = this.props.errors.lines.map(l => {
-        return {
-          row: l - 1,
-          column: 0,
-          type: "error",
-          text: "-"
-        }
-      });
-      return annots;
+    let e = this.state.error;
+    if (!e) e = this.props.error;
+    if (e) {
+      return [{
+        row: e.line - 1,
+        column: 0,
+        type: "error",
+        text: e.text
+      }];
     }
     return;
   }
@@ -74,7 +89,7 @@ export default class Editor extends React.Component {
         style={style}
         size={{ width: this.state.width + 2, height: this.state.height + 2 }}
         enable={{
-          top: false, right: true, bottom: true, left: false,
+          top: false, right: true, bottom: true, left: true,
           topRight: false, bottomRight: true, bottomLeft: false, topLeft: false
         }}
         onResizeStop={this.resize}>

@@ -6,12 +6,6 @@ import "ace-builds/src-noconflict/theme-terminal";
 import "./Editor.css";
 import axios from 'axios';
 
-const style = {
-  alignItems: "center",
-  justifyContent: "center",
-  border: "solid 2px black",
-};
-
 export default class Editor extends React.Component {
 
   constructor(props) {
@@ -85,15 +79,13 @@ export default class Editor extends React.Component {
   render() {
     return (
       <Resizable
-        className="resizable"
-        style={style}
+        className={`resizable editor ${this.props.settings.darkTheme ? "border-gray" : "border-black"}`}
         size={{ width: this.state.width + 2, height: this.state.height + 2 }}
         enable={{
           top: false, right: true, bottom: true, left: true,
           topRight: false, bottomRight: true, bottomLeft: false, topLeft: false
         }}
         onResizeStop={this.resize}>
-
         <AceEditor
           height={this.state.height}
           width={this.state.width}

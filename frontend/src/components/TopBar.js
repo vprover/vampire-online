@@ -30,12 +30,13 @@ export default class TopBar extends React.Component {
 
   render() {
     return (
-      <AppBar position="static" style={{ margin: "1em" }}>
+      <AppBar position="static" style={{ margin: "0.5em" }}>
         <Toolbar>
           <RunButton
             input={this.props.input}
             args={this.state.args}
             onVampireOutput={this.props.onVampireOutput}
+            createAlert={this.props.createAlert}
           />
           <div style={{ marginLeft: "auto" }}>
             <TimeLimitInput updateArg={this.updateArg} />

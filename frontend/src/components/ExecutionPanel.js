@@ -1,5 +1,6 @@
 import React from 'react';
 import { Container, Grid } from '@material-ui/core';
+import Alert from '@material-ui/lab/Alert';
 import Editor from './Editor';
 import TopBar from './TopBar';
 
@@ -14,7 +15,8 @@ export default class ExecutionPanel extends React.Component {
         orientation: "row"
       },
       input: "",
-      output: {}
+      output: {},
+      alert: null
     }
   }
 
@@ -48,7 +50,15 @@ export default class ExecutionPanel extends React.Component {
           input={this.state.input}
           onVampireOutput={this.updateVampireOutput}
           applySettings={this.updateEditorSettings}
+          createAlert={(s, msg) => { this.setState({ alert: { severity: s, message: msg } }) }}
         />
+
+        {
+          this.state.alert &&
+          <Alert severity={this.state.alert.severity} onClose={() => { this.setState({ alert: null }) }} style={{ margin: "0.5em" }}>
+            {this.state.alert.message}
+          </Alert>
+        }
 
         <Grid container direction={this.state.editorSettings.orientation} justify="space-evenly" alignItems="center" spacing={3}>
 

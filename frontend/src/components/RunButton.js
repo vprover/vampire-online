@@ -56,6 +56,9 @@ class RunButton extends React.Component {
         this.setState({
           apiCallStatus: "fail"
         });
+        let msg = error.response ? `Status ${error.response.status}: ` : "";
+        msg += error.message;
+        this.props.createAlert("error", msg);
       });
   }
 

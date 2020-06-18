@@ -71,7 +71,7 @@ class TimeLimitInput extends React.Component {
             }
           }}
           InputProps={{
-            style: { color: "white" }
+            style: { color: "white" },
             // endAdornment: <InputAdornment position="end">Seconds</InputAdornment>,
           }}
         />

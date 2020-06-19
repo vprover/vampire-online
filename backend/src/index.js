@@ -1,10 +1,14 @@
 const express = require("express");
 const { execSync } = require("child_process");
 const cors = require('cors');
+const op = require('./options_parser');
 
 const app = express();
 app.use(express.json());
 app.use(cors());
+
+// Save the parsed options to avoid future calls to vampire
+const vampireOptions = op.toJSON(getStrVampireOptions());
 
 app.post("/solve", (req, res) => {
   console.log(`Solve: ${req.body.clauses}`);
@@ -16,6 +20,15 @@ app.post("/parse", (req, res) => {
   console.log(`Parse: ${req.body.clauses}`);
   res.status(200).json(vampireParse(req.body.clauses));
   console.log(`Finished parsing`);
+})
+
+app.get("/options", (req, res) => {
+  if (vampireOptions) {
+    res.status(200).json(vampireOptions);
+  }
+  else {
+    res.status(404).send("Could not retrieve options.");
+  }
 })
 
 app.listen(8080, () => {
@@ -68,10 +81,22 @@ function vampireSolve(clauses, args) {
     };
   }
   catch (error) {
-    console.log(`Error: ${error.stdout}\nstderr: ${error.stderr}\nstdout: ${error.stdout}`);
+    console.log(`An \x1b[31merror\x1b[0m occured while solving\n: ${error.message}\n--stderr: ${error.stderr}\n--stdout: ${error.stdout}`);
     return {
       rawOutput: `${error.stdout}`,
       error: parseErrorMessage(error.stdout)
     };
+  }
+}
+
+function getStrVampireOptions() {
+  try {
+    const str = execSync(`./vampire-executables/vampire4.2.2 --show_options on`).toString();
+    console.log(str);
+    return str;
+  }
+  catch (error) {
+    console.log(`An \x1b[31merror\x1b[0m occured while getting the options:\n ${error.message}`);
+    return null;
   }
 }

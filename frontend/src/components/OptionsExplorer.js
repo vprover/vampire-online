@@ -46,6 +46,7 @@ const useStyles = theme => ({
   tabs: {
     borderRight: `1px solid ${theme.palette.divider}`,
     position: 'fixed',
+    marginTop: "3rem"
   },
   tabpanel: {
     width: "75%"

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Grid } from '@material-ui/core';
+import { Grid } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
 import Editor from './Editor';
 import TopBar from './TopBar';
@@ -44,7 +44,7 @@ export default class ExecutionPanel extends React.Component {
 
   render() {
     return (
-      <Container flex p="0.5em">
+      <React.Fragment>
         <TopBar
           settings={this.state.editorSettings}
           input={this.state.input}
@@ -69,9 +69,8 @@ export default class ExecutionPanel extends React.Component {
           <Grid item>
             <Editor settings={this.state.editorSettings} value={this.state.output.rawOutput} readOnly={true} />
           </Grid>
-
         </Grid>
-      </Container>
+      </React.Fragment>
     )
   }
 }

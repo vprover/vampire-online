@@ -92,7 +92,6 @@ function vampireSolve(clauses, args) {
 function getStrVampireOptions() {
   try {
     const str = execSync(`./vampire-executables/vampire4.2.2 --show_options on`).toString();
-    console.log(str);
     return str;
   }
   catch (error) {

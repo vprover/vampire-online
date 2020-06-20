@@ -92,7 +92,7 @@ class OptionsExplorer extends React.Component {
           className={classes.tabs}
           orientation="vertical"
           variant="scrollable"
-          scrollButtons="auto"
+          scrollButtons="off"
           value={this.state.openedTab}
           onChange={this.switchTab}>
           {

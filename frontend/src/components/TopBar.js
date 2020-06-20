@@ -40,7 +40,7 @@ export default class TopBar extends React.Component {
             createAlert={this.props.createAlert}
           />
           <div style={{ marginLeft: "auto" }}>
-            <OptionsDialog/>
+            <OptionsDialog />
             <TimeLimitInput updateArg={this.updateArg} />
             <EditorSettingsMenu settings={this.props.settings} applySettings={this.props.applySettings} />
           </div>

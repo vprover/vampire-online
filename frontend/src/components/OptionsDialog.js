@@ -1,9 +1,38 @@
 import React from 'react';
-import { Dialog, IconButton, Tooltip } from '@material-ui/core';
+import { Dialog, DialogContent, IconButton, Tooltip, Typography } from '@material-ui/core';
+import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import CloseIcon from '@material-ui/icons/Close';
 import HelpIcon from '@material-ui/icons/Help';
 import OptionsExplorer from './OptionsExplorer';
 import { withStyles } from '@material-ui/styles';
+
+const dialogTitleStyle = (theme) => ({
+  root: {
+    marginLeft: "2rem",
+    marginBottom: "-1.4rem",
+    paddingTop: "1rem",
+  },
+  closeButton: {
+    position: 'absolute',
+    right: theme.spacing(1),
+    top: theme.spacing(1),
+    color: theme.palette.grey[500],
+  },
+});
+
+const DialogTitle = withStyles(dialogTitleStyle)((props) => {
+  const { children, classes, onClose, ...other } = props;
+  return (
+    <MuiDialogTitle disableTypography className={classes.root} {...other}>
+      <Typography variant="h4">{children}</Typography>
+      {onClose ? (
+        <IconButton aria-label="close" className={classes.closeButton} onClick={onClose}>
+          <CloseIcon />
+        </IconButton>
+      ) : null}
+    </MuiDialogTitle>
+  );
+});
 
 const useStyles = theme => ({
   paper: {
@@ -51,10 +80,13 @@ class OptionsDialog extends React.Component {
           scroll="paper"
           classes={{ paper: classes.paper }}
         >
-          <IconButton className={classes.closeBtn} onClick={this.handleClose}>
-            <CloseIcon />
-          </IconButton>
-          <OptionsExplorer />
+          <DialogTitle onClose={this.handleClose}>
+            Vampire Options
+          </DialogTitle>
+
+          <DialogContent>
+            <OptionsExplorer />
+          </DialogContent>
         </Dialog>
       </React.Fragment>
     )

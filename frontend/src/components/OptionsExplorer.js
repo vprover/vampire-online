@@ -16,7 +16,7 @@ const TabPanel = (props) => {
       {...other}
     >
       {openedTab === index && (
-        <Box p="1rem" mr="1rem">
+        <Box px="1rem" mx="1rem">
           {children}
         </Box>
       )}
@@ -48,7 +48,7 @@ const useStyles = theme => ({
   tabs: {
     borderRight: `1px solid ${theme.palette.divider}`,
     flexShrink: "0",
-    marginTop: "2rem",
+    marginTop: "1rem",
     width: "12rem"
   },
   tabpanel: {

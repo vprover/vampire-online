@@ -11,7 +11,7 @@ export default class OptionsSection extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <Typography variant="h3" style={{ margin: "1.2rem" }}>
+        <Typography variant="h4" style={{ margin: "1.2rem" }}>
           {this.props.name}
         </Typography>
         {

@@ -3,6 +3,7 @@ import { AppBar, Toolbar } from "@material-ui/core";
 import RunButton from './RunButton';
 import TimeLimitInput from "./TimeLimitInput";
 import EditorSettingsMenu from "./EditorSettingsMenu";
+import OptionsDialog from "./OptionsDialog";
 
 export default class TopBar extends React.Component {
   constructor(props) {
@@ -30,7 +31,7 @@ export default class TopBar extends React.Component {
 
   render() {
     return (
-      <AppBar position="static" style={{ margin: "0.5em" }}>
+      <AppBar position="static" style={{ margin: "0.4em" }}>
         <Toolbar>
           <RunButton
             input={this.props.input}
@@ -39,6 +40,7 @@ export default class TopBar extends React.Component {
             createAlert={this.props.createAlert}
           />
           <div style={{ marginLeft: "auto" }}>
+            <OptionsDialog/>
             <TimeLimitInput updateArg={this.updateArg} />
             <EditorSettingsMenu settings={this.props.settings} applySettings={this.props.applySettings} />
           </div>

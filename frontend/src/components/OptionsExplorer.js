@@ -16,7 +16,7 @@ const TabPanel = (props) => {
       {...other}
     >
       {openedTab === index && (
-        <Box p={3}>
+        <Box p="1rem" mr="1rem">
           {children}
         </Box>
       )}
@@ -41,15 +41,20 @@ const useStyles = theme => ({
   root: {
     flexGrow: 1,
     backgroundColor: theme.palette.background.paper,
-    display: 'flex'
+    display: "flex",
+    flexDirection: "row",
+    height: "100%"
   },
   tabs: {
     borderRight: `1px solid ${theme.palette.divider}`,
-    position: 'fixed',
-    marginTop: "3rem"
+    flexShrink: "0",
+    marginTop: "2rem",
+    width: "12rem"
   },
   tabpanel: {
-    width: "75%"
+    overflow: "auto",
+    height: "inherit",
+    flexGrow: 1
   }
 });
 
@@ -83,11 +88,11 @@ class OptionsExplorer extends React.Component {
     const { classes } = this.props;
     return (
       <div className={classes.root}>
-        <div style={{ width: "15%" }}></div>
         <Tabs
           className={classes.tabs}
           orientation="vertical"
           variant="scrollable"
+          scrollButtons="auto"
           value={this.state.openedTab}
           onChange={this.switchTab}>
           {
@@ -117,6 +122,7 @@ class OptionsExplorer extends React.Component {
             );
           })
         }
+
       </div>
     )
   }

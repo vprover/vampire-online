@@ -25,12 +25,12 @@ class Option extends React.Component {
       <Card className={classes.optionCard}>
         <CardContent>
           <div style={{ display: "flex", alignItems: 'center', marginBottom: "1rem" }}>
-            <Typography variant="h4">
+            <Typography variant="h5">
               {name}
             </Typography>
             {
               shortName
-              && <Typography variant="h5" className={classes.shortNameText}>({shortName})</Typography>
+              && <Typography variant="h6" className={classes.shortNameText}>({shortName})</Typography>
             }
           </div>
           <Typography>

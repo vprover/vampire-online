@@ -7,7 +7,7 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-// Save the parsed options to avoid future calls to vampire
+// Load the options on startup to avoid future calls to vampire
 const vampireOptions = op.toJSON(getStrVampireOptions());
 
 app.post("/solve", (req, res) => {
@@ -31,6 +31,14 @@ app.get("/options", (req, res) => {
   }
 })
 
+app.post("/string-strategy/decode", (req, res) => {
+
+})
+
+app.post("/string-strategy/encode", (req, res) => {
+  res.status(200).json(vampireEncode(req.body.args));
+})
+
 app.listen(8080, () => {
   console.log("Server running on port 8080");
 })
@@ -52,7 +60,11 @@ function parseErrorMessage(str) {
 function argsToString(args) {
   console.log(args);
   let str = "";
-  for (let [key, value] of Object.entries(JSON.parse(args))) {
+  try {
+    args = JSON.parse(args);
+  }
+  catch (error) { }
+  for (let [key, value] of Object.entries(args)) {
     if (typeof value === 'boolean') str += `${key} `;
     else str += `${key} ${value} `;
   }
@@ -96,6 +108,19 @@ function getStrVampireOptions() {
   }
   catch (error) {
     console.log(`An \x1b[31merror\x1b[0m occured while getting the options:\n ${error.message}`);
+    return null;
+  }
+}
+
+function vampireEncode(args) {
+  try {
+    const argsStr = argsToString(args);
+    const encodingOutput = execSync(`./vampire-executables/vampire4.2.2 --encode on ${argsStr}`).toString();
+    const encodingClean = /(.*)Satisfiable!/g.exec(encodingOutput)[1];
+    return encodingClean.replace(/encode=on:?/, "");
+  }
+  catch (error) {
+    console.log(`An \x1b[31merror\x1b[0m occured while encoding options:\n ${error.message}`);
     return null;
   }
 }

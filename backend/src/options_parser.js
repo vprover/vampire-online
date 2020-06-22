@@ -16,7 +16,7 @@ function getSections(str) {
 }
 
 function getOptions(section) {
-  const regex = /--(?<name>\w+)\s+(?:\(-(?<shortName>\w+)\))?\s+(?<description>[^]+?(?=default))(?:default:\s(?<default>.+))?(?:\s+values:\s(?<values>[^]+?(?=\n--)))?/g;
+  const regex = /--(?<name>\w+)\s+(?:\(-(?<shortName>\w+)\))?\s+(?<description>[^]+?(?=default:))(?:default:\s(?<default>.+))?(?:\s+values:\s(?<values>[^]+?(?=\n--)))?/g;
   let options = []
   while (result = regex.exec(section)) {
     const opt = result.groups;

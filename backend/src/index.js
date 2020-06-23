@@ -9,6 +9,7 @@ app.use(cors());
 
 // Load the options on startup to avoid future calls to vampire
 const vampireOptions = op.toJSON(getStrVampireOptions());
+const shortNameToNameMap = op.extractShortNameToNameMap(vampireOptions);
 
 app.post("/solve", (req, res) => {
   console.log(`Solve: ${req.body.clauses}`);
@@ -32,11 +33,25 @@ app.get("/options", (req, res) => {
 })
 
 app.post("/string-strategy/decode", (req, res) => {
-
+  console.log(`Decoding ${req.body.optionString}`);
+  const result = vampireDecode(req.body.optionString);
+  if (result) {
+    res.status(200).json(result)
+  }
+  else {
+    res.status(422).send("Invalid option string");
+  }
 })
 
 app.post("/string-strategy/encode", (req, res) => {
-  res.status(200).json(vampireEncode(req.body.args));
+  console.log(`Encoding ${req.body.args}`);
+  const result = vampireEncode(req.body.args);
+  if (result) {
+    res.status(200).json(result);
+  }
+  else {
+    res.status(422).send("Invalid options");
+  }
 })
 
 app.listen(8080, () => {
@@ -58,7 +73,6 @@ function parseErrorMessage(str) {
 }
 
 function argsToString(args) {
-  console.log(args);
   let str = "";
   try {
     args = JSON.parse(args);
@@ -68,7 +82,6 @@ function argsToString(args) {
     if (typeof value === 'boolean') str += `${key} `;
     else str += `${key} ${value} `;
   }
-  console.log(str);
   return str;
 }
 
@@ -120,7 +133,29 @@ function vampireEncode(args) {
     return encodingClean.replace(/encode=on:?/, "");
   }
   catch (error) {
-    console.log(`An \x1b[31merror\x1b[0m occured while encoding options:\n ${error.message}`);
+    console.log(`An \x1b[31merror\x1b[0m occured while encoding options:\n ${error.output}`);
     return null;
   }
+}
+
+
+const saValues = vampireOptions.find(section => section.name.toLowerCase() === 'saturation')
+  .options.find(option => option.shortName && option.shortName.toLowerCase() === 'sa').values;
+
+function vampireDecode(optionString) {
+  const strStucture = /(?<sa>[a-z]+)(?<s>[+-][0-9]+)_(?<awr>[0-9:]+)_(?<args>[\w:=.]*)_(?<t>[0-9]+)/g;
+  const optionParts = strStucture.exec(optionString).groups;
+  let args = {
+    "--saturation_algorithm": saValues.find(v => v.startsWith(optionParts.sa)),
+    "--selection": optionParts.s,
+    "--age_weight_ratio": optionParts.awr,
+    "--time_limit": optionParts.t
+  };
+  optionParts.args.split(":").forEach(arg => {
+    [name, val] = arg.split("=");
+    args[`--${shortNameToNameMap[name] ? shortNameToNameMap[name] : name}`] = val;
+  })
+  // Validate the decoded args
+  // return vampireEncode(args) === optionString ? args : null;
+  return args;
 }

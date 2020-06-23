@@ -31,4 +31,17 @@ function getOptions(section) {
   return options;
 }
 
+function extractShortNameToNameMap(optionsJSON) {
+  let mapping = {};
+  optionsJSON.forEach(section => {
+    section.options.forEach(option => {
+      if (option.shortName) {
+        mapping[option.shortName] = option.name;
+      }
+    });
+  });
+  return mapping;
+}
+
 exports.toJSON = (str) => { return str ? getSections(str) : null };
+exports.extractShortNameToNameMap = extractShortNameToNameMap;

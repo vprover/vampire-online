@@ -3,12 +3,12 @@
 // console.log(getSections(stringOptions));
 
 function getSections(str) {
-  const regex = /[*]+\n[*]+\s+(?<name>[a-zA-Z]+)\s+[*]+\n[*]+\n{2}(?<content>[^*]*)/g;
+  const regex = /[*]+\n[*]+\s+(?<name>[a-zA-Z\s]+)\s+[*]+\n[*]+\n{2}(?<content>[^*]*)/g;
   let sections = []
   while (result = regex.exec(str)) {
     const sec = result.groups;
     sections.push({
-      name: sec.name,
+      name: sec.name.trim(),
       options: getOptions(sec.content)
     })
   }

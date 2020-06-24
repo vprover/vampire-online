@@ -33,8 +33,8 @@ app.get("/options", (req, res) => {
 })
 
 app.post("/string-strategy/decode", (req, res) => {
-  console.log(`Decoding ${req.body.optionString}`);
-  const result = vampireDecode(req.body.optionString);
+  console.log(`Decoding ${req.body.stringStrategy}`);
+  const result = vampireDecode(req.body.stringStrategy);
   if (result) {
     res.status(200).json(result)
   }
@@ -128,9 +128,8 @@ function getStrVampireOptions() {
 function vampireEncode(args) {
   try {
     const argsStr = argsToString(args);
-    const encodingOutput = execSync(`./vampire-executables/vampire4.2.2 --encode on ${argsStr}`).toString();
-    const encodingClean = /(.*)Satisfiable!/g.exec(encodingOutput)[1];
-    return encodingClean.replace(/encode=on:?/, "");
+    const encoding = execSync(`./vampire-executables/vampire4.2.2 --mode output --encode on ${argsStr}`).toString(); 
+    return encoding.replace(/encode=on:?/, "");
   }
   catch (error) {
     console.log(`An \x1b[31merror\x1b[0m occured while encoding options:\n ${error.output}`);
@@ -142,16 +141,16 @@ function vampireEncode(args) {
 const saValues = vampireOptions.find(section => section.name.toLowerCase() === 'saturation')
   .options.find(option => option.shortName && option.shortName.toLowerCase() === 'sa').values;
 
-function vampireDecode(optionString) {
+function vampireDecode(stringStrategy) {
   const strStucture = /(?<sa>[a-z]+)(?<s>[+-][0-9]+)_(?<awr>[0-9:]+)_(?<args>[\w:=.]*)_(?<t>[0-9]+)/g;
-  const optionParts = strStucture.exec(optionString).groups;
+  const strategyParts = strStucture.exec(stringStrategy).groups;
   let args = {
-    "--saturation_algorithm": saValues.find(v => v.startsWith(optionParts.sa)),
-    "--selection": optionParts.s,
-    "--age_weight_ratio": optionParts.awr,
-    "--time_limit": optionParts.t
+    "--saturation_algorithm": saValues.find(v => v.startsWith(strategyParts.sa)),
+    "--selection": strategyParts.s,
+    "--age_weight_ratio": strategyParts.awr,
+    "--time_limit": strategyParts.t / 10.0
   };
-  optionParts.args.split(":").forEach(arg => {
+  strategyParts.args.split(":").forEach(arg => {
     [name, val] = arg.split("=");
     args[`--${shortNameToNameMap[name] ? shortNameToNameMap[name] : name}`] = val;
   })

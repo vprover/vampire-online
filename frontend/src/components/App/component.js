@@ -1,6 +1,6 @@
 import React from 'react';
 import { Container } from '@material-ui/core';
-import ExecutionPanel from './components/ExecutionPanel';
+import ExecutionPanel from '../ExecutionPanel/component';
 import { createMuiTheme, ThemeProvider, responsiveFontSizes } from '@material-ui/core/styles';
 import { blue, red } from '@material-ui/core/colors';
 import './App.css';

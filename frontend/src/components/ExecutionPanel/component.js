@@ -2,7 +2,7 @@ import React from 'react';
 import { Grid } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
 import Editor from './Editor';
-import TopBar from './TopBar';
+import TopBar from './TopBar/component';
 
 export default class ExecutionPanel extends React.Component {
 

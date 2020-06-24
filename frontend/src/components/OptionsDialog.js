@@ -66,7 +66,7 @@ class OptionsDialog extends React.Component {
     const { classes } = this.props;
     return (
       <React.Fragment>
-        <Tooltip title="Vampire Options">
+        <Tooltip title="Vampire Options Manual">
           <IconButton color="inherit" onClick={this.handleClickOpen}>
             <HelpIcon />
           </IconButton>

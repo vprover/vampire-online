@@ -8,8 +8,9 @@ app.use(express.json());
 app.use(cors());
 
 // Load the options on startup to avoid future calls to vampire
-const vampireOptions = op.toJSON(getStrVampireOptions());
-const shortNameToNameMap = op.extractShortNameToNameMap(vampireOptions);
+const vampireOptionSections = op.toJSON(getStrVampireOptions());
+const vampireOptions = op.toOptionArray(vampireOptionSections);
+const shortNameToNameMap = op.extractShortNameToNameMap(vampireOptionSections);
 
 app.post("/solve", (req, res) => {
   console.log(`Solve: ${req.body.clauses}`);
@@ -24,8 +25,13 @@ app.post("/parse", (req, res) => {
 })
 
 app.get("/options", (req, res) => {
-  if (vampireOptions) {
-    res.status(200).json(vampireOptions);
+  if (vampireOptionSections) {
+    if (req.query.sections && req.query.sections === "true") {
+      res.status(200).json(vampireOptionSections);
+    }
+    else {
+      res.status(200).json(vampireOptions);
+    }
   }
   else {
     res.status(404).send("Could not retrieve options.");
@@ -128,7 +134,7 @@ function getStrVampireOptions() {
 function vampireEncode(args) {
   try {
     const argsStr = argsToString(args);
-    const encoding = execSync(`./vampire-executables/vampire4.2.2 --mode output --encode on ${argsStr}`).toString(); 
+    const encoding = execSync(`./vampire-executables/vampire4.2.2 --mode output --encode on ${argsStr}`).toString();
     return encoding.replace(/encode=on:?/, "");
   }
   catch (error) {
@@ -138,7 +144,7 @@ function vampireEncode(args) {
 }
 
 
-const saValues = vampireOptions.find(section => section.name.toLowerCase() === 'saturation')
+const saValues = vampireOptionSections.find(section => section.name.toLowerCase() === 'saturation')
   .options.find(option => option.shortName && option.shortName.toLowerCase() === 'sa').values;
 
 function vampireDecode(stringStrategy) {

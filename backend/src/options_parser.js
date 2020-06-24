@@ -45,3 +45,4 @@ function extractShortNameToNameMap(optionsJSON) {
 
 exports.toJSON = (str) => { return str ? getSections(str) : null };
 exports.extractShortNameToNameMap = extractShortNameToNameMap;
+exports.toOptionArray = (sections => sections.reduce((arr, section) => arr.concat(section.options), []));

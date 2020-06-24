@@ -4,6 +4,7 @@ import RunButton from './RunButton';
 import TimeLimitInput from "./TimeLimitInput";
 import EditorSettingsMenu from "./EditorSettingsMenu";
 import OptionsDialog from "./OptionsDialog";
+import OptionsInput from "./OptionsInput";
 
 export default class TopBar extends React.Component {
   constructor(props) {
@@ -39,7 +40,8 @@ export default class TopBar extends React.Component {
             onVampireOutput={this.props.onVampireOutput}
             createAlert={this.props.createAlert}
           />
-          <div style={{ marginLeft: "auto" }}>
+          <OptionsInput updateArg={this.updateArg} removeArg={this.removeArg} />
+          <div style={{ marginLeft: "auto", display: "flex" }}>
             <OptionsDialog />
             <TimeLimitInput updateArg={this.updateArg} />
             <EditorSettingsMenu settings={this.props.settings} applySettings={this.props.applySettings} />

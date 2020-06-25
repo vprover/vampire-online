@@ -16,8 +16,8 @@ const useStyles = theme => ({
 });
 
 class Option extends React.Component {
-  constructor(prors) {
-    super(prors);
+  constructor(props) {
+    super(props);
   }
   render() {
     const { name, shortName, description, defaultVal, values, classes } = this.props;

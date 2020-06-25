@@ -59,8 +59,8 @@ const useStyles = theme => ({
 });
 
 class OptionsExplorer extends React.Component {
-  constructor(prors) {
-    super(prors);
+  constructor(props) {
+    super(props);
     this.state = {
       sections: [],
       openedTab: 0

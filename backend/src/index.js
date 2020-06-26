@@ -85,8 +85,8 @@ function argsToString(args) {
   }
   catch (error) { }
   for (let [key, value] of Object.entries(args)) {
-    if (typeof value === 'boolean') str += `${key} `;
-    else str += `${key} ${value} `;
+    if (typeof value === 'boolean') str += `--${key} `;
+    else str += `--${key} ${value} `;
   }
   return str;
 }
@@ -112,7 +112,7 @@ function vampireSolve(clauses, args) {
     };
   }
   catch (error) {
-    console.log(`An \x1b[31merror\x1b[0m occured while solving\n: ${error.message}\n--stderr: ${error.stderr}\n--stdout: ${error.stdout}`);
+    console.log(`An \x1b[31merror\x1b[0m occurred while solving\n: ${error.message}\n--stderr: ${error.stderr}\n--stdout: ${error.stdout}`);
     return {
       rawOutput: `${error.stdout}`,
       error: parseErrorMessage(error.stdout)
@@ -126,7 +126,7 @@ function getStrVampireOptions() {
     return str;
   }
   catch (error) {
-    console.log(`An \x1b[31merror\x1b[0m occured while getting the options:\n ${error.message}`);
+    console.log(`An \x1b[31merror\x1b[0m occurred while getting the options:\n ${error.message}`);
     return null;
   }
 }
@@ -138,7 +138,7 @@ function vampireEncode(args) {
     return encoding.replace(/encode=on:?/, "");
   }
   catch (error) {
-    console.log(`An \x1b[31merror\x1b[0m occured while encoding options:\n ${error.output}`);
+    console.log(`An \x1b[31merror\x1b[0m occurred while encoding options:\n ${error.output}`);
     return null;
   }
 }
@@ -148,8 +148,8 @@ const saValues = vampireOptionSections.find(section => section.name.toLowerCase(
   .options.find(option => option.shortName && option.shortName.toLowerCase() === 'sa').values;
 
 function vampireDecode(stringStrategy) {
-  const strStucture = /(?<sa>[a-z]+)(?<s>[+-][0-9]+)_(?<awr>[0-9:]+)_(?<args>[\w:=.]*)_(?<t>[0-9]+)/g;
-  const strategyParts = strStucture.exec(stringStrategy).groups;
+  const strStructure = /(?<sa>[a-z]+)(?<s>[+-][0-9]+)_(?<awr>[0-9:]+)_(?<args>[\w:=.]*)_(?<t>[0-9]+)/g;
+  const strategyParts = strStructure.exec(stringStrategy).groups;
   let args = {
     "--saturation_algorithm": saValues.find(v => v.startsWith(strategyParts.sa)),
     "--selection": strategyParts.s,

@@ -151,14 +151,14 @@ function vampireDecode(stringStrategy) {
   const strStructure = /(?<sa>[a-z]+)(?<s>[+-][0-9]+)_(?<awr>[0-9:]+)_(?<args>[\w:=.]*)_(?<t>[0-9]+)/g;
   const strategyParts = strStructure.exec(stringStrategy).groups;
   let args = {
-    "--saturation_algorithm": saValues.find(v => v.startsWith(strategyParts.sa)),
-    "--selection": strategyParts.s,
-    "--age_weight_ratio": strategyParts.awr,
-    "--time_limit": strategyParts.t / 10.0
+    "saturation_algorithm": saValues.find(v => v.startsWith(strategyParts.sa)),
+    "selection": strategyParts.s,
+    "age_weight_ratio": strategyParts.awr,
+    "time_limit": strategyParts.t / 10.0
   };
   strategyParts.args.split(":").forEach(arg => {
     [name, val] = arg.split("=");
-    args[`--${shortNameToNameMap[name] ? shortNameToNameMap[name] : name}`] = val;
+    args[`${shortNameToNameMap[name] ? shortNameToNameMap[name] : name}`] = val;
   })
   // Validate the decoded args
   // return vampireEncode(args) === optionString ? args : null;

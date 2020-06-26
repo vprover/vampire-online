@@ -20,6 +20,8 @@ export default class OptionsInput extends React.Component {
     super(props);
     this.state = {
       copiedSuccess: false,
+      selectedOptions: [],
+      optionSuggestionsOpened: false,
       anchorEl: null,
       optionToEdit: null,
       options: []
@@ -63,9 +65,17 @@ export default class OptionsInput extends React.Component {
     const str = (event.clipboardData || window.clipboardData).getData('text');
     console.log(`Pasted ${str}`);
     axios.post("http://localhost:8000/string-strategy/decode", {
-      optionsString: str
+      stringStrategy: str
     }).then(res => {
-      this.props.setState({ args: res.data });
+      console.log(`Parsed to ${JSON.stringify(res.data)}`);
+      for (const [name, val] of Object.entries(res.data)) {
+        this.props.updateArg(name, val);
+      }
+      const decodedArgNames = Object.keys(this.props.args);
+      this.setState({
+        selectedOptions: this.state.options.filter(o => decodedArgNames.includes(o.name)),
+        optionSuggestionsOpened: false
+      });
     }).catch(error => {
       // this.props.createAlert("error", error.message);
     });
@@ -105,7 +115,10 @@ export default class OptionsInput extends React.Component {
         <Autocomplete
           multiple
           fullWidth
+          value={this.state.selectedOptions}
           options={this.state.options}
+          onChange={(event, newVal) => this.setState({ selectedOptions: newVal })}
+          getOptionSelected={(option, value) => option.name === value.name || option === value}
           getOptionLabel={option => option.name}
           // renderOption={option => (<React.Fragment>{option.name}</React.Fragment>)}
           filterOptions={createFilterOptions({
@@ -131,9 +144,8 @@ export default class OptionsInput extends React.Component {
               <TextField
                 {...params}
                 variant="outlined"
-                // color="contrast"
                 placeholder="Vampire Options"
-              // onPaste={e => { console.log("Paste"); this.handlePasteOptionString(e) }}
+                onPaste={e => { this.handlePasteOptionString(e); }}
               />
             )
           }

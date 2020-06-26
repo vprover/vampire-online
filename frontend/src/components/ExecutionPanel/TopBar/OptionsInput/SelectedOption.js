@@ -8,7 +8,9 @@ export default class SelectedOption extends React.Component {
     super(props);
 
     this.getInitialValue = this.getInitialValue.bind(this);
-    this.props.updateArg(this.props.option.name, this.getInitialValue());
+    if (!this.props.args[this.props.option.name]) {
+      this.props.updateArg(this.props.option.name, this.getInitialValue());
+    }
   }
 
   getInitialValue() {

@@ -1,11 +1,11 @@
 import React from 'react';
-import { TextField, IconButton, SvgIcon, Tooltip, Chip } from '@material-ui/core';
+import { Box, TextField, IconButton, SvgIcon, Tooltip, Popover, FormControl } from '@material-ui/core';
+import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete';
+import SelectedOption from './SelectedOption';
+import ValueSelector from "./ValueSelector";
 import { Icon, InlineIcon } from '@iconify/react';
 import contentCopy from '@iconify/icons-mdi/content-copy';
-import Autocomplete from '@material-ui/lab/Autocomplete';
-import { createFilterOptions } from '@material-ui/lab/Autocomplete';
-import axios from 'axios'
-import SelectedOption from './SelectedOption';
+import axios from 'axios';
 
 const CopyIcon = (props) => {
   return (
@@ -19,12 +19,14 @@ export default class OptionsInput extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      args: {},
       copiedSuccess: false,
+      anchorEl: null,
+      optionToEdit: null,
       options: []
     }
     this.copyOptionsToClipBoard = this.copyOptionsToClipBoard.bind(this);
     this.handlePasteOptionString = this.handlePasteOptionString.bind(this);
+    this.closePopover = this.closePopover.bind(this);
   }
 
   componentDidMount() {
@@ -46,8 +48,9 @@ export default class OptionsInput extends React.Component {
   }
 
   copyOptionsToClipBoard() {
+    console.log(this.props.args);
     axios.post("http://localhost:8000/string-strategy/encode", {
-      args: JSON.stringify(this.state.args)
+      args: JSON.stringify(this.props.args)
     }).then(res => {
       this.copyToClipboard(res.data);
       this.setState({ copiedSuccess: true });
@@ -62,7 +65,7 @@ export default class OptionsInput extends React.Component {
     axios.post("http://localhost:8000/string-strategy/decode", {
       optionsString: str
     }).then(res => {
-      this.setState({ args: res.data });
+      this.props.setState({ args: res.data });
     }).catch(error => {
       // this.props.createAlert("error", error.message);
     });
@@ -70,9 +73,9 @@ export default class OptionsInput extends React.Component {
 
   strToArgs(str) {
     let args = {};
-    const splited = str.match(/\w+ \w+/g);
+    const splitted = str.match(/\w+ \w+/g);
     try {
-      splited.forEach(element => {
+      splitted.forEach(element => {
         let name, value;
         [name, value] = element.split(" ");
         args[name] = value;
@@ -92,46 +95,80 @@ export default class OptionsInput extends React.Component {
     return str;
   }
 
-  searchBarOnChange(event, newValue, reason) {
-    switch (reason) {
-      case "select-option":
-
-      case "remove-option":
-
-    }
+  closePopover() {
+    this.setState({ anchorEl: null, optionToEdit: null });
   }
-
 
   render() {
     return (
-      <React.Fragment>
+      <Box style={{ display: "flex", flexGrow: 2 }} mx="1.2rem" my="0.4rem">
         <Autocomplete
           multiple
           fullWidth
-          // value={this.props.args}
-          onChange={this.searchBarOnChange}
           options={this.state.options}
           getOptionLabel={option => option.name}
-          renderOption={option => (<React.Fragment>{option.name}</React.Fragment>)}
+          // renderOption={option => (<React.Fragment>{option.name}</React.Fragment>)}
           filterOptions={createFilterOptions({
             stringify: option => `${option.name} ${option.shortName} ${option.description} ${option.defaultVal} ${option.values}`
           })}
-          renderTags={(tagValue, getTagProps) =>
-            tagValue.map((option, index) => (
-              <SelectedOption option={option} updateArg={this.props.updateArg} key={index} {...getTagProps({ index })} />
+          filterSelectedOptions
+          renderTags={(tags, getTagProps) =>
+            tags.map((option, index) => (
+              <SelectedOption
+                option={option}
+                updateArg={this.props.updateArg}
+                removeArg={this.props.removeArg}
+                args={this.props.args}
+                key={index}
+                // Seems interesting, but we could also use a simple click
+                onDoubleClick={event => this.setState({ anchorEl: event.target, optionToEdit: option })}
+                {...getTagProps({ index })}
+              />
             ))
           }
-          renderInput={params => (
-            <TextField
-              {...params}
-              variant="outlined"
-              color="secondary"
-              value={this.argsToString(this.state.args)}
-              placeholder="Vampire Options"
-              onPaste={e => this.handlePasteOptionString(e)}
+          renderInput={params => {
+            return (
+              <TextField
+                {...params}
+                variant="outlined"
+                // color="contrast"
+                placeholder="Vampire Options"
+              // onPaste={e => { console.log("Paste"); this.handlePasteOptionString(e) }}
               />
-          )}
+            )
+          }
+          }
         />
+
+        {`${this.state.anchorEl ? this.state.anchorEl.offsetWidth : ""}`}
+
+        <Popover
+          // style={{ width: this.state.anchorEl ? 3.5 * this.state.anchorEl.offsetWidth : "10rem" }}
+          anchorEl={this.state.anchorEl}
+          open={Boolean(this.state.anchorEl)}
+          onClose={this.closePopover}
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'center'
+          }}
+          transformOrigin={{
+            vertical: 'top',
+            horizontal: 'center'
+          }}
+        >
+          {
+            this.state.anchorEl &&
+            <FormControl style={{
+              margin: "0.8rem", display: "inline-flex", justifyContent: "center", flexDirection: "row"
+            }}>
+              <ValueSelector
+                option={this.state.optionToEdit}
+                updateArg={this.props.updateArg}
+                args={this.props.args}
+                closePopover={this.closePopover} />
+            </FormControl>
+          }
+        </Popover>
 
         <Tooltip
           title="Copied as strategy"
@@ -143,7 +180,7 @@ export default class OptionsInput extends React.Component {
             <CopyIcon />
           </IconButton>
         </Tooltip>
-      </React.Fragment>
+      </Box >
     )
   }
 }

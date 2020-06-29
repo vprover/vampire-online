@@ -32,7 +32,7 @@ export default class OptionsInput extends React.Component {
   }
 
   componentDidMount() {
-    axios.get("http://localhost:8000/options", { sections: false })
+    axios.get(`${process.env.REACT_APP_API_HOST}/options`, { sections: false })
       .then(res => this.setState({ options: res.data }))
       .catch(error => console.log(`Could not fetch vampire options: ${error.message}`));
   }
@@ -51,7 +51,7 @@ export default class OptionsInput extends React.Component {
 
   copyOptionsToClipBoard() {
     console.log(this.props.args);
-    axios.post("http://localhost:8000/string-strategy/encode", {
+    axios.post(`${process.env.REACT_APP_API_HOST}/string-strategy/encode`, {
       args: JSON.stringify(this.props.args)
     }).then(res => {
       this.copyToClipboard(res.data);
@@ -64,7 +64,7 @@ export default class OptionsInput extends React.Component {
   handlePasteOptionString(event) {
     const str = (event.clipboardData || window.clipboardData).getData('text');
     console.log(`Pasted ${str}`);
-    axios.post("http://localhost:8000/string-strategy/decode", {
+    axios.post(`${process.env.REACT_APP_API_HOST}/string-strategy/decode`, {
       stringStrategy: str
     }).then(res => {
       console.log(`Parsed to ${JSON.stringify(res.data)}`);

@@ -12,6 +12,8 @@ export default class TopBar extends React.Component {
     this.state = {
       args: {}
     };
+    this.updateArg = this.updateArg.bind(this);
+    this.removeArg = this.removeArg.bind(this);
   }
 
   updateArg = (name, value) => {
@@ -43,7 +45,7 @@ export default class TopBar extends React.Component {
           <OptionsInput updateArg={this.updateArg} removeArg={this.removeArg} args={this.state.args} />
           <div style={{ marginLeft: "auto", display: "flex" }}>
             <OptionsDialog />
-            <TimeLimitInput updateArg={this.updateArg} />
+            <TimeLimitInput updateArg={this.updateArg} timeLimit={this.state.args["time_limit"]} />
             <EditorSettingsMenu settings={this.props.settings} applySettings={this.props.applySettings} />
           </div>
         </Toolbar>

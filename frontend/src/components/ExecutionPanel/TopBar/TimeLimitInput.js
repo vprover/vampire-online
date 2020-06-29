@@ -45,9 +45,17 @@ class TimeLimitInput extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      valid: true
+      valid: true,
+      currentVal: 60
     }
   }
+
+  componentDidUpdate(prevProps, prevState) {
+    const v = Number(this.props.timeLimit);
+    
+  }
+  
+  
 
   render() {
     const { classes } = this.props;
@@ -58,16 +66,16 @@ class TimeLimitInput extends React.Component {
           label="Time limit"
           className={classes.root}
           size="small"
-          defaultValue="60"
+          value={this.props.timeLimit && this.state.valid ? this.props.timeLimit : this.state.currentVal}
           helperText={!this.state.valid ? "Number: 1 - 60" : ""}
           onChange={e => {
             const v = Number(e.target.value);
             if (v && v > 0 && v <= 60) {
-              this.setState({ valid: true });
-              this.props.updateArg("--time_limit", v);
+              this.setState({ valid: true, currentVal: v });
+              this.props.updateArg("time_limit", v);
             }
             else {
-              this.setState({ valid: false });
+              this.setState({ valid: false, currentVal: e.target.value });
             }
           }}
           InputProps={{

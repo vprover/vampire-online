@@ -73,7 +73,7 @@ class OptionsExplorer extends React.Component {
   }
 
   getVampireOptions = () => {
-    axios.get("http://localhost:8000/options", { params: { sections: true } })
+    axios.get(`${process.env.REACT_APP_API_HOST}/options`, { params: { sections: true } })
       .then(res => this.setState({ sections: res.data }))
       .catch(error => console.log(`Could not fetch vampire options: ${error.message}`));
   }

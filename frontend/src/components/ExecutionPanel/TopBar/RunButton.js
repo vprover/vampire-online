@@ -41,7 +41,7 @@ class RunButton extends React.Component {
     console.log(this.props.input);
     console.log(this.props.args);
 
-    axios.post("http://localhost:8000/solve", {
+    axios.post(`${process.env.REACT_APP_API_HOST}/solve`, {
       clauses: JSON.stringify(this.props.input),
       args: JSON.stringify(this.props.args)
     })
@@ -58,7 +58,7 @@ class RunButton extends React.Component {
         });
         let msg = error.response ? `Status ${error.response.status}: ` : "";
         msg += error.message;
-        this.props.createAlert("error", msg);
+        this.props.createAlert("error", JSON.stringify(error));
       });
   }
 

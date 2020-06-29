@@ -1,0 +1,18 @@
+version: "3.0"
+services: 
+  frontend:
+    image: "vladene/vampire-frontend:${VAMPIRE_VERSION}"
+    ports: 
+    - "3000:80"
+    depends_on:
+    - backend
+    deploy:
+      restart_policy:
+        condition: on-failure
+  backend:
+    image: "vladene/vampire-backend:${VAMPIRE_VERSION}"
+    ports:
+    - "8000:8080"
+    deploy:
+      restart_policy:
+        condition: on-failure

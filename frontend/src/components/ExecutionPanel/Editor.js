@@ -16,6 +16,7 @@ export default class Editor extends React.Component {
       error: {},
       height: props.settings.orientation === "row" ? 550 : 300,
       width: props.settings.orientation === "row" ? 500 : 900,
+      d: { width: 0, height: 0 }
     }
     this.resize = this.resize.bind(this);
     this.onUserInput = this.onUserInput.bind(this);
@@ -44,8 +45,9 @@ export default class Editor extends React.Component {
 
   resize(e, dir, ref, d) {
     this.setState(prevState => ({
-      height: prevState.height + d.height,
-      width: prevState.width + d.width,
+      width: prevState.width + d.width - prevState.d.width,
+      height: prevState.height + d.height - prevState.d.height,
+      d: { ...d }
     }));
   }
 
@@ -53,7 +55,7 @@ export default class Editor extends React.Component {
     return this.state.value === nextState.value || this.props.output !== nextProps.output;
   }
 
-  componentDidUpdate = (prevProps) => {
+  componentDidUpdate(prevProps) {
     if (prevProps.settings.orientation !== this.props.settings.orientation) {
       this.setState({
         height: this.props.settings.orientation === "row" ? 550 : 300,
@@ -79,16 +81,19 @@ export default class Editor extends React.Component {
   render() {
     return (
       <Resizable
-        className={`resizable editor ${this.props.settings.darkTheme ? "border-gray" : "border-black"}`}
-        size={{ width: this.state.width + 2, height: this.state.height + 2 }}
+        className="resizable"
+        size={{ width: this.state.width + 6, height: this.state.height + 6 }}
         enable={{
           top: false, right: true, bottom: true, left: true,
           topRight: false, bottomRight: true, bottomLeft: false, topLeft: false
         }}
-        onResizeStop={this.resize}>
+        onResizeStart={() => this.setState({ d: { width: 0, height: 0 } })}
+        onResize={this.resize}
+      >
         <AceEditor
-          height={this.state.height}
-          width={this.state.width}
+          className={`editor ${this.props.settings.darkTheme ? "border-gray" : "border-black"}`}
+          height={`${this.state.height}px`}
+          width={`${this.state.width}px`}
           readOnly={this.props.readOnly}
           value={this.props.readOnly ? this.props.value : this.state.value}
           fontSize={this.props.settings.fontSize}

@@ -1,17 +1,14 @@
-.editor{
+.resizable {
+  /* overflow: hidden; */
   align-items: center;
   justify-content: center;
-}
-
-.resizable {
-  overflow: hidden;
-  resize: both;
+  padding: 0.1rem;
 }
 
 .border-black {
-  border: 2px solid black;
+  border: 0.12rem solid black;
 }
 
 .border-gray {
-  border: 2px solid gray;
+  border: 0.12rem solid #1e88e5;
 }

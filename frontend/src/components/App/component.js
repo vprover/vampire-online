@@ -32,7 +32,7 @@ export default class App extends React.Component {
   render() {
     return (
       <ThemeProvider theme={theme}>
-        <Container flex p="0.5em">
+        <Container p="0.5em">
           <ExecutionPanel />
         </Container>
       </ThemeProvider>

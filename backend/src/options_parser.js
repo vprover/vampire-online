@@ -23,7 +23,8 @@ function getOptions(section) {
     options.push({
       name: opt.name,
       shortName: opt.shortName,
-      description: opt.description ? opt.description.replace(/\s+/g, " ") : null,
+      // description: opt.description ? opt.description.replace(/\s+/g, " ") : null,
+      description: opt.description ? opt.description.trim() : null,
       default: opt.default,
       values: opt.values ? opt.values.replace(/\s+/g, " ").split(",") : null
     })

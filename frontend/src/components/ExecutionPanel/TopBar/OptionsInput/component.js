@@ -34,7 +34,9 @@ export default class OptionsInput extends React.Component {
   componentDidMount() {
     axios.get(`${process.env.REACT_APP_API_HOST}/options`, { sections: false })
       .then(res => this.setState({ options: res.data }))
-      .catch(error => console.log(`Could not fetch vampire options: ${error.message}`));
+      .catch(error => {
+        this.props.createAlert('error', `Could not fetch vampire options: ${error.message}. Try again later!`);
+      })
   }
 
   copyToClipboard(str) {
@@ -57,7 +59,7 @@ export default class OptionsInput extends React.Component {
       this.copyToClipboard(res.data);
       this.setState({ copiedSuccess: true });
     }).catch(error => {
-      // this.props.createAlert("error", error.message);
+      this.props.createAlert("error", `Could not encode options: ${error.message}`);
     });
   }
 
@@ -77,7 +79,7 @@ export default class OptionsInput extends React.Component {
         optionSuggestionsOpened: false
       });
     }).catch(error => {
-      // this.props.createAlert("error", error.message);
+      this.props.createAlert("error", `Could not decode string strategy: ${error.message}`);
     });
   }
 

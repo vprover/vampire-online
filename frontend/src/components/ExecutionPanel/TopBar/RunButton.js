@@ -58,7 +58,7 @@ class RunButton extends React.Component {
         });
         let msg = error.response ? `Status ${error.response.status}: ` : "";
         msg += error.message;
-        this.props.createAlert("error", JSON.stringify(error));
+        this.props.createAlert("error", msg);
       });
   }
 

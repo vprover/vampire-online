@@ -42,9 +42,13 @@ export default class TopBar extends React.Component {
             onVampireOutput={this.props.onVampireOutput}
             createAlert={this.props.createAlert}
           />
-          <OptionsInput updateArg={this.updateArg} removeArg={this.removeArg} args={this.state.args} />
+          <OptionsInput
+            updateArg={this.updateArg}
+            removeArg={this.removeArg}
+            args={this.state.args}
+            createAlert={this.props.createAlert}/>
           <div style={{ marginLeft: "auto", display: "flex" }}>
-            <OptionsDialog />
+            <OptionsDialog createAlert={this.props.createAlert}/>
             <TimeLimitInput updateArg={this.updateArg} timeLimit={this.state.args["time_limit"]} />
             <EditorSettingsMenu settings={this.props.settings} applySettings={this.props.applySettings} />
           </div>

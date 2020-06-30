@@ -36,6 +36,7 @@ export default class ValueSelector extends React.Component {
         return (
           <>
             <Input
+              id="input-str-option"
               style={{ width: "65%" }}
               defaultValue={this.props.args[name]}
               onKeyPress={event => {

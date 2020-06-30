@@ -6,6 +6,8 @@ import ValueSelector from "./ValueSelector";
 import { Icon, InlineIcon } from '@iconify/react';
 import contentCopy from '@iconify/icons-mdi/content-copy';
 import axios from 'axios';
+import useStyles from '../Style';
+import { withStyles } from '@material-ui/core/styles';
 
 const CopyIcon = (props) => {
   return (
@@ -15,7 +17,7 @@ const CopyIcon = (props) => {
   )
 }
 
-export default class OptionsInput extends React.Component {
+class OptionsInput extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -112,6 +114,7 @@ export default class OptionsInput extends React.Component {
   }
 
   render() {
+    const { classes } = this.props;
     return (
       <Box style={{ display: "flex", flexGrow: 2 }} mx="1.2rem" my="0.4rem">
         <Autocomplete
@@ -145,6 +148,7 @@ export default class OptionsInput extends React.Component {
             return (
               <TextField
                 {...params}
+                className={classes.textField}
                 variant="outlined"
                 placeholder="Vampire Options"
                 onPaste={e => { this.handlePasteOptionString(e); }}
@@ -198,3 +202,5 @@ export default class OptionsInput extends React.Component {
     )
   }
 }
+
+export default withStyles(useStyles)(OptionsInput);

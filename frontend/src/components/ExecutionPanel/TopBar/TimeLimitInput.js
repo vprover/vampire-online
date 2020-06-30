@@ -1,45 +1,7 @@
 import React from "react";
 import { Box, TextField, InputAdornment } from "@material-ui/core";
 import { withStyles } from '@material-ui/core/styles';
-
-const useStyles = theme => {
-  const c = theme.palette.primary.contrastText;
-  const e = theme.palette.error.main;
-  return ({
-    root: {
-      '& label': {
-        color: c,
-        fontSize: "1.3em"
-      },
-      '& label.Mui-focused': {
-        color: c,
-      },
-      '& label.Mui-focused.Mui-error': {
-        color: e,
-      },
-      '& .MuiInput-underline:after': {
-        borderBottomColor: c,
-      },
-      '& .MuiFormHelperText-root': {
-        color: c
-      },
-      '& .MuiInput-underline.Mui-error:after': {
-        borderBottomColor: e
-      },
-      '& .MuiOutlinedInput-root': {
-        '& fieldset': {
-          borderColor: c,
-        },
-        '&:hover fieldset': {
-          borderColor: c,
-        },
-        '&.Mui-focused fieldset': {
-          borderColor: c,
-        },
-      },
-    },
-  })
-}
+import useStyles from './Style';
 
 class TimeLimitInput extends React.Component {
   constructor(props) {
@@ -57,7 +19,7 @@ class TimeLimitInput extends React.Component {
         <TextField
           error={!this.state.valid}
           label="Time limit"
-          className={classes.root}
+          className={classes.textField}
           size="small"
           value={this.props.timeLimit && this.state.valid ? this.props.timeLimit : this.state.currentVal}
           helperText={!this.state.valid ? "Number: 1 - 60" : ""}

@@ -21,6 +21,7 @@ class Option extends React.Component {
   }
   render() {
     const { name, shortName, description, defaultVal, values, classes } = this.props;
+    if (name === "selection") console.log(description);
     return (
       <Card className={classes.optionCard}>
         <CardContent>
@@ -34,7 +35,7 @@ class Option extends React.Component {
             }
           </div>
           <Typography>
-            {description}
+            {description.split("\n").map(p => (<p>{p}</p>))}
           </Typography>
           {
             defaultVal &&

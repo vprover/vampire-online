@@ -1,7 +1,5 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
-import { Tooltip, Chip, Popover, Select, MenuItem, Switch, Input, IconButton, Typography, FormControl } from '@material-ui/core';
-import DoneIcon from '@material-ui/icons/Done';
+import { Tooltip, Chip, Typography } from '@material-ui/core';
 
 export default class SelectedOption extends React.Component {
   constructor(props) {

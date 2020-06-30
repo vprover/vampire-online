@@ -15,7 +15,7 @@
     "axios": "^0.19.2",
     "re-resizable": "^6.5.1",
     "react": "^16.13.1",
-    "react-ace": "^9.0.0",
+    "react-ace": "^9.1.1",
     "react-dom": "^16.13.1",
     "react-scripts": "3.4.1"
   },

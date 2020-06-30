@@ -1,9 +1,9 @@
 import React from 'react';
 import AceEditor from 'react-ace';
 import { Resizable } from 're-resizable'
-import "ace-builds/src-noconflict/theme-github";
-import "ace-builds/src-noconflict/theme-terminal";
-import "./Editor.css";
+import 'ace-builds/src-noconflict/theme-github';
+import 'ace-builds/src-noconflict/theme-terminal';
+import './Editor.css';
 import axios from 'axios';
 
 export default class Editor extends React.Component {
@@ -100,6 +100,7 @@ export default class Editor extends React.Component {
           theme={this.props.settings.darkTheme ? "terminal" : "github"}
           onChange={this.onUserInput}
           annotations={this.getErrorAnnotations()}
+          setOptions={{ useWorker: false }}
         />
       </Resizable>
     )

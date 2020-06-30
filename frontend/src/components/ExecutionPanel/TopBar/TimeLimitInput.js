@@ -50,13 +50,6 @@ class TimeLimitInput extends React.Component {
     }
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    const v = Number(this.props.timeLimit);
-    
-  }
-  
-  
-
   render() {
     const { classes } = this.props;
     return (

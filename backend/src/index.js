@@ -122,7 +122,7 @@ function vampireSolve(clauses, args) {
 
 function getStrVampireOptions() {
   try {
-    const str = execSync(`./vampire-executables/vampire4.2.2 --show_options on`).toString();
+    const str = execSync(`./vampire-executables/vampire_latest --show_options_line_wrap off --show_options on`).toString();
     return str;
   }
   catch (error) {

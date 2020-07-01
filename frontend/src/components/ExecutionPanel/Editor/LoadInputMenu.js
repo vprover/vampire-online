@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
-import { Button, ButtonGroup } from '@material-ui/core';
+import { Button, ButtonGroup, Dialog, DialogContent } from '@material-ui/core';
+import { DialogTitle } from '../TopBar/OptionsDialog';
+import ProblemLibraryExplorer from './ProblemLibraryExplorer';
 import { Icon, InlineIcon } from '@iconify/react';
 import fileUploadOutline from '@iconify/icons-mdi/file-upload-outline';
 import libraryOutline from '@iconify/icons-ion/library-outline';
-import styles from './SlidingButtonsStyles';
 import { makeStyles } from '@material-ui/core/styles';
+import styles from './SlidingButtonsStyles';
 import axios from 'axios';
 
 const useStyles = makeStyles(styles);
@@ -22,6 +24,11 @@ const SlideDiv = props => {
         setHoverTimer(setTimeout(() => setOpen(true), 1200));
       }}
       onMouseLeave={() => {
+        clearTimeout(hoverTimer);
+        setHoverTimer(null);
+        setOpen(false);
+      }}
+      onClick={() => {
         clearTimeout(hoverTimer);
         setHoverTimer(null);
         setOpen(false);
@@ -66,14 +73,34 @@ const UploadProblemFileButton = props => {
 
 const ImportProblemFromLibButton = props => {
   const classes = useStyles();
+  const [open, setOpen] = React.useState(false);
+  const handleClose = () => setOpen(false);
   return (
-    <Button
-      {...props}
-      className={`${classes.left} ${classes.normalText}`}
-      startIcon={<Icon icon={libraryOutline} />}
-    >
-      Problem Library
-    </Button>
+    <React.Fragment>
+      <Button
+        {...props}
+        onClick={() => setOpen(true)}
+        className={`${classes.left} ${classes.normalText}`}
+        startIcon={<Icon icon={libraryOutline} />}
+      >
+        Problem Library
+      </Button>
+
+      <Dialog
+        maxWidth="md"
+        open={open}
+        onClose={handleClose}
+        scroll="paper"
+      >
+        <DialogTitle onClose={handleClose} textVariant="h5">
+          Problem Library
+        </DialogTitle>
+
+        <DialogContent>
+          <ProblemLibraryExplorer closeDialog={handleClose} updateInput={props.updateInput} />
+        </DialogContent>
+      </Dialog>
+    </React.Fragment>
   )
 }
 

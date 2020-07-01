@@ -2,6 +2,7 @@ const express = require("express");
 const { execSync } = require("child_process");
 const cors = require('cors');
 const op = require('./options_parser');
+const pbLib = require('./problem_library_retriever');
 
 const app = express();
 app.use(express.json());
@@ -57,6 +58,42 @@ app.post("/string-strategy/encode", (req, res) => {
   }
   else {
     res.status(422).send("Invalid options");
+  }
+})
+
+app.get("/problem-library/contents", (req, res) => {
+  if (req.query.section) {
+    try {
+      res.status(200).json(pbLib.getSectionProblems(req.query.section));
+    }
+    catch (error) {
+      res.status(404).send(`Section ${req.query.section} not found`);
+    }
+  }
+  else {
+    try {
+      res.status(200).json(pbLib.getLibraryData());
+    }
+    catch (error) {
+      res.status(500).send("Something went wrong!");
+      console.log(`Could not retrieve problem library contents ${error}`);
+    }
+  }
+})
+
+app.get("/problem-library", (req, res) => {
+  const { section, problem } = req.query;
+  if (section && problem) {
+    try {
+      const pbPath = pbLib.getValidProblemPath(section, problem);
+      res.status(200).sendFile(pbPath);
+    }
+    catch{
+      res.status(404).send(`Could not find ${problem} from section ${section}`);
+    }
+  }
+  else {
+    res.status(400).send("Please specify a <problem> and its <section>.\n GET /problem-library/contents for a table of contents");
   }
 })
 

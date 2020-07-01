@@ -61,28 +61,28 @@ app.post("/string-strategy/encode", (req, res) => {
   }
 })
 
-app.get("/problem-library/contents", (req, res) => {
-  if (req.query.section) {
-    try {
-      res.status(200).json(pbLib.getSectionProblems(req.query.section));
-    }
-    catch (error) {
-      res.status(404).send(`Section ${req.query.section} not found`);
-    }
+app.get("/problem-library", (req, res) => {
+  try {
+    res.status(200).json(pbLib.getLibraryData());
   }
-  else {
-    try {
-      res.status(200).json(pbLib.getLibraryData());
-    }
-    catch (error) {
-      res.status(500).send("Something went wrong!");
-      console.log(`Could not retrieve problem library contents ${error}`);
-    }
+  catch (error) {
+    res.status(500).send("Something went wrong!");
+    console.log(`Could not retrieve problem library contents ${error}`);
   }
 })
 
-app.get("/problem-library", (req, res) => {
-  const { section, problem } = req.query;
+app.get("/problem-library/:section", (req, res) => {
+  const { section } = req.params;
+  try {
+    res.status(200).json(pbLib.getSectionProblems(section));
+  }
+  catch (error) {
+    res.status(404).send(`Section ${section} not found`);
+  }
+})
+
+app.get("/problem-library/:section/:problem", (req, res) => {
+  const { section, problem } = req.params;
   if (section && problem) {
     try {
       const pbPath = pbLib.getValidProblemPath(section, problem);

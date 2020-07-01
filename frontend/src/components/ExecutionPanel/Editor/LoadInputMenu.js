@@ -5,6 +5,7 @@ import fileUploadOutline from '@iconify/icons-mdi/file-upload-outline';
 import libraryOutline from '@iconify/icons-ion/library-outline';
 import styles from './SlidingButtonsStyles';
 import { makeStyles } from '@material-ui/core/styles';
+import axios from 'axios';
 
 const useStyles = makeStyles(styles);
 
@@ -52,7 +53,7 @@ const UploadProblemFileButton = props => {
         <Button
           {...props}
           fullWidth
-          className={classes.left}
+          className={`${classes.left} ${classes.normalText}`}
           startIcon={<Icon icon={fileUploadOutline} />}
           component="span"
         >
@@ -60,6 +61,19 @@ const UploadProblemFileButton = props => {
         </Button>
       </label>
     </React.Fragment>
+  )
+}
+
+const ImportProblemFromLibButton = props => {
+  const classes = useStyles();
+  return (
+    <Button
+      {...props}
+      className={`${classes.left} ${classes.normalText}`}
+      startIcon={<Icon icon={libraryOutline} />}
+    >
+      Problem Library
+    </Button>
   )
 }
 
@@ -74,17 +88,14 @@ const LoadInputMenu = props => {
         orientation="vertical"
       >
         <UploadProblemFileButton
-          direction="left"
           updateInput={props.updateInput}
           style={{ borderBottomLeftRadius: 0, borderBottomRightRadius: 0 }}
         />
 
-        <Button
-          className={classes.left}
-          startIcon={<Icon icon={libraryOutline} />}
-        >
-          Problem Library
-          </Button>
+        <ImportProblemFromLibButton
+          updateInput={props.updateInput}
+          style={{ borderTopLeftRadius: 0, borderTopRightRadius: 0 }}
+        />
 
       </ButtonGroup>
     </SlideDiv >

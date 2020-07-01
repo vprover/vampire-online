@@ -35,7 +35,7 @@ class Option extends React.Component {
             }
           </div>
           <Typography>
-            {description.split("\n").map(p => (<p>{p}</p>))}
+            {description.split("\n").map(p => (<>{p}<br/></>))}
           </Typography>
           {
             defaultVal &&

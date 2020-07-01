@@ -9,6 +9,9 @@ const styles = theme => {
         position: "absolute",
         flexWrap: "nowrap"
       },
+      normalText: {
+        textTransform: "none"
+      },
       left: {
         justifyContent: "flex-start"
       },

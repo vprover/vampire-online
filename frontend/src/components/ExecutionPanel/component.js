@@ -1,7 +1,7 @@
 import React from 'react';
 import { Grid } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
-import Editor from './Editor';
+import Editor from './Editor/component';
 import TopBar from './TopBar/component';
 
 export default class ExecutionPanel extends React.Component {
@@ -18,9 +18,12 @@ export default class ExecutionPanel extends React.Component {
       output: {},
       alert: null
     }
+    this.updateEditorSettings = this.updateEditorSettings.bind(this);
+    this.updateUserInput = this.updateUserInput.bind(this);
+    this.updateVampireOutput = this.updateVampireOutput.bind(this);
   }
 
-  updateEditorSettings = (field, val) => {
+  updateEditorSettings(field, val) {
     this.setState(oldState => ({
       editorSettings: {
         ...oldState.editorSettings,
@@ -29,14 +32,13 @@ export default class ExecutionPanel extends React.Component {
     }));
   }
 
-  updateUserInput = (input) => {
+  updateUserInput(input) {
     this.setState({
       input: input
     });
   }
 
-  updateVampireOutput = (output) => {
-    console.log(output);
+  updateVampireOutput(output) {
     this.setState({
       output: output
     });
@@ -63,7 +65,7 @@ export default class ExecutionPanel extends React.Component {
         <Grid container direction={this.state.editorSettings.orientation} justify="space-evenly" alignItems="center" spacing={3}>
 
           <Grid item>
-            <Editor settings={this.state.editorSettings} updateInput={this.updateUserInput} error={this.state.output.errors} />
+            <Editor settings={this.state.editorSettings} value={this.state.input} updateInput={this.updateUserInput} error={this.state.output.errors} />
           </Grid>
 
           <Grid item>

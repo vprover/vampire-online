@@ -1,19 +1,20 @@
 import React from 'react';
 import AceEditor from 'react-ace';
 import { Resizable } from 're-resizable'
+import LoadInputMenu from './LoadInputMenu';
 import 'ace-builds/src-noconflict/theme-github';
 import 'ace-builds/src-noconflict/theme-terminal';
-import './Editor.css';
+import { withStyles } from '@material-ui/core/styles';
+import useStyles from './EditorStyles';
 import axios from 'axios';
 
-export default class Editor extends React.Component {
+class Editor extends React.Component {
 
   constructor(props) {
     super(props)
     this.state = {
       prevOrientation: props.settings.orientation,
-      value: "",
-      error: {},
+      parseError: {},
       height: props.settings.orientation === "row" ? 550 : 300,
       width: props.settings.orientation === "row" ? 500 : 900,
       d: { width: 0, height: 0 }
@@ -34,9 +35,6 @@ export default class Editor extends React.Component {
   }
 
   onUserInput(value) {
-    this.setState({
-      value: value
-    });
     this.props.updateInput(value);
     if (!this.props.readOnly) {
       this.callParseAPI(value);
@@ -65,7 +63,7 @@ export default class Editor extends React.Component {
   }
 
   getErrorAnnotations() {
-    let e = this.state.error;
+    let e = this.state.parseError;
     if (!e) e = this.props.error;
     if (e) {
       return [{
@@ -79,30 +77,39 @@ export default class Editor extends React.Component {
   }
 
   render() {
+    const { classes } = this.props;
     return (
-      <Resizable
-        className="resizable"
-        size={{ width: this.state.width + 6, height: this.state.height + 6 }}
-        enable={{
-          top: false, right: true, bottom: true, left: true,
-          topRight: false, bottomRight: true, bottomLeft: false, topLeft: false
-        }}
-        onResizeStart={() => this.setState({ d: { width: 0, height: 0 } })}
-        onResize={this.resize}
-      >
-        <AceEditor
-          className={`editor ${this.props.settings.darkTheme ? "border-gray" : "border-black"}`}
-          height={`${this.state.height}px`}
-          width={`${this.state.width}px`}
-          readOnly={this.props.readOnly}
-          value={this.props.readOnly ? this.props.value : this.state.value}
-          fontSize={this.props.settings.fontSize}
-          theme={this.props.settings.darkTheme ? "terminal" : "github"}
-          onChange={this.onUserInput}
-          annotations={this.getErrorAnnotations()}
-          setOptions={{ useWorker: false }}
-        />
-      </Resizable>
+      <div style={{ position: "relative" }}>
+        {
+          !this.props.readOnly &&
+          <LoadInputMenu updateInput={this.props.updateInput} />
+        }
+        <Resizable
+          className={classes.resizable}
+          size={{ width: this.state.width + 6, height: this.state.height + 6 }}
+          enable={{
+            top: false, right: true, bottom: true, left: true,
+            topRight: false, bottomRight: true, bottomLeft: false, topLeft: false
+          }}
+          onResizeStart={() => this.setState({ d: { width: 0, height: 0 } })}
+          onResize={this.resize}
+        >
+          <AceEditor
+            className={`${this.props.settings.darkTheme ? classes.borderDarkTheme : classes.borderLightTheme}`}
+            height={`${this.state.height}px`}
+            width={`${this.state.width}px`}
+            readOnly={this.props.readOnly}
+            value={this.props.value}
+            fontSize={this.props.settings.fontSize}
+            theme={this.props.settings.darkTheme ? "terminal" : "github"}
+            onChange={this.onUserInput}
+            annotations={this.getErrorAnnotations()}
+            setOptions={{ useWorker: false }}
+          />
+        </Resizable>
+      </div>
     )
   }
 }
+
+export default withStyles(useStyles)(Editor);

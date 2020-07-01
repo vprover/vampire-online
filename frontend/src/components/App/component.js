@@ -19,6 +19,11 @@ const theme = responsiveFontSizes(
       error: {
         main: red["A200"]
       }
+    },
+    typography: {
+      button: {
+        textTransform: 'none'
+      }
     }
   })
 );

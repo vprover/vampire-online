@@ -87,9 +87,11 @@ const ImportProblemFromLibButton = props => {
       </Button>
 
       <Dialog
-        maxWidth="md"
+        fullWidth
+        maxWidth="xs"
         open={open}
         onClose={handleClose}
+        onMouseOver={(e) => e.preventDefault()}
         scroll="paper"
       >
         <DialogTitle onClose={handleClose} textVariant="h5">

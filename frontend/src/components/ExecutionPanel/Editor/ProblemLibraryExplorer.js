@@ -48,6 +48,7 @@ class ProblemLibraryExplorer extends Component {
       <div className={classes.root}>
         <Tabs
           className={classes.tabs}
+          style={{ width: "8rem" }}
           orientation="vertical"
           variant="scrollable"
           scrollButtons="off"
@@ -61,6 +62,7 @@ class ProblemLibraryExplorer extends Component {
                   label={section.name}
                   index={index}
                   key={index}
+                  style={{ minWidth: "8rem" }}
                   {...a11yProps("problem-library", index)}
                 />
               )

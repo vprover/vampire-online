@@ -35,7 +35,7 @@ class Option extends React.Component {
             }
           </div>
           <Typography>
-            {description.split("\n").map(p => (<>{p}<br/></>))}
+            {description.split("\n").map((p, index) => (<React.Fragment key={index}>{p}<br /></React.Fragment>))}
           </Typography>
           {
             defaultVal &&

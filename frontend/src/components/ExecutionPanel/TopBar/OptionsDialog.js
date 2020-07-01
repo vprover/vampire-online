@@ -21,10 +21,10 @@ const dialogTitleStyle = (theme) => ({
 });
 
 const DialogTitle = withStyles(dialogTitleStyle)((props) => {
-  const { children, classes, onClose, ...other } = props;
+  const { children, textVariant, classes, onClose, ...other } = props;
   return (
     <MuiDialogTitle disableTypography className={classes.root} {...other}>
-      <Typography variant="h4">{children}</Typography>
+      <Typography variant={textVariant}>{children}</Typography>
       {onClose ? (
         <IconButton aria-label="close" className={classes.closeButton} onClick={onClose}>
           <CloseIcon />
@@ -37,11 +37,6 @@ const DialogTitle = withStyles(dialogTitleStyle)((props) => {
 const useStyles = theme => ({
   paper: {
     height: '90%',
-  },
-  closeBtn: {
-    position: "fixed",
-    alignSelf: "flex-end",
-    marginRight: "1rem"
   }
 });
 
@@ -80,7 +75,7 @@ class OptionsDialog extends React.Component {
           scroll="paper"
           classes={{ paper: classes.paper }}
         >
-          <DialogTitle onClose={this.handleClose}>
+          <DialogTitle onClose={this.handleClose} textVariant="h4">
             Vampire Options
           </DialogTitle>
 
@@ -94,3 +89,4 @@ class OptionsDialog extends React.Component {
 }
 
 export default withStyles(useStyles)(OptionsDialog);
+export { DialogTitle };

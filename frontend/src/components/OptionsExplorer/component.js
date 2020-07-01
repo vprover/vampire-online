@@ -4,15 +4,16 @@ import { Tabs, Tab, Box } from '@material-ui/core';
 import OptionsSection from './OptionsSection';
 import axios from 'axios';
 import { withStyles } from '@material-ui/core/styles';
+import useStyles from './Styles';
 
 const TabPanel = (props) => {
-  const { children, openedTab, index, ...other } = props;
+  const { children, openedTab, index, name, ...other } = props;
   return (
     <div
       role="tabpanel"
       hidden={openedTab !== index}
-      id={`options-section-tabpanel-${index}`}
-      aria-labelledby={`options-section-tab-${index}`}
+      id={`${name}-section-tabpanel-${index}`}
+      aria-labelledby={`${name}-section-tab-${index}`}
       {...other}
     >
       {openedTab === index && (
@@ -27,36 +28,15 @@ const TabPanel = (props) => {
 TabPanel.propTypes = {
   children: PropTypes.node,
   index: PropTypes.any.isRequired,
-  value: PropTypes.any.isRequired,
+  value: PropTypes.any,
 };
 
-const a11yProps = index => {
+const a11yProps = (name, index) => {
   return {
-    id: `options-section-tab-${index}`,
-    'aria-controls': `options-section-tabpanel-${index}`,
+    id: `${name}-section-tab-${index}`,
+    'aria-controls': `${name}-section-tabpanel-${index}`,
   };
 }
-
-const useStyles = theme => ({
-  root: {
-    flexGrow: 1,
-    backgroundColor: theme.palette.background.paper,
-    display: "flex",
-    flexDirection: "row",
-    height: "100%"
-  },
-  tabs: {
-    borderRight: `1px solid ${theme.palette.divider}`,
-    flexShrink: "0",
-    marginTop: "1rem",
-    width: "12rem"
-  },
-  tabpanel: {
-    overflow: "auto",
-    height: "inherit",
-    flexGrow: 1
-  }
-});
 
 class OptionsExplorer extends React.Component {
   constructor(props) {
@@ -102,7 +82,8 @@ class OptionsExplorer extends React.Component {
                 <Tab
                   label={section.name}
                   index={index}
-                  {...a11yProps(index)}
+                  {...a11yProps("options", index)}
+                  key={index}
                 />
               )
             })
@@ -113,7 +94,13 @@ class OptionsExplorer extends React.Component {
           this.state.sections &&
           this.state.sections.map((section, index) => {
             return (
-              <TabPanel className={classes.tabpanel} openedTab={this.state.openedTab} index={index}>
+              <TabPanel
+                name="options"
+                className={classes.tabpanel}
+                openedTab={this.state.openedTab}
+                index={index}
+                key={index}
+              >
                 <OptionsSection
                   name={section.name}
                   options={section.options}
@@ -129,3 +116,4 @@ class OptionsExplorer extends React.Component {
 }
 
 export default withStyles(useStyles)(OptionsExplorer);
+export { TabPanel, a11yProps };

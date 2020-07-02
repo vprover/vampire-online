@@ -5,10 +5,13 @@ const useStyles = theme => {
     textField: {
       '& label': {
         color: c,
-        fontSize: "1.3em"
+        fontSize: "0.9rem"
       },
       '& label.Mui-focused': {
         color: c,
+      },
+      '& label.MuiInputLabel-shrink': {
+        transform: "translate(0, 2px)"
       },
       '& label.Mui-focused.Mui-error': {
         color: e,
@@ -29,6 +32,30 @@ const useStyles = theme => {
         },
       },
     },
+    formControlInputLang: {
+      marginLeft: "0.6rem",
+      marginRight: "0.6rem",
+      minWidth: "8rem"
+    },
+    inputLabel: {
+      color: c,
+      fontSize: "0.9rem",
+      '&.Mui-focused': {
+        color: c,
+        borderColor: c
+      },
+      '&.MuiInputLabel-shrink': {
+        transform: "translate(0, 6px)"
+      },
+    },
+    select: {
+      '&.MuiInput-underline:after': {
+        borderBottomColor: c,
+      },
+      '& .MuiInput-input': {
+        color: c
+      }
+    }
   })
 };
 

@@ -5,6 +5,7 @@ import TimeLimitInput from "./TimeLimitInput";
 import EditorSettingsMenu from "./EditorSettingsMenu";
 import OptionsDialog from "./OptionsDialog";
 import OptionsInput from "./OptionsInput/component";
+import InputLanguageSelector from "./InputLanguageSelector";
 
 export default class TopBar extends React.Component {
   constructor(props) {
@@ -48,7 +49,8 @@ export default class TopBar extends React.Component {
             args={this.state.args}
             createAlert={this.props.createAlert}/>
           <div style={{ marginLeft: "auto", display: "flex" }}>
-            <OptionsDialog createAlert={this.props.createAlert}/>
+            <OptionsDialog createAlert={this.props.createAlert} />
+            <InputLanguageSelector updateArg={this.updateArg} inputLang={this.state.args["input_syntax"]}/>
             <TimeLimitInput updateArg={this.updateArg} timeLimit={this.state.args["time_limit"]} />
             <EditorSettingsMenu settings={this.props.settings} applySettings={this.props.applySettings} />
           </div>

@@ -15,7 +15,7 @@ class TimeLimitInput extends React.Component {
   render() {
     const { classes } = this.props;
     return (
-      <Box m="0.2em" width="6em" display="inline-flex"  >
+      <Box my="0.2rem" mx="0.6rem" width="5rem" display="inline-flex"  >
         <TextField
           error={!this.state.valid}
           label="Time limit"

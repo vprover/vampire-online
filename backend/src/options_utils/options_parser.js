@@ -1,6 +1,8 @@
 // const { stringOptions } = require('./options');
 // console.log(stringOptions);
-// console.log(getSections(stringOptions));
+const { appendRestrictions } = require('./restricted_options');
+
+// console.log(appendRestrictions('any',getSections(stringOptions)[0].options));
 
 function getSections(str) {
   const regex = /[*]+\n[*]+\s+(?<name>[a-zA-Z\s]+)\s+[*]+\n[*]+\n{2}(?<content>[^*]*)/g;
@@ -29,7 +31,7 @@ function getOptions(section) {
       values: opt.values ? opt.values.replace(/\s+/g, " ").split(",") : null
     })
   }
-  return options;
+  return appendRestrictions('any', options);
 }
 
 function extractShortNameToNameMap(optionsJSON) {

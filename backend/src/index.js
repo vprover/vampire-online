@@ -1,7 +1,7 @@
 const express = require("express");
 const { execSync } = require("child_process");
 const cors = require('cors');
-const op = require('./options_parser');
+const op = require('./options_utils/options_parser');
 const pbLib = require('./problem_library_retriever');
 
 const app = express();

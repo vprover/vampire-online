@@ -43,6 +43,7 @@ const SlideDiv = props => {
 
 const UploadProblemFileButton = props => {
   const classes = useStyles();
+  const { updateInput, ...other } = props;
   return (
     <React.Fragment>
       <input
@@ -52,13 +53,13 @@ const UploadProblemFileButton = props => {
         type="file"
         onChange={event => {
           const reader = new FileReader();
-          reader.onload = (event => props.updateInput(event.target.result));
+          reader.onload = (event => updateInput(event.target.result));
           reader.readAsText(event.target.files[0]);
         }}
       />
       <label htmlFor="upload-problem-file-button">
         <Button
-          {...props}
+          {...other}
           fullWidth
           className={`${classes.left} ${classes.normalText}`}
           startIcon={<Icon icon={fileUploadOutline} />}
@@ -73,12 +74,13 @@ const UploadProblemFileButton = props => {
 
 const ImportProblemFromLibButton = props => {
   const classes = useStyles();
+  const { updateInput, ...other } = props;
   const [open, setOpen] = React.useState(false);
   const handleClose = () => setOpen(false);
   return (
     <React.Fragment>
       <Button
-        {...props}
+        {...other}
         onClick={() => setOpen(true)}
         className={`${classes.left} ${classes.normalText}`}
         startIcon={<Icon icon={libraryOutline} />}
@@ -99,7 +101,7 @@ const ImportProblemFromLibButton = props => {
         </DialogTitle>
 
         <DialogContent>
-          <ProblemLibraryExplorer closeDialog={handleClose} updateInput={props.updateInput} />
+          <ProblemLibraryExplorer closeDialog={handleClose} updateInput={updateInput} />
         </DialogContent>
       </Dialog>
     </React.Fragment>

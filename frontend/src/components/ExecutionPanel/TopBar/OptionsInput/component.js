@@ -121,7 +121,7 @@ class OptionsInput extends React.Component {
           multiple
           fullWidth
           value={this.state.selectedOptions}
-          options={this.state.options}
+          options={this.state.options.filter(o => !o.restriction)}
           onChange={(event, newVal) => this.setState({ selectedOptions: newVal })}
           getOptionSelected={(option, value) => option.name === value.name || option === value}
           getOptionLabel={option => option.name}

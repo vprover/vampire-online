@@ -20,8 +20,9 @@ class Option extends React.Component {
     super(props);
   }
   render() {
-    const { name, shortName, description, defaultVal, values, classes } = this.props;
-    if (name === "selection") console.log(description);
+    const { classes } = this.props;
+    const { name, shortName, description, values, restriction } = this.props.option;
+    const defaultVal = this.props.option.default;
     return (
       <Card className={classes.optionCard}>
         <CardContent>
@@ -55,6 +56,12 @@ class Option extends React.Component {
                 })
               }
             </div>
+          }
+          {
+            restriction &&
+            <Typography color="error">
+              This option is not available online.
+            </Typography>
           }
         </CardContent>
       </Card>

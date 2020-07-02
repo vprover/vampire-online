@@ -19,11 +19,8 @@ export default class OptionsSection extends React.Component {
             return (
               <Option
                 key={index}
-                name={option.name}
-                shortName={option.shortName}
-                description={option.description}
-                defaultVal={option.default}
-                values={option.values} />
+                option={option}
+              />
             );
           })
         }

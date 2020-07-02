@@ -31,8 +31,9 @@ export default class SelectedOption extends React.Component {
     return (
       <Tooltip title={description}>
         <Chip
+          size="small"
           label={
-            <Typography>
+            <Typography variant="body2">
               {`${name}: ${this.props.args[name]}`}
             </Typography >
           }

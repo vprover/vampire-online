@@ -29,7 +29,7 @@ class Editor extends React.Component {
       .then(res => {
         console.log(res);
         this.setState({
-          error: res.data.error
+          parseError: res.data.error
         })
       });
   }

@@ -3,76 +3,60 @@ import { Grid } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
 import Editor from './Editor/component';
 import TopBar from './TopBar/component';
+import { EditorSettingsContext, EditorSettingsContextProvider } from '../../contexts/EditorSettingsContext';
+import { ExecutionContextProvider } from '../../contexts/ExecutionContext';
 
 export default class ExecutionPanel extends React.Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      editorSettings: {
-        darkTheme: true,
-        fontSize: 14,
-        orientation: "row"
-      },
-      input: "",
-      output: {},
       alert: null
     }
-    this.updateEditorSettings = this.updateEditorSettings.bind(this);
-    this.updateUserInput = this.updateUserInput.bind(this);
-    this.updateVampireOutput = this.updateVampireOutput.bind(this);
-  }
-
-  updateEditorSettings(field, val) {
-    this.setState(oldState => ({
-      editorSettings: {
-        ...oldState.editorSettings,
-        [field]: val
-      }
-    }));
-  }
-
-  updateUserInput(input) {
-    this.setState({
-      input: input
-    });
-  }
-
-  updateVampireOutput(output) {
-    this.setState({
-      output: output
-    });
   }
 
   render() {
     return (
-      <React.Fragment>
-        <TopBar
-          settings={this.state.editorSettings}
-          input={this.state.input}
-          onVampireOutput={this.updateVampireOutput}
-          applySettings={this.updateEditorSettings}
-          createAlert={(s, msg) => { this.setState({ alert: { severity: s, message: msg } }) }}
-        />
+      <EditorSettingsContextProvider>
+        <ExecutionContextProvider>
+          <React.Fragment>
 
-        {
-          this.state.alert &&
-          <Alert severity={this.state.alert.severity} onClose={() => { this.setState({ alert: null }) }} style={{ margin: "0.5em" }}>
-            {this.state.alert.message}
-          </Alert>
-        }
+            <TopBar
+              createAlert={(s, msg) => { this.setState({ alert: { severity: s, message: msg } }) }}
+            />
 
-        <Grid container direction={this.state.editorSettings.orientation} justify="space-evenly" alignItems="center" spacing={3}>
+            {
+              this.state.alert &&
+              <Alert severity={this.state.alert.severity} onClose={() => { this.setState({ alert: null }) }} style={{ margin: "0.5em" }}>
+                {this.state.alert.message}
+              </Alert>
+            }
 
-          <Grid item>
-            <Editor settings={this.state.editorSettings} value={this.state.input} updateInput={this.updateUserInput} error={this.state.output.errors} />
-          </Grid>
+            <EditorSettingsContext.Consumer>
+              {
+                value => {
+                  console.log(value);
+                  return (
+                    <Grid container direction={value.settings.orientation} justify="space-evenly" alignItems="center" spacing={3}>
 
-          <Grid item>
-            <Editor settings={this.state.editorSettings} value={this.state.output.rawOutput} readOnly={true} />
-          </Grid>
-        </Grid>
-      </React.Fragment>
+                      <Grid item>
+                        {/* <Editor settings={this.state.editorSettings} value={this.state.input} updateInput={this.updateUserInput} error={this.state.output.errors} /> */}
+                        <Editor type="input" />
+                      </Grid>
+
+                      <Grid item>
+                        {/* <Editor settings={this.state.editorSettings} value={this.state.output.rawOutput} readOnly={true} /> */}
+                        <Editor type="output" />
+                      </Grid>
+                    </Grid>
+
+                  )
+                }
+              }
+            </EditorSettingsContext.Consumer>
+          </React.Fragment>
+        </ExecutionContextProvider>
+      </EditorSettingsContextProvider>
     )
   }
 }

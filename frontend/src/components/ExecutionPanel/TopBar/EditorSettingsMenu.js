@@ -3,8 +3,11 @@ import { IconButton, Menu, MenuItem, Select, Grid, Box } from "@material-ui/core
 import SettingsIcon from '@material-ui/icons/Settings';
 import Brightness5Icon from '@material-ui/icons/Brightness5';
 import BrightnessHighIcon from '@material-ui/icons/BrightnessHigh';
+import { EditorSettingsContext } from '../../../contexts/EditorSettingsContext';
 
 export default class EditorSettingsMenu extends React.Component {
+  static contextType = EditorSettingsContext;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -33,15 +36,15 @@ export default class EditorSettingsMenu extends React.Component {
 
   onSelectedColorMode(e) {
     e.preventDefault();
-    this.props.applySettings("darkTheme", !this.props.settings.darkTheme);
+    this.context.updateEditorSettings("darkTheme", !this.context.settings.darkTheme);
   }
 
   onSelectedOrientation(e) {
-    this.props.applySettings("orientation", e.target.value);
+    this.context.updateEditorSettings("orientation", e.target.value);
   }
 
   onSelectedFontSize(e) {
-    this.props.applySettings("fontSize", e.target.value);
+    this.context.updateEditorSettings("fontSize", e.target.value);
   }
 
   render() {
@@ -62,7 +65,7 @@ export default class EditorSettingsMenu extends React.Component {
               <Grid item>Dark mode</Grid>
               <Grid item>
                 <IconButton onClick={this.onSelectedColorMode}>
-                  {this.props.settings.darkTheme ? <BrightnessHighIcon /> : <Brightness5Icon />}
+                  {this.context.settings.darkTheme ? <BrightnessHighIcon /> : <Brightness5Icon />}
                 </IconButton>
 
               </Grid>
@@ -72,7 +75,7 @@ export default class EditorSettingsMenu extends React.Component {
               <Grid item>Orientation</Grid>
               <Grid item>
                 <Select
-                  value={this.props.settings.orientation}
+                  value={this.context.settings.orientation}
                   onChange={this.onSelectedOrientation}
                 >
                   <MenuItem value={"row"}>Vertical</MenuItem>
@@ -85,7 +88,7 @@ export default class EditorSettingsMenu extends React.Component {
               <Grid item>Font size</Grid>
               <Grid item>
                 <Select
-                  value={this.props.settings.fontSize}
+                  value={this.context.settings.fontSize}
                   onChange={this.onSelectedFontSize}
                 >
                   <MenuItem value={12}>12</MenuItem>

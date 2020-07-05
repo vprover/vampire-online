@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Button, ButtonGroup, Dialog, DialogContent } from '@material-ui/core';
 import { DialogTitle } from '../TopBar/OptionsDialog';
 import ProblemLibraryExplorer from './ProblemLibraryExplorer';
@@ -7,7 +7,7 @@ import fileUploadOutline from '@iconify/icons-mdi/file-upload-outline';
 import libraryOutline from '@iconify/icons-ion/library-outline';
 import { makeStyles } from '@material-ui/core/styles';
 import styles from './SlidingButtonsStyles';
-import axios from 'axios';
+import { ExecutionContext } from '../../../contexts/ExecutionContext';
 
 const useStyles = makeStyles(styles);
 
@@ -43,7 +43,7 @@ const SlideDiv = props => {
 
 const UploadProblemFileButton = props => {
   const classes = useStyles();
-  const { updateInput, ...other } = props;
+  const { updateInput } = React.useContext(ExecutionContext);
   return (
     <React.Fragment>
       <input
@@ -59,7 +59,7 @@ const UploadProblemFileButton = props => {
       />
       <label htmlFor="upload-problem-file-button">
         <Button
-          {...other}
+          {...props}
           fullWidth
           className={`${classes.left} ${classes.normalText}`}
           startIcon={<Icon icon={fileUploadOutline} />}
@@ -101,7 +101,7 @@ const ImportProblemFromLibButton = props => {
         </DialogTitle>
 
         <DialogContent>
-          <ProblemLibraryExplorer closeDialog={handleClose} updateInput={updateInput} />
+          <ProblemLibraryExplorer closeDialog={handleClose} />
         </DialogContent>
       </Dialog>
     </React.Fragment>
@@ -109,7 +109,6 @@ const ImportProblemFromLibButton = props => {
 }
 
 const LoadInputMenu = props => {
-  const classes = useStyles();
   return (
     <SlideDiv direction="left">
       <ButtonGroup
@@ -119,12 +118,10 @@ const LoadInputMenu = props => {
         orientation="vertical"
       >
         <UploadProblemFileButton
-          updateInput={props.updateInput}
           style={{ borderBottomLeftRadius: 0, borderBottomRightRadius: 0 }}
         />
 
         <ImportProblemFromLibButton
-          updateInput={props.updateInput}
           style={{ borderTopLeftRadius: 0, borderTopRightRadius: 0 }}
         />
 

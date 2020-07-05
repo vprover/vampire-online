@@ -8,6 +8,7 @@ import contentCopy from '@iconify/icons-mdi/content-copy';
 import axios from 'axios';
 import useStyles from '../Style';
 import { withStyles } from '@material-ui/core/styles';
+import { ExecutionContext } from '../../../../contexts/ExecutionContext';
 
 const CopyIcon = (props) => {
   return (
@@ -18,6 +19,8 @@ const CopyIcon = (props) => {
 }
 
 class OptionsInput extends React.Component {
+  static contextType = ExecutionContext;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -54,9 +57,9 @@ class OptionsInput extends React.Component {
   }
 
   copyOptionsToClipBoard() {
-    console.log(this.props.args);
+    console.log(this.context.args);
     axios.post(`${process.env.REACT_APP_API_HOST}/string-strategy/encode`, {
-      args: JSON.stringify(this.props.args)
+      args: JSON.stringify(this.context.args)
     }).then(res => {
       this.copyToClipboard(res.data);
       this.setState({ copiedSuccess: true });
@@ -73,9 +76,9 @@ class OptionsInput extends React.Component {
     }).then(res => {
       console.log(`Parsed to ${JSON.stringify(res.data)}`);
       for (const [name, val] of Object.entries(res.data)) {
-        this.props.updateArg(name, val);
+        this.context.updateArg(name, val);
       }
-      const decodedArgNames = Object.keys(this.props.args);
+      const decodedArgNames = Object.keys(this.context.args);
       this.setState({
         selectedOptions: this.state.options.filter(o => decodedArgNames.includes(o.name)),
         optionSuggestionsOpened: false
@@ -134,9 +137,6 @@ class OptionsInput extends React.Component {
             tags.map((option, index) => (
               <SelectedOption
                 option={option}
-                updateArg={this.props.updateArg}
-                removeArg={this.props.removeArg}
-                args={this.props.args}
                 key={index}
                 // Seems interesting, but we could also use a simple click
                 onDoubleClick={event => this.setState({ anchorEl: event.target, optionToEdit: option })}
@@ -181,8 +181,6 @@ class OptionsInput extends React.Component {
             }}>
               <ValueSelector
                 option={this.state.optionToEdit}
-                updateArg={this.props.updateArg}
-                args={this.props.args}
                 closePopover={this.closePopover} />
             </FormControl>
           }

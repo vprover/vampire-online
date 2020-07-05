@@ -1,13 +1,16 @@
 import React from 'react'
 import { Tooltip, Chip, Typography } from '@material-ui/core';
+import { ExecutionContext } from '../../../../contexts/ExecutionContext';
 
 export default class SelectedOption extends React.Component {
-  constructor(props) {
+  static contextType = ExecutionContext;
+
+  constructor(props, context) {
     super(props);
 
     this.getInitialValue = this.getInitialValue.bind(this);
-    if (!this.props.args[this.props.option.name]) {
-      this.props.updateArg(this.props.option.name, this.getInitialValue());
+    if (!context.args[this.props.option.name]) {
+      context.updateArg(this.props.option.name, this.getInitialValue());
     }
   }
 
@@ -26,7 +29,8 @@ export default class SelectedOption extends React.Component {
   }
 
   render() {
-    const { option, updateArg, removeArg, onDelete, args, ...otherProps } = this.props;
+    const { option, onDelete, ...otherProps } = this.props;
+    const { removeArg, args } = this.context;
     const { name, description } = option;
     return (
       <Tooltip title={description}>
@@ -34,11 +38,11 @@ export default class SelectedOption extends React.Component {
           size="small"
           label={
             <Typography variant="body2">
-              {`${name}: ${this.props.args[name]}`}
+              {`${name}: ${args[name]}`}
             </Typography >
           }
           onDelete={e => {
-            this.props.removeArg(this.props.option.name);
+            removeArg(this.props.option.name);
             onDelete(e);
           }}
           {...otherProps}

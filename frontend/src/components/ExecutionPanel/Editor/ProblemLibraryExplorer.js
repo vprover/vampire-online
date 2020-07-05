@@ -3,14 +3,15 @@ import { Link, List, ListItem, Tabs, Tab, withStyles, Box } from '@material-ui/c
 import useStyles from '../../OptionsExplorer/Styles';
 import { TabPanel, a11yProps } from '../../OptionsExplorer/component';
 import axios from 'axios';
+import { ExecutionContext } from '../../../contexts/ExecutionContext';
 
 
 const ProblemSelectLink = props => {
-
+  const { updateInput } = React.useContext(ExecutionContext);
   const loadProblem = () => {
     axios.get(`${process.env.REACT_APP_API_HOST}/problem-library/${props.section}/${props.name}`)
       .then(res => {
-        props.updateInput(res.data);
+        updateInput(res.data);
       })
       .catch(error => console.log(`Could not fetch problem ${props.name}: ${error.message}`));
   }
@@ -91,7 +92,6 @@ class ProblemLibraryExplorer extends Component {
                           <ProblemSelectLink
                             section={section.name}
                             name={pb}
-                            updateInput={this.props.updateInput}
                             closeDialog={this.props.closeDialog}
                           />
                         </ListItem>

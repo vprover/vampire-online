@@ -130,7 +130,7 @@ function argsToString(args) {
 
 function vampireParse(clauses) {
   try {
-    execSync(`echo ${clauses} | ./vampire-executables/vampire4.2.2 --mode output`)
+    execSync(`echo '${clauses}' | ./vampire-executables/vampire4.2.2 --mode output`)
     return {
       error: {}
     }
@@ -143,7 +143,7 @@ function vampireParse(clauses) {
 function vampireSolve(clauses, args) {
   try {
     const stringArgs = argsToString(args);
-    const solution = execSync(`echo ${clauses} | ./vampire-executables/vampire4.2.2 ${stringArgs}`).toString()
+    const solution = execSync(`echo '${clauses}' | ./vampire-executables/vampire4.2.2 ${stringArgs}`).toString()
     return {
       rawOutput: `${solution}`
     };

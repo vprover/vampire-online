@@ -42,7 +42,7 @@ class RunButton extends React.Component {
     console.log(this.props.args);
 
     axios.post(`${process.env.REACT_APP_API_HOST}/solve`, {
-      clauses: JSON.stringify(this.props.input),
+      clauses: this.props.input,
       args: JSON.stringify(this.props.args)
     })
       .then(res => {

@@ -25,7 +25,7 @@ class Editor extends React.Component {
   }
 
   callParseAPI(val) {
-    axios.post(`${process.env.REACT_APP_API_HOST}/parse`, { clauses: JSON.stringify(val) })
+    axios.post(`${process.env.REACT_APP_API_HOST}/parse`, { clauses: val })
       .then(res => {
         console.log(res);
         this.setState({

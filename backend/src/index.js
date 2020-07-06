@@ -15,13 +15,16 @@ const shortNameToNameMap = op.extractShortNameToNameMap(vampireOptionSections);
 
 app.post("/solve", (req, res) => {
   console.log(`Solve: ${req.body.clauses}`);
-  res.status(200).json(vampireSolve(req.body.clauses, req.body.args));
+  let args = req.body.args;
+  try { args = JSON.parse(args);}
+  catch (error) { }
+  res.status(200).json(vampireSolve(req.body.clauses, args));
   console.log(`Finished solving`);
 })
 
 app.post("/parse", (req, res) => {
   console.log(`Parse: ${req.body.clauses}`);
-  res.status(200).json(vampireParse(req.body.clauses));
+  res.status(200).json(vampireParse(req.body.clauses, req.body.inputSyntax || "tptp"));
   console.log(`Finished parsing`);
 })
 
@@ -117,10 +120,6 @@ function parseErrorMessage(str) {
 
 function argsToString(args) {
   let str = "";
-  try {
-    args = JSON.parse(args);
-  }
-  catch (error) { }
   for (let [key, value] of Object.entries(args)) {
     if (typeof value === 'boolean') str += `--${key} `;
     else str += `--${key} ${value} `;
@@ -128,9 +127,9 @@ function argsToString(args) {
   return str;
 }
 
-function vampireParse(clauses) {
+function vampireParse(clauses, inputSyntax) {
   try {
-    execSync(`echo '${clauses}' | ./vampire-executables/vampire4.2.2 --mode output`)
+    execSync(`echo '${clauses}' | ./vampire-executables/vampire4.2.2 --input_syntax ${inputSyntax} --mode output`)
     return {
       error: {}
     }
@@ -150,9 +149,12 @@ function vampireSolve(clauses, args) {
   }
   catch (error) {
     console.log(`An \x1b[31merror\x1b[0m occurred while solving\n: ${error.message}\n--stderr: ${error.stderr}\n--stdout: ${error.stdout}`);
+    const parsedError = parseErrorMessage(error.stdout);
+    const portfolioHint = Object.keys(parsedError).length === 0 && (!args["mode"] || args["mode"] !== "portfolio") ? "You can use mode: portfolio to check if vampire can find a solution." : undefined;
     return {
       rawOutput: `${error.stdout}`,
-      error: parseErrorMessage(error.stdout)
+      error: parsedError,
+      info: portfolioHint
     };
   }
 }

@@ -51,6 +51,9 @@ class RunButton extends React.Component {
         this.setState({
           apiCallStatus: "success"
         })
+        if (res.data.info) {
+          this.props.createAlert("info", res.data.info);
+        }
       })
       .catch(error => {
         this.setState({

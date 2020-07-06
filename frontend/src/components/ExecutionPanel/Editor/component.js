@@ -27,11 +27,12 @@ class Editor extends Component {
   }
 
   callParseAPI(val) {
-    axios.post(`${process.env.REACT_APP_API_HOST}/parse`, { clauses: val })
+    const syntax = this.props.execCtx.args["input_syntax"];
+    axios.post(`${process.env.REACT_APP_API_HOST}/parse`, { clauses: val, inputSyntax: syntax })
       .then(res => {
         this.setState({
           parseError: res.data.error
-        })
+        });
       });
   }
 
@@ -125,11 +126,11 @@ const withContexts = Component => {
                   execCtx => {
                     return (
                       <Component
-                      {...props}
-                      readOnly={props.type === 'output'}
-                      settings={settingsCtx.settings}
-                      execCtx={execCtx} />
-                      )
+                        {...props}
+                        readOnly={props.type === 'output'}
+                        settings={settingsCtx.settings}
+                        execCtx={execCtx} />
+                    )
                   }
                 }
               </ExecutionContext.Consumer>

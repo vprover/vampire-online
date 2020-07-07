@@ -1,29 +1,16 @@
 import React from 'react';
-import { Dialog, DialogContent, IconButton, Tooltip, Typography } from '@material-ui/core';
+import { Dialog, DialogContent, IconButton, Tooltip, Typography, Button } from '@material-ui/core';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import CloseIcon from '@material-ui/icons/Close';
 import HelpIcon from '@material-ui/icons/Help';
 import OptionsExplorer from '../../OptionsExplorer/component';
 import { withStyles } from '@material-ui/styles';
+import useStyles from './Style';
 
-const dialogTitleStyle = (theme) => ({
-  root: {
-    marginLeft: "2rem",
-    marginBottom: "-1.4rem",
-    paddingTop: "1rem",
-  },
-  closeButton: {
-    position: 'absolute',
-    right: theme.spacing(1),
-    top: theme.spacing(1),
-    color: theme.palette.grey[500],
-  },
-});
-
-const DialogTitle = withStyles(dialogTitleStyle)((props) => {
+const DialogTitle = withStyles(useStyles)((props) => {
   const { children, textVariant, classes, onClose, ...other } = props;
   return (
-    <MuiDialogTitle disableTypography className={classes.root} {...other}>
+    <MuiDialogTitle disableTypography className={classes.dialogTitle} {...other}>
       <Typography variant={textVariant}>{children}</Typography>
       {onClose ? (
         <IconButton aria-label="close" className={classes.closeButton} onClick={onClose}>
@@ -34,26 +21,22 @@ const DialogTitle = withStyles(dialogTitleStyle)((props) => {
   );
 });
 
-const useStyles = theme => ({
-  paper: {
-    height: '90%',
-  }
-});
-
 class OptionsDialog extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       open: false
     }
+    this.handleClickOpen = this.handleClickOpen.bind(this);
+    this.handleClose = this.handleClose.bind(this);
   }
 
-  handleClickOpen = () => {
+  handleClickOpen() {
     this.setState({ open: true });
   };
 
 
-  handleClose = () => {
+  handleClose() {
     this.setState({ open: false });
   }
 
@@ -61,12 +44,6 @@ class OptionsDialog extends React.Component {
     const { classes } = this.props;
     return (
       <React.Fragment>
-        <Tooltip title="Vampire Options Manual">
-          <IconButton color="inherit" onClick={this.handleClickOpen}>
-            <HelpIcon />
-          </IconButton>
-        </Tooltip>
-
         <Dialog
           fullWidth={true}
           maxWidth="lg"

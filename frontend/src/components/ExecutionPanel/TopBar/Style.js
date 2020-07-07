@@ -55,6 +55,23 @@ const useStyles = theme => {
       '& .MuiInput-input': {
         color: c
       }
+    },
+    normalText: {
+      textTransform: "none",
+    },
+    dialogTitle: {
+      marginLeft: "2rem",
+      marginBottom: "-1.4rem",
+      paddingTop: "1rem",
+    },
+    closeButton: {
+      position: 'absolute',
+      right: theme.spacing(1),
+      top: theme.spacing(1),
+      color: theme.palette.grey[500],
+    },
+    paper: {
+      height: '90%',
     }
   })
 };

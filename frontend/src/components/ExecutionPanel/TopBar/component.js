@@ -6,6 +6,8 @@ import EditorSettingsMenu from "./EditorSettingsMenu";
 import OptionsDialog from "./OptionsDialog";
 import OptionsInput from "./OptionsInput/component";
 import InputLanguageSelector from "./InputLanguageSelector";
+import HelpButton from "./HelpButton";
+
 
 const TopBar = props => {
   return (
@@ -17,7 +19,8 @@ const TopBar = props => {
         <OptionsInput
           createAlert={props.createAlert} />
         <div style={{ marginLeft: "auto", display: "flex" }}>
-          <OptionsDialog createAlert={props.createAlert} />
+          {/* <OptionsDialog createAlert={props.createAlert} /> */}
+          <HelpButton />
           <InputLanguageSelector />
           <TimeLimitInput />
           <EditorSettingsMenu />

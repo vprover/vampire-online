@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 export const EditorSettingsContext = React.createContext({
   darkTheme: true,
-  fontSize: 14,
+  fontSize: 16,
   orientation: "row"
 });
 
@@ -11,7 +11,7 @@ export class EditorSettingsContextProvider extends Component {
     super(props);
     this.state = {
       darkTheme: true,
-      fontSize: 14,
+      fontSize: 16,
       orientation: "row"
     }
     this.updateEditorSettings = this.updateEditorSettings.bind(this);

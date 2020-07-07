@@ -91,10 +91,10 @@ export default class EditorSettingsMenu extends React.Component {
                   value={this.context.settings.fontSize}
                   onChange={this.onSelectedFontSize}
                 >
-                  <MenuItem value={12}>12</MenuItem>
                   <MenuItem value={14}>14</MenuItem>
                   <MenuItem value={16}>16</MenuItem>
                   <MenuItem value={20}>20</MenuItem>
+                  <MenuItem value={22}>22</MenuItem>
                 </Select>
               </Grid>
             </Grid>

@@ -4,12 +4,12 @@ import { Box, TextField, IconButton, SvgIcon, Tooltip, Popover, FormControl } fr
 import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete';
 import SelectedOption from './SelectedOption';
 import ValueSelector from "./ValueSelector";
-import AlertSnackbar from '../../AlertSnackbar';
 import { Icon, InlineIcon } from '@iconify/react';
 import contentCopy from '@iconify/icons-mdi/content-copy';
 import axios from 'axios';
 import useStyles from '../Style';
 import { withStyles } from '@material-ui/core/styles';
+import { withSnackbar } from 'notistack';
 
 const CopyIcon = (props) => {
   return (
@@ -63,9 +63,9 @@ class OptionsInput extends React.Component {
       args: JSON.stringify(this.context.args)
     }).then(res => {
       this.copyToClipboard(res.data);
-      this.setState({ feedback: { severity: "success", message: "Copied strategy to clipboard" } });
+      this.props.enqueueSnackbar(`Copied strategy to clipboard`, { variant: "success" });
     }).catch(error => {
-      this.setState({ feedback: { severity: "success", message: `Could not encode options, ${error.message}` } })
+      this.props.enqueueSnackbar(`Could not encode options, ${error.message}`, { variant: "error" });
     });
   }
 
@@ -83,10 +83,10 @@ class OptionsInput extends React.Component {
       this.setState({
         selectedOptions: this.state.options.filter(o => decodedArgNames.includes(o.name)),
         optionSuggestionsOpened: false,
-        feedback: { severity: "success", message: "Options decoded" }
       });
+      this.props.enqueueSnackbar(`Options decoded`, { variant: "success" });
     }).catch(error => {
-      this.setState({ feedback: { severity: "error", message: `Could not decode string strategy, ${error.message}` } });
+      this.props.enqueueSnackbar(`Could not decode string strategy, ${error.message}`, { variant: "error" });
     });
   }
 
@@ -194,14 +194,9 @@ class OptionsInput extends React.Component {
             <CopyIcon />
           </IconButton>
         </Tooltip>
-
-        <AlertSnackbar
-          feedback={this.state.feedback}
-          onClose={() => this.setState({ feedback: undefined })} />
-
       </Box >
     )
   }
 }
 
-export default withStyles(useStyles)(OptionsInput);
+export default withSnackbar(withStyles(useStyles)(OptionsInput));

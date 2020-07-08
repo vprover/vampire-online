@@ -5,6 +5,8 @@ import { withStyles } from '@material-ui/core/styles';
 import { grey } from '@material-ui/core/colors';
 import axios from 'axios';
 import { ExecutionContext } from '../../contexts/ExecutionContext';
+import { Alert } from '@material-ui/lab';
+import { withSnackbar } from 'notistack';
 
 const useStyles = theme => ({
   buttonProgress: {
@@ -31,14 +33,13 @@ class RunButton extends React.Component {
     super(props);
     this.state = {
       loading: false,
-      apiCallStatus: "no-call"
     }
     this.callSolveAPI = this.callSolveAPI.bind(this);
   }
 
   callSolveAPI() {
     this.setState({
-      apiCallStatus: "loading"
+      loading: true
     });
 
     axios.post(`${process.env.REACT_APP_API_HOST}/solve`, {
@@ -48,21 +49,27 @@ class RunButton extends React.Component {
       .then(res => {
         console.log(res);
         this.context.updateOutput(res.data);
-        this.setState({
-          apiCallStatus: "success"
-        })
-        if (res.data.info) {
-          this.props.createAlert("info", res.data.info);
+        if (res.data.error) {
+          if (Object.keys(res.data.error).length === 0) {
+            this.props.enqueueSnackbar("No solution was found", { variant: "warning" });
+          }
+          else {
+            this.props.enqueueSnackbar("Could not solve due to parsing error", { variant: "error" });
+          }
+          if (res.data.info) {
+            this.props.enqueueSnackbar(res.data.info, { variant: "info" });
+          }
+        }
+        else {
+          this.props.enqueueSnackbar("Problem solved", { variant: "success" });
         }
       })
       .catch(error => {
-        this.setState({
-          apiCallStatus: "fail"
-        });
         let msg = error.response ? `Status ${error.response.status}: ` : "";
         msg += error.message;
         this.props.createAlert("error", msg);
-      });
+      })
+      .finally(() => { this.setState({ loading: false }) })
   }
 
   render() {
@@ -84,7 +91,7 @@ class RunButton extends React.Component {
               variant="contained"
               className={classes.button}
               endIcon={<PlayArrowIcon />}
-              disabled={this.state.apiCallStatus === "loading"}
+              disabled={this.state.loading === true}
               onClick={this.callSolveAPI}>
               Run
             </Button>
@@ -92,10 +99,10 @@ class RunButton extends React.Component {
         {/* <Backdrop open={this.state.apiCallStatus === "loading"}>
           <CircularProgress />
         </Backdrop> */}
-        {this.state.apiCallStatus === "loading" && <CircularProgress size={30} className={classes.buttonProgress} />}
+        {this.state.loading === true && <CircularProgress size={30} className={classes.buttonProgress} />}
       </Box>
     );
   }
 }
 
-export default withStyles(useStyles)(RunButton)
+export default withSnackbar(withStyles(useStyles)(RunButton))

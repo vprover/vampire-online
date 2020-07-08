@@ -43,17 +43,22 @@ export const SlideDiv = props => {
 
 const UploadProblemFileButton = props => {
   const classes = useStyles();
-  const { updateInput } = React.useContext(ExecutionContext);
+  const { updateInput, updateArg } = React.useContext(ExecutionContext);
   return (
     <React.Fragment>
       <input
-        accept=".tptp, .p"
+        accept=".tptp, .p, .smt2"
         style={{ display: "none" }}
         id="upload-problem-file-button"
         type="file"
         onChange={event => {
           const reader = new FileReader();
-          reader.onload = (event => updateInput(event.target.result));
+          const extension = event.target.files[0].name.split('.').pop().toLowerCase();
+          reader.onload = (event => {
+            updateInput(event.target.result);
+            if (extension === "smt2") updateArg("input_syntax", "smtlib2");
+            else updateArg("input_syntax", "tptp");
+          });
           reader.readAsText(event.target.files[0]);
         }}
       />

@@ -1,9 +1,10 @@
 import React from 'react';
 import { Container } from '@material-ui/core';
 import ExecutionPanel from '../ExecutionPanel/component';
-import { createMuiTheme, ThemeProvider, responsiveFontSizes } from '@material-ui/core/styles';
+import TutorialPanel from '../TutorialPanel/component';
+import { createMuiTheme, ThemeProvider, responsiveFontSizes, makeStyles } from '@material-ui/core/styles';
 import { blue, red } from '@material-ui/core/colors';
-import './App.css';
+import { BrowserRouter, Switch, Route } from 'react-router-dom';
 
 const theme = responsiveFontSizes(
   createMuiTheme({
@@ -23,19 +24,35 @@ const theme = responsiveFontSizes(
   })
 );
 
-export default class App extends React.Component {
+const useStyle = makeStyles(theme => {
+  return (
+    {
+      topContainer: {
+        padding: "1rem",
+        paddingLeft: "4rem",
+        paddingRight: "4rem",
+      }
+    })
+})
 
-  constructor(props) {
-    super(props);
-  }
+const App = props => {
+  const classes = useStyle();
+  return (
+    <ThemeProvider theme={theme}>
+      <Container
+        className={classes.topContainer}
+        maxWidth="xl"
+      >
+        <BrowserRouter>
+          <Switch>
+            <Route path="/" exact component={ExecutionPanel} />
+            <Route path="/tutorial" component={TutorialPanel} />
+          </Switch>
+        </BrowserRouter>
+      </Container>
+    </ThemeProvider>
+  );
 
-  render() {
-    return (
-      <ThemeProvider theme={theme}>
-        <Container p="0.5em">
-          <ExecutionPanel />
-        </Container>
-      </ThemeProvider>
-    );
-  }
 }
+
+export default App;

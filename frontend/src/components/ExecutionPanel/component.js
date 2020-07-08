@@ -2,7 +2,7 @@ import React from 'react';
 import { Grid } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
 import Editor from './Editor/component';
-import TopBar from './TopBar/component';
+import ExecutionBar from '../ExecutionBar/component';
 import { EditorSettingsContext, EditorSettingsContextProvider } from '../../contexts/EditorSettingsContext';
 import { ExecutionContextProvider } from '../../contexts/ExecutionContext';
 
@@ -21,7 +21,8 @@ export default class ExecutionPanel extends React.Component {
         <ExecutionContextProvider>
           <React.Fragment>
 
-            <TopBar
+            <ExecutionBar
+              style={{ marginBottom: "1.5rem" }}
               createAlert={(s, msg) => { this.setState({ alert: { severity: s, message: msg } }) }}
             />
 
@@ -35,10 +36,14 @@ export default class ExecutionPanel extends React.Component {
             <EditorSettingsContext.Consumer>
               {
                 value => {
-                  console.log(value);
                   return (
-                    <Grid container direction={value.settings.orientation} justify="space-evenly" alignItems="center" spacing={3}>
-
+                    <Grid
+                      container
+                      direction={value.settings.orientation}
+                      justify="space-evenly"
+                      alignItems="center"
+                      spacing={2}
+                      style={{ paddingLeft: "4rem", paddingRight: "4rem" }}>
                       <Grid item>
                         {/* <Editor settings={this.state.editorSettings} value={this.state.input} updateInput={this.updateUserInput} error={this.state.output.errors} /> */}
                         <Editor type="input" />
@@ -49,7 +54,6 @@ export default class ExecutionPanel extends React.Component {
                         <Editor type="output" />
                       </Grid>
                     </Grid>
-
                   )
                 }
               }

@@ -83,8 +83,8 @@ class Editor extends Component {
     return (
       <div style={{ position: "relative" }}>
         {
-          !this.props.readOnly &&
-          <LoadInputMenu updateInput={this.props.updateInput} />
+          this.props.type === 'input' &&
+          <LoadInputMenu />
         }
         <Resizable
           className={classes.resizable}

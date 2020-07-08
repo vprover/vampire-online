@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, ButtonGroup, Dialog, DialogContent } from '@material-ui/core';
-import { DialogTitle } from '../TopBar/OptionsDialog';
+import { DialogTitle } from '../../ExecutionBar/OptionsDialog';
 import ProblemLibraryExplorer from './ProblemLibraryExplorer';
 import { Icon, InlineIcon } from '@iconify/react';
 import fileUploadOutline from '@iconify/icons-mdi/file-upload-outline';
@@ -11,7 +11,7 @@ import { ExecutionContext } from '../../../contexts/ExecutionContext';
 
 const useStyles = makeStyles(styles);
 
-const SlideDiv = props => {
+export const SlideDiv = props => {
   const [hoverTimer, setHoverTimer] = React.useState(null);
   const [open, setOpen] = React.useState(false);
   const { children, direction, ...other } = props;

@@ -6,28 +6,41 @@ import EditorSettingsMenu from "./EditorSettingsMenu";
 import OptionsDialog from "./OptionsDialog";
 import OptionsInput from "./OptionsInput/component";
 import InputLanguageSelector from "./InputLanguageSelector";
+import RefreshInputButton from "./RefreshInputButton";
 import HelpButton from "./HelpButton";
 
-
-const TopBar = props => {
+const ExecutionBar = props => {
+  const { style } = props;
   return (
-    <AppBar position="static" style={{ margin: "0.4em" }}>
+    <AppBar position="static" style={{ margin: "0.4em", ...style }}>
       <Toolbar>
         <RunButton
           createAlert={props.createAlert}
         />
         <OptionsInput
-          createAlert={props.createAlert} />
+          createAlert={props.createAlert}
+          tutorial={props.tutorial}
+        />
         <div style={{ marginLeft: "auto", display: "flex" }}>
-          {/* <OptionsDialog createAlert={props.createAlert} /> */}
-          <HelpButton />
-          <InputLanguageSelector />
+          {
+            !props.tutorial
+            && (
+              <React.Fragment>
+                <HelpButton />
+                <InputLanguageSelector />
+              </React.Fragment>
+            )
+          }
           <TimeLimitInput />
-          <EditorSettingsMenu />
+          {
+            props.tutorial
+            && <RefreshInputButton />
+          }
+          <EditorSettingsMenu hideOrientation />
         </div>
       </Toolbar>
     </AppBar>
   );
 }
 
-export default TopBar;
+export default ExecutionBar;

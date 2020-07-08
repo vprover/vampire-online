@@ -72,6 +72,14 @@ const useStyles = theme => {
     },
     paper: {
       height: '90%',
+    },
+    extraSmall: {
+      padding: 0,
+      margin: 0,
+      '& input': {
+        padding: [0, '!important'],
+        margin: [0, '!important'],
+      }
     }
   })
 };

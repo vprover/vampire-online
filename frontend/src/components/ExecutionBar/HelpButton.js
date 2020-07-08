@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { IconButton, Popover, ButtonGroup, Button } from '@material-ui/core';
+import { IconButton, Popover, ButtonGroup, Button, Tooltip } from '@material-ui/core';
 import HelpIcon from '@material-ui/icons/Help';
 import { withStyles } from '@material-ui/core/styles';
 import useStyles from './Style';
@@ -31,14 +31,16 @@ class HelpButton extends Component {
 
     return (
       <Fragment>
-        <IconButton
-          color="inherit"
-          aria-owns={open ? "helper-menu" : undefined}
-          aria-haspopup="true"
-          onClick={this.handlePopoverOpen}
-        >
-          <HelpIcon />
-        </IconButton>
+        <Tooltip title="Get help">
+          <IconButton
+            color="inherit"
+            aria-owns={open ? "helper-menu" : undefined}
+            aria-haspopup="true"
+            onClick={this.handlePopoverOpen}
+          >
+            <HelpIcon />
+          </IconButton>
+        </Tooltip>
 
         <Popover
           id="helper-menu"

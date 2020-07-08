@@ -29,8 +29,8 @@ const useStyle = makeStyles(theme => {
     {
       topContainer: {
         padding: "1rem",
-        paddingLeft: "4rem",
-        paddingRight: "4rem",
+        paddingLeft: "2rem",
+        paddingRight: "2rem",
       }
     })
 })

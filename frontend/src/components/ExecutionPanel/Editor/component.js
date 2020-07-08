@@ -100,8 +100,8 @@ class Editor extends Component {
             className={`${this.props.settings.darkTheme ? classes.borderDarkTheme : classes.borderLightTheme}`}
             height={`${this.state.height}px`}
             width={`${this.state.width}px`}
-            readOnly={this.props.readOnly}
-            value={this.props.readOnly ? this.props.execCtx.output.rawOutput : this.props.execCtx.input}
+            readOnly={this.props.type === 'output'}
+            value={this.props.type === 'output' ? this.props.execCtx.output.rawOutput : this.props.execCtx.input}
             fontSize={this.props.settings.fontSize}
             theme={this.props.settings.darkTheme ? "terminal" : "github"}
             onChange={this.onUserInput}

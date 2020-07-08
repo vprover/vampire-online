@@ -1,14 +1,15 @@
 import React from 'react';
+import { ExecutionContext } from '../../../contexts/ExecutionContext';
 import { Box, TextField, IconButton, SvgIcon, Tooltip, Popover, FormControl } from '@material-ui/core';
 import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete';
 import SelectedOption from './SelectedOption';
 import ValueSelector from "./ValueSelector";
+import AlertSnackbar from '../../AlertSnackbar';
 import { Icon, InlineIcon } from '@iconify/react';
 import contentCopy from '@iconify/icons-mdi/content-copy';
 import axios from 'axios';
 import useStyles from '../Style';
 import { withStyles } from '@material-ui/core/styles';
-import { ExecutionContext } from '../../../contexts/ExecutionContext';
 
 const CopyIcon = (props) => {
   return (
@@ -24,7 +25,7 @@ class OptionsInput extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      copiedSuccess: false,
+      feedback: undefined,
       selectedOptions: [],
       optionSuggestionsOpened: false,
       anchorEl: null,
@@ -62,9 +63,9 @@ class OptionsInput extends React.Component {
       args: JSON.stringify(this.context.args)
     }).then(res => {
       this.copyToClipboard(res.data);
-      this.setState({ copiedSuccess: true });
+      this.setState({ feedback: { severity: "success", message: "Copied strategy to clipboard" } });
     }).catch(error => {
-      this.props.createAlert("error", `Could not encode options: ${error.message}`);
+      this.setState({ feedback: { severity: "success", message: `Could not encode options, ${error.message}` } })
     });
   }
 
@@ -81,10 +82,11 @@ class OptionsInput extends React.Component {
       const decodedArgNames = Object.keys(this.context.args);
       this.setState({
         selectedOptions: this.state.options.filter(o => decodedArgNames.includes(o.name)),
-        optionSuggestionsOpened: false
+        optionSuggestionsOpened: false,
+        feedback: { severity: "success", message: "Options decoded" }
       });
     }).catch(error => {
-      this.props.createAlert("error", `Could not decode string strategy: ${error.message}`);
+      this.setState({ feedback: { severity: "error", message: `Could not decode string strategy, ${error.message}` } });
     });
   }
 
@@ -187,16 +189,16 @@ class OptionsInput extends React.Component {
           }
         </Popover>
 
-        <Tooltip
-          title="Copied as strategy"
-          leaveDelay={1500}
-          open={this.state.copiedSuccess}
-          disableHoverListener
-          onClose={() => this.setState({ copiedSuccess: false })}>
+        <Tooltip title="Copy as strategy">
           <IconButton color="inherit" onClick={this.copyOptionsToClipBoard}>
             <CopyIcon />
           </IconButton>
         </Tooltip>
+
+        <AlertSnackbar
+          feedback={this.state.feedback}
+          onClose={() => this.setState({ feedback: undefined })} />
+
       </Box >
     )
   }

@@ -45,12 +45,10 @@ export default class ExecutionPanel extends React.Component {
                       spacing={2}
                       style={{ paddingLeft: "4rem", paddingRight: "4rem" }}>
                       <Grid item>
-                        {/* <Editor settings={this.state.editorSettings} value={this.state.input} updateInput={this.updateUserInput} error={this.state.output.errors} /> */}
                         <Editor type="input" />
                       </Grid>
 
                       <Grid item>
-                        {/* <Editor settings={this.state.editorSettings} value={this.state.output.rawOutput} readOnly={true} /> */}
                         <Editor type="output" />
                       </Grid>
                     </Grid>

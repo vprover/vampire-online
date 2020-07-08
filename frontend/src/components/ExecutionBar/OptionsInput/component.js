@@ -8,7 +8,7 @@ import contentCopy from '@iconify/icons-mdi/content-copy';
 import axios from 'axios';
 import useStyles from '../Style';
 import { withStyles } from '@material-ui/core/styles';
-import { ExecutionContext } from '../../../../contexts/ExecutionContext';
+import { ExecutionContext } from '../../../contexts/ExecutionContext';
 
 const CopyIcon = (props) => {
   return (
@@ -148,6 +148,7 @@ class OptionsInput extends React.Component {
             return (
               <TextField
                 {...params}
+                // className={`${classes.textField} ${this.props.tutorial ? classes.extraSmall : undefined}`}
                 className={classes.textField}
                 variant="outlined"
                 placeholder="Vampire Options"

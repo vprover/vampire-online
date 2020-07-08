@@ -2,7 +2,7 @@ import React from "react";
 import { Box, TextField, InputAdornment } from "@material-ui/core";
 import { withStyles } from '@material-ui/core/styles';
 import useStyles from './Style';
-import { ExecutionContext } from "../../../contexts/ExecutionContext";
+import { ExecutionContext } from "../../contexts/ExecutionContext";
 
 class TimeLimitInput extends React.Component {
   static contextType = ExecutionContext;

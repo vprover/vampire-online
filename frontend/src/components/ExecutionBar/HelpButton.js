@@ -4,6 +4,7 @@ import HelpIcon from '@material-ui/icons/Help';
 import { withStyles } from '@material-ui/core/styles';
 import useStyles from './Style';
 import OptionsDialog from './OptionsDialog';
+import { Link } from 'react-router-dom';
 
 class HelpButton extends Component {
   constructor(props) {
@@ -53,12 +54,17 @@ class HelpButton extends Component {
           anchorEl={this.state.anchorEl}
           onClose={this.handlePopoverClose}
         >
+
           <ButtonGroup color="secondary">
-            <Button className={classes.normalText}>Tutorial Mode</Button>
+
+            <Button className={classes.normalText} component={Link} to="/tutorial">
+              Tutorial Mode
+            </Button>
+
             <Button
               onClick={() => {
-                this.handlePopoverClose();
                 this.optionsExplorerRef.current.handleClickOpen();
+                this.handlePopoverClose();
               }}
               className={classes.normalText}
             >

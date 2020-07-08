@@ -1,10 +1,10 @@
 import React from 'react';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
-import { Box, Button, CircularProgress, Backdrop } from '@material-ui/core';
+import { Box, Button, IconButton, CircularProgress, Backdrop } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import { grey } from '@material-ui/core/colors';
 import axios from 'axios';
-import { ExecutionContext } from '../../../contexts/ExecutionContext';
+import { ExecutionContext } from '../../contexts/ExecutionContext';
 
 const useStyles = theme => ({
   buttonProgress: {
@@ -69,14 +69,26 @@ class RunButton extends React.Component {
     const { classes } = this.props;
     return (
       <Box position="relative">
-        <Button
-          variant="contained"
-          className={classes.button}
-          endIcon={<PlayArrowIcon />}
-          disabled={this.state.apiCallStatus === "loading"}
-          onClick={this.callSolveAPI}>
-          Run
-        </Button>
+        {
+          this.props.iconOnly ?
+            <IconButton
+              variant="contained"
+              className={classes.button}
+              style={{ borderRadius: "4px" }}
+              disabled={this.state.apiCallStatus === "loading"}
+              onClick={this.callSolveAPI}>
+              <PlayArrowIcon />
+            </IconButton>
+            :
+            <Button
+              variant="contained"
+              className={classes.button}
+              endIcon={<PlayArrowIcon />}
+              disabled={this.state.apiCallStatus === "loading"}
+              onClick={this.callSolveAPI}>
+              Run
+            </Button>
+        }
         {/* <Backdrop open={this.state.apiCallStatus === "loading"}>
           <CircularProgress />
         </Backdrop> */}

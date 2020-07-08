@@ -1,6 +1,6 @@
 import React from 'react'
 import { Tooltip, Chip, Typography } from '@material-ui/core';
-import { ExecutionContext } from '../../../../contexts/ExecutionContext';
+import { ExecutionContext } from '../../../contexts/ExecutionContext';
 
 export default class SelectedOption extends React.Component {
   static contextType = ExecutionContext;

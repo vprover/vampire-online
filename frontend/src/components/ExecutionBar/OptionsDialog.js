@@ -3,7 +3,7 @@ import { Dialog, DialogContent, IconButton, Tooltip, Typography, Button } from '
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import CloseIcon from '@material-ui/icons/Close';
 import HelpIcon from '@material-ui/icons/Help';
-import OptionsExplorer from '../../OptionsExplorer/component';
+import OptionsExplorer from '../OptionsExplorer/component';
 import { withStyles } from '@material-ui/styles';
 import useStyles from './Style';
 

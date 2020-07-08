@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { FormControl, Select, InputLabel, MenuItem } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import useStyles from './Style';
-import { ExecutionContext } from '../../../contexts/ExecutionContext';
+import { ExecutionContext } from '../../contexts/ExecutionContext';
 
 class InputLanguageSelector extends Component {
   static contextType = ExecutionContext;

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Input, IconButton, Select, MenuItem, Switch } from "@material-ui/core";
 import CheckIcon from '@material-ui/icons/Check';
-import { ExecutionContext } from "../../../../contexts/ExecutionContext";
+import { ExecutionContext } from "../../../contexts/ExecutionContext";
 
 export default class ValueSelector extends React.Component {
   static contextType = ExecutionContext;

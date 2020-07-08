@@ -5,6 +5,7 @@ export const ExecutionContext = React.createContext({
   output: {},
   args: {},
   updateInput: (newInput) => { },
+  restoreInput: () => { },
   updateOutput: (newOutput) => { },
   updateArg: (name, newVal) => { },
   removeArg: (name) => { },
@@ -14,11 +15,12 @@ export class ExecutionContextProvider extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      input: "",
+      input: this.props.defaultInput || "",
       output: {},
       args: {},
     }
     this.updateInput = this.updateInput.bind(this);
+    this.restoreInput = this.restoreInput.bind(this);
     this.updateOutput = this.updateOutput.bind(this);
     this.updateArg = this.updateArg.bind(this);
     this.removeArg = this.removeArg.bind(this);
@@ -28,6 +30,12 @@ export class ExecutionContextProvider extends Component {
     this.setState({
       input: input
     });
+  }
+
+  restoreInput() {
+    this.setState({
+      input: this.props.defaultInput
+    })
   }
 
   updateOutput(output) {
@@ -53,16 +61,22 @@ export class ExecutionContextProvider extends Component {
   }
 
   render() {
+    const baseValues = {
+      ...this.state,
+      updateInput: this.updateInput,
+      restoreInput: this.restoreInput,
+      updateOutput: this.updateOutput,
+      updateArg: this.updateArg,
+      removeArg: this.removeArg,
+    }
     return (
-      <ExecutionContext.Provider value={{
-        ...this.state,
-        updateInput: this.updateInput,
-        updateOutput: this.updateOutput,
-        updateArg: this.updateArg,
-        removeArg: this.removeArg
-      }}>
+      <ExecutionContext.Provider
+        value={{
+          ...baseValues,
+          ...this.props.overrideValues
+        }}>
         {this.props.children}
-      </ExecutionContext.Provider>
+      </ExecutionContext.Provider >
     )
   }
 }

@@ -18,7 +18,7 @@ const useStyles = theme => {
       top: "10px",
       color: "white",
       zIndex: 4,
-      backgroundColor: fade(theme.palette.secondary.main, 0.7),
+      backgroundColor: fade(theme.palette.secondary.main, 0.8),
       "&:hover": {
         backgroundColor: theme.palette.secondary.main,
       }

@@ -1,9 +1,9 @@
-import React, { Component } from 'react'
-import { EditorSettingsContextProvider } from '../../contexts/EditorSettingsContext'
-import DemoProblemDisplay from './DemoProblemDisplay/component'
-import Editor from './Editor'
-import { ExecutionContextProvider } from '../../contexts/ExecutionContext'
-
+import React, { Component } from 'react';
+import { EditorSettingsContextProvider } from '../../contexts/EditorSettingsContext';
+import DemoProblemDisplay from './DemoProblemDisplay/component';
+import Editor from './Editor';
+import { ExecutionContextProvider } from '../../contexts/ExecutionContext';
+import ContentsDrawer from './ContentsDrawer';
 
 export default class component extends Component {
   render() {
@@ -13,21 +13,31 @@ export default class component extends Component {
           <div
             style={{ display: "flex", justifyContent: "space-between", overflow: "hidden", height: "95vh" }}
           >
+            <ContentsDrawer
+              contents={
+                [
+                  { id: "sec1", name: "Basic code with text" },
+                  { id: "sec2", name: "Learning TPTP syntax" },
+                  { id: "sec3", name: "A large input example" },
+                ]
+              }
+            />
+
             <div style={{ width: "60%", overflowY: "auto", padding: "1rem" }}>
               <h2>Tutorial Demo</h2>
-              <div>
+              <div id="sec1">
                 <h3>Basic code and text</h3>
                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin tincidunt quis ex at tempus. Donec tincidunt neque et bibendum placerat. Fusce purus tellus, vestibulum sit amet sem nec, finibus laoreet dui. Integer at lectus sodales, rutrum purus et, porta ex. Maecenas consequat lacus est, malesuada tincidunt nulla vulputate a. Etiam nec neque orci. Duis gravida iaculis tincidunt. Quisque sit amet odio pharetra, elementum odio et, ornare nisl. Fusce diam libero, vestibulum quis nisl nec, condimentum varius dui. </p>
                 <p>Donec nunc quam, rutrum pulvinar imperdiet eget, pellentesque sed nibh. Aenean in tristique urna. Quisque semper libero justo, eget aliquet mi mattis eu. Donec vel scelerisque arcu. Integer odio libero, viverra a nunc sed, congue porta massa. Vivamus finibus tellus aliquam, hendrerit mi sed, eleifend orci. Nullam sed elit non felis semper ultrices. Sed id congue dui, a varius erat. Duis ut est posuere sem blandit feugiat. Praesent euismod egestas metus, ut rhoncus lorem pharetra eu. Fusce a molestie massa. In commodo risus et libero vestibulum interdum. Nam ultricies nulla mi, non pellentesque quam ultricies non. Maecenas finibus quam ipsum, vulputate iaculis elit malesuada et. Nulla luctus, libero eu consequat sollicitudin, sem nisi scelerisque nunc, et posuere libero elit in lacus. Suspendisse ut magna id augue tincidunt pellentesque. </p>
                 <DemoProblemDisplay defaultInput={"fof(one,axiom, ![X] : (rich(X) => happy(X))).\nfof(two,axiom, rich(giles)).\nfof(three, conjecture, happy(giles))."} />
               </div>
-              <div>
+              <div id="sec2">
                 <h3>Learning TPTP syntax</h3>
                 <p>We could deliberately give erroneous input and disable parsing in the editor if we're teaching a user the syntax.</p>
                 <p>Integer nec pellentesque tortor, eget consequat justo. Praesent sit amet velit dui. Donec euismod elit sagittis dui commodo auctor. Vivamus faucibus tellus at diam congue, porta dignissim augue tristique. Nam nisl eros, commodo nec sem id, dapibus interdum turpis. Cras ut interdum nisl, sit amet imperdiet quam. Mauris fermentum, sem quis dignissim pharetra, tellus nulla efficitur odio, eget volutpat elit ex vitae nibh. Vivamus semper et tellus sit amet dignissim. Phasellus risus elit, accumsan sed enim at, varius rutrum leo. </p>
                 <DemoProblemDisplay defaultInput={"fof(one,axiom, ![X] : (rich(X => happy(X))).\nfof(two,conjecture, rich(giles)).\nfof(three, conjecture, happy(giles))."} disableParsingErrors />
               </div>
-              <div>
+              <div id="sec3">
                 <h3>A large input example</h3>
                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eleifend accumsan tortor, a rutrum risus iaculis et. Quisque auctor mattis. </p>
                 <DemoProblemDisplay

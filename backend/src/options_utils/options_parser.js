@@ -1,18 +1,18 @@
+const { appendRestrictions } = require('./restricted_options');
 // const { stringOptions } = require('./options');
 // console.log(stringOptions);
-const { appendRestrictions } = require('./restricted_options');
-
-// console.log(appendRestrictions('any',getSections(stringOptions)[0].options));
+// console.log(appendRestrictions('any', getSections(stringOptions)[0].options));
+// console.log(getSections(stringOptions));
 
 function getSections(str) {
-  const regex = /[*]+\n[*]+\s+(?<name>[a-zA-Z\s]+)\s+[*]+\n[*]+\n{2}(?<content>[^*]*)/g;
+  const regex = /[*]+\n[*]+\s+(?<name>[a-zA-Z\s]+)\s+[*]+\n[*]+\n{2}(?<content>[^]*?(?=[*]{10,}|$))/g;
   let sections = []
   while (result = regex.exec(str)) {
     const sec = result.groups;
     sections.push({
       name: sec.name.trim(),
       options: getOptions(sec.content)
-    })
+    });
   }
   return sections;
 }

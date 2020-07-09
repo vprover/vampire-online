@@ -15,8 +15,7 @@ class Editor extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      prevOrientation: props.settings.orientation,
-      parseError: {},
+      editor: undefined,
       height: props.settings.orientation === "row" ? 550 : 300,
       width: props.settings.orientation === "row" ? 500 : 900,
       d: { width: 0, height: 0 }
@@ -24,21 +23,21 @@ class Editor extends Component {
     this.resize = this.resize.bind(this);
     this.onUserInput = this.onUserInput.bind(this);
     this.callParseAPI = this.callParseAPI.bind(this);
+    this.getErrorAnnotations = this.getErrorAnnotations.bind(this);
   }
 
   callParseAPI(val) {
     const syntax = this.props.execCtx.args["input_syntax"];
     axios.post(`${process.env.REACT_APP_API_HOST}/parse`, { clauses: val, inputSyntax: syntax })
       .then(res => {
-        this.setState({
-          parseError: res.data.error
-        });
+        console.log(res);
+        this.state.editor.getSession().setAnnotations(this.getErrorAnnotations(res.data.error));
       });
   }
 
   onUserInput(value) {
-    this.props.execCtx.updateInput(value);
-    if (!this.props.readOnly) {
+    if (this.props.input) {
+      this.props.execCtx.updateInput(value);
       this.callParseAPI(value);
     }
   }
@@ -51,10 +50,6 @@ class Editor extends Component {
     }));
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
-    return this.state.value === nextState.value || this.props.execCtx.output !== nextProps.output;
-  }
-
   componentDidUpdate(prevProps) {
     if (prevProps.settings.orientation !== this.props.settings.orientation) {
       this.setState({
@@ -64,9 +59,8 @@ class Editor extends Component {
     }
   }
 
-  getErrorAnnotations() {
-    let e = this.state.parseError;
-    if (!e) e = this.props.execCtx.output.error;
+  getErrorAnnotations(error) {
+    const e = error || this.props.execCtx.output.error;
     if (e) {
       return [{
         row: e.line - 1,
@@ -75,7 +69,7 @@ class Editor extends Component {
         text: e.text
       }];
     }
-    return;
+    return [];
   }
 
   render() {
@@ -83,7 +77,7 @@ class Editor extends Component {
     return (
       <div style={{ position: "relative" }}>
         {
-          this.props.type === 'input' &&
+          this.props.input &&
           <LoadInputMenu />
         }
         <Resizable
@@ -98,14 +92,14 @@ class Editor extends Component {
         >
           <AceEditor
             className={`${this.props.settings.darkTheme ? classes.borderDarkTheme : classes.borderLightTheme}`}
+            onLoad={(e) => this.setState({ editor: e })}
             height={`${this.state.height}px`}
             width={`${this.state.width}px`}
-            readOnly={this.props.type === 'output'}
-            value={this.props.type === 'output' ? this.props.execCtx.output.rawOutput : this.props.execCtx.input}
+            readOnly={this.props.output}
+            value={this.props.input ? this.props.execCtx.input : this.props.execCtx.output.rawOutput}
             fontSize={this.props.settings.fontSize}
             theme={this.props.settings.darkTheme ? "terminal" : "github"}
             onChange={this.onUserInput}
-            annotations={this.getErrorAnnotations()}
             setOptions={{ useWorker: false }}
           />
         </Resizable>
@@ -127,7 +121,6 @@ const withContexts = Component => {
                     return (
                       <Component
                         {...props}
-                        readOnly={props.type === 'output'}
                         settings={settingsCtx.settings}
                         execCtx={execCtx} />
                     )

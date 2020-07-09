@@ -5,7 +5,6 @@ import { withStyles } from '@material-ui/core/styles';
 import { grey } from '@material-ui/core/colors';
 import axios from 'axios';
 import { ExecutionContext } from '../../contexts/ExecutionContext';
-import { Alert } from '@material-ui/lab';
 import { withSnackbar } from 'notistack';
 
 const useStyles = theme => ({

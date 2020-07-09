@@ -45,11 +45,11 @@ export default class ExecutionPanel extends React.Component {
                       spacing={2}
                       style={{ paddingLeft: "4rem", paddingRight: "4rem" }}>
                       <Grid item>
-                        <Editor type="input" />
+                        <Editor input />
                       </Grid>
 
                       <Grid item>
-                        <Editor type="output" />
+                        <Editor output />
                       </Grid>
                     </Grid>
                   )

@@ -151,7 +151,7 @@ fof(pel47,conjecture,
             </div>
 
             <div style={{ width: "35%", overflowY: "auto", padding: "1rem" }}>
-              <Editor type="output" />
+              <Editor output />
             </div>
           </div>
         </ExecutionContextProvider>

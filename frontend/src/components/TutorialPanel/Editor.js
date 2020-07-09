@@ -18,7 +18,7 @@ class Editor extends Component {
     this.state = {
       isExpanded: false,
       numberOfInputLines: 0,
-      parseError: {},
+      editor: undefined
     }
     this.onUserInput = this.onUserInput.bind(this);
     this.callParseAPI = this.callParseAPI.bind(this);
@@ -33,15 +33,13 @@ class Editor extends Component {
     const syntax = this.props.execCtx.args["input_syntax"];
     axios.post(`${process.env.REACT_APP_API_HOST}/parse`, { clauses: val, inputSyntax: syntax })
       .then(res => {
-        this.setState({
-          parseError: res.data.error
-        });
+        this.state.editor.getSession().setAnnotations(this.getErrorAnnotations(res.data.error));
       });
   }
 
   onUserInput(value) {
     this.props.execCtx.updateInput(value);
-    if (!this.props.readOnly) {
+    if (!this.props.disableParsingErrors) {
       this.callParseAPI(value);
     }
     this.setState({
@@ -49,9 +47,8 @@ class Editor extends Component {
     })
   }
 
-  getErrorAnnotations() {
-    let e = this.state.parseError;
-    if (!e) e = this.props.execCtx.output.error;
+  getErrorAnnotations(error) {
+    const e = error || this.props.execCtx.output.error;
     if (e) {
       return [{
         row: e.line - 1,
@@ -60,7 +57,7 @@ class Editor extends Component {
         text: e.text
       }];
     }
-    return;
+    return [];
   }
 
   getNumberOfLines(str) {
@@ -69,11 +66,10 @@ class Editor extends Component {
 
   render() {
     const { classes } = this.props;
-    const isOutput = this.props.type === 'output';
     return (
-      <div style={{ position: "relative", height: `${isOutput ? "100%" : undefined}` }}>
+      <div style={{ position: "relative", height: `${this.props.output ? "100%" : undefined}` }}>
         {
-          !isOutput
+          this.props.input
           && this.state.numberOfInputLines > this.defaultNumberOfLines
           &&
           <IconButton
@@ -86,15 +82,15 @@ class Editor extends Component {
 
         <AceEditor
           className={`${this.props.settings.darkTheme ? classes.borderDarkTheme : classes.borderLightTheme}`}
-          maxLines={!isOutput ? (this.state.isExpanded ? Infinity : this.defaultNumberOfLines) : undefined}
-          height={isOutput ? "100%" : undefined}
+          onLoad={(e) => this.setState({ editor: e })}
+          maxLines={this.props.input ? (this.state.isExpanded ? Infinity : this.defaultNumberOfLines) : undefined}
+          height={this.props.output ? "100%" : undefined}
           width="100%"
-          readOnly={isOutput}
-          value={isOutput ? this.props.execCtx.output.rawOutput : this.props.execCtx.input}
+          readOnly={this.props.output}
+          value={this.props.input ? this.props.execCtx.input : this.props.execCtx.output.rawOutput}
           fontSize={this.props.settings.fontSize}
           theme={this.props.settings.darkTheme ? "terminal" : "github"}
-          onChange={this.onUserInput}
-          annotations={!this.props.disableParsingErrors ? this.getErrorAnnotations() : undefined}
+          onChange={this.props.input ? this.onUserInput : undefined}
           setOptions={{ useWorker: false }}
         />
       </div >
@@ -115,7 +111,6 @@ const withContexts = Component => {
                     return (
                       <Component
                         {...props}
-                        readOnly={props.type === 'output'}
                         settings={settingsCtx.settings}
                         execCtx={execCtx} />
                     )

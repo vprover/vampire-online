@@ -15,7 +15,7 @@ const DemoProblemDisplay = (props) => {
         }}
         defaultInput={props.defaultInput} >
         <ExecutionBar tutorial style={{ margin: "0.1rem" }} />
-        <Editor type="input" disableParsingErrors={props.disableParsingErrors} />
+        <Editor input disableParsingErrors={props.disableParsingErrors} />
       </ExecutionContextProvider>
     </div>
   )

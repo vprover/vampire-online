@@ -1,9 +1,16 @@
 import React, { Component } from 'react';
+import axios from 'axios';
 
 export const ExecutionContext = React.createContext({
   input: "",
   output: {},
   args: {},
+  vampireVersion: "_latest",
+  options: {
+    withSections: [],
+    asArray: [],
+    uiRestricted: [],
+  },
   updateInput: (newInput) => { },
   restoreInput: () => { },
   updateOutput: (newOutput) => { },
@@ -18,12 +25,43 @@ export class ExecutionContextProvider extends Component {
       input: this.props.defaultInput || "",
       output: {},
       args: {},
+      vampireVersion: "_latest",
+      options: {
+        withSections: [],
+        asArray: [],
+        uiRestricted: ["time_limit", "input_syntax"],
+      },
     }
     this.updateInput = this.updateInput.bind(this);
     this.restoreInput = this.restoreInput.bind(this);
     this.updateOutput = this.updateOutput.bind(this);
     this.updateArg = this.updateArg.bind(this);
     this.removeArg = this.removeArg.bind(this);
+  }
+
+  componentDidMount() {
+    axios.get(`${process.env.REACT_APP_API_HOST}/options`, { sections: false })
+      .then(res => this.setState(prevState => {
+        return ({
+          options: {
+            ...prevState.options,
+            asArray: res.data,
+          }
+        })
+      }))
+      .catch(error => {
+        console.log(`Could not fetch vampire options: ${error.message}. Try again later!`);
+      });
+    axios.get(`${process.env.REACT_APP_API_HOST}/options`, { params: { sections: true } })
+      .then(res => this.setState(prevState => {
+        return ({
+          options: {
+            ...prevState.options,
+            withSections: res.data,
+          }
+        })
+      }))
+      .catch(error => console.log(`Could not fetch vampire options: ${error.message}`));
   }
 
   updateInput(input) {

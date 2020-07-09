@@ -20,7 +20,7 @@ class TimeLimitInput extends React.Component {
 
   render() {
     const { classes } = this.props;
-    const timeLimit = this.context["time_limit"];
+    const timeLimit = this.context.args["time_limit"];
     return (
       <Box my="0.2rem" mx="0.6rem" width="5rem" display="inline-flex"  >
         <TextField

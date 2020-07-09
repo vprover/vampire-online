@@ -27,22 +27,12 @@ class OptionsInput extends React.Component {
     this.state = {
       feedback: undefined,
       selectedOptions: [],
-      optionSuggestionsOpened: false,
       anchorEl: null,
       optionToEdit: null,
-      options: []
     }
     this.copyOptionsToClipBoard = this.copyOptionsToClipBoard.bind(this);
     this.handlePasteOptionString = this.handlePasteOptionString.bind(this);
     this.closePopover = this.closePopover.bind(this);
-  }
-
-  componentDidMount() {
-    axios.get(`${process.env.REACT_APP_API_HOST}/options`, { sections: false })
-      .then(res => this.setState({ options: res.data }))
-      .catch(error => {
-        this.props.createAlert('error', `Could not fetch vampire options: ${error.message}. Try again later!`);
-      })
   }
 
   copyToClipboard(str) {
@@ -81,7 +71,7 @@ class OptionsInput extends React.Component {
       }
       const decodedArgNames = Object.keys(this.context.args);
       this.setState({
-        selectedOptions: this.state.options.filter(o => decodedArgNames.includes(o.name)),
+        selectedOptions: this.context.options.asArray.filter(o => decodedArgNames.includes(o.name) && !this.context.options.uiRestricted.includes(o.name)),
         optionSuggestionsOpened: false,
       });
       this.props.enqueueSnackbar(`Options decoded`, { variant: "success" });
@@ -126,7 +116,7 @@ class OptionsInput extends React.Component {
           multiple
           fullWidth
           value={this.state.selectedOptions}
-          options={this.state.options.filter(o => !o.restriction)}
+          options={this.context.options.asArray.filter(o => !o.restriction && !this.context.options.uiRestricted.includes(o.name))}
           onChange={(event, newVal) => this.setState({ selectedOptions: newVal })}
           getOptionSelected={(option, value) => option.name === value.name || option === value}
           getOptionLabel={option => option.name}

@@ -5,6 +5,7 @@ import OptionsSection from './OptionsSection';
 import axios from 'axios';
 import { withStyles } from '@material-ui/core/styles';
 import useStyles from './Styles';
+import { ExecutionContext } from '../../contexts/ExecutionContext';
 
 const TabPanel = (props) => {
   const { children, openedTab, index, name, ...other } = props;
@@ -39,23 +40,14 @@ const a11yProps = (name, index) => {
 }
 
 class OptionsExplorer extends React.Component {
+  static contextType = ExecutionContext;
+
   constructor(props) {
     super(props);
     this.state = {
-      sections: [],
       openedTab: 0
     }
     this.switchTab = this.switchTab.bind(this);
-  }
-
-  componentDidMount() {
-    this.getVampireOptions();
-  }
-
-  getVampireOptions = () => {
-    axios.get(`${process.env.REACT_APP_API_HOST}/options`, { params: { sections: true } })
-      .then(res => this.setState({ sections: res.data }))
-      .catch(error => console.log(`Could not fetch vampire options: ${error.message}`));
   }
 
   switchTab(event, tabIndex) {
@@ -76,8 +68,8 @@ class OptionsExplorer extends React.Component {
           value={this.state.openedTab}
           onChange={this.switchTab}>
           {
-            this.state.sections &&
-            this.state.sections.map((section, index) => {
+            this.context.options.withSections &&
+            this.context.options.withSections.map((section, index) => {
               return (
                 <Tab
                   label={section.name}
@@ -91,8 +83,8 @@ class OptionsExplorer extends React.Component {
         </Tabs>
 
         {
-          this.state.sections &&
-          this.state.sections.map((section, index) => {
+          this.context.options.withSections &&
+          this.context.options.withSections.map((section, index) => {
             return (
               <TabPanel
                 name="options"

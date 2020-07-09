@@ -23,6 +23,7 @@ app.use((req, res, next) => {
   }
 })
 
+const vampireVersion = "_latest";
 // Load the options on startup to avoid future calls to vampire
 const vampireOptionSections = op.toJSON(getStrVampireOptions());
 const vampireOptions = op.toOptionArray(vampireOptionSections);
@@ -141,7 +142,7 @@ function argsToString(args) {
 
 function vampireParse(clauses, inputSyntax) {
   try {
-    execSync(`echo '${clauses}' | ./vampire-executables/vampire4.2.2 --input_syntax ${inputSyntax} --mode output`)
+    execSync(`echo '${clauses}' | ./vampire-executables/vampire${vampireVersion} --input_syntax ${inputSyntax} --mode output`)
     return {
       error: {}
     }
@@ -154,7 +155,7 @@ function vampireParse(clauses, inputSyntax) {
 function vampireSolve(clauses, args) {
   try {
     const stringArgs = argsToString(args);
-    const solution = execSync(`echo '${clauses}' | ./vampire-executables/vampire4.2.2 ${stringArgs}`).toString()
+    const solution = execSync(`echo '${clauses}' | ./vampire-executables/vampire${vampireVersion} ${stringArgs}`).toString()
     return {
       rawOutput: `${solution}`
     };
@@ -173,7 +174,7 @@ function vampireSolve(clauses, args) {
 
 function getStrVampireOptions() {
   try {
-    const str = execSync(`./vampire-executables/vampire_latest --show_options_line_wrap off --show_options on`).toString();
+    const str = execSync(`./vampire-executables/vampire${vampireVersion} --show_options_line_wrap off --show_options on`).toString();
     return str;
   }
   catch (error) {
@@ -185,7 +186,7 @@ function getStrVampireOptions() {
 function vampireEncode(args) {
   try {
     const argsStr = argsToString(args);
-    const encoding = execSync(`./vampire-executables/vampire4.2.2 ${argsStr} --mode output --encode on `).toString();
+    const encoding = execSync(`./vampire-executables/vampire${vampireVersion} ${argsStr} --mode output --encode on `).toString();
     return encoding.replace(/encode=on:?/, "");
   }
   catch (error) {

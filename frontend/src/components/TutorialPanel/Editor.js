@@ -16,9 +16,10 @@ class Editor extends Component {
   constructor(props) {
     super(props)
     this.state = {
+      editor: undefined,
+      value: "",
       isExpanded: false,
       numberOfInputLines: 0,
-      editor: undefined
     }
     this.onUserInput = this.onUserInput.bind(this);
     this.callParseAPI = this.callParseAPI.bind(this);
@@ -26,7 +27,20 @@ class Editor extends Component {
   }
 
   componentDidMount() {
-    this.setState({ numberOfInputLines: this.getNumberOfLines(this.props.execCtx.input) })
+    this.setState({
+      value: this.props.execCtx.input,
+      numberOfInputLines: this.getNumberOfLines(this.props.execCtx.input)
+    })
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.execCtx.input !== this.state.value
+      && this.props.execCtx.input !== prevProps.execCtx.input) {
+      this.setState({
+        value: this.props.execCtx.input,
+        numberOfInputLines: this.getNumberOfLines(this.props.execCtx.input)
+      })
+    }
   }
 
   callParseAPI(val) {
@@ -38,11 +52,11 @@ class Editor extends Component {
   }
 
   onUserInput(value) {
-    this.props.execCtx.updateInput(value);
     if (!this.props.disableParsingErrors) {
       this.callParseAPI(value);
     }
     this.setState({
+      value: value,
       numberOfInputLines: this.getNumberOfLines(value)
     })
   }
@@ -82,15 +96,16 @@ class Editor extends Component {
 
         <AceEditor
           className={`${this.props.settings.darkTheme ? classes.borderDarkTheme : classes.borderLightTheme}`}
-          onLoad={(e) => this.setState({ editor: e })}
           maxLines={this.props.input ? (this.state.isExpanded ? Infinity : this.defaultNumberOfLines) : undefined}
           height={this.props.output ? "100%" : undefined}
           width="100%"
+          onLoad={(e) => this.setState({ editor: e })}
+          onChange={this.props.input ? this.onUserInput : undefined}
+          onBlur={() => this.props.execCtx.updateInput(this.state.value)}
           readOnly={this.props.output}
-          value={this.props.input ? this.props.execCtx.input : this.props.execCtx.output.rawOutput}
+          value={this.props.input ? this.state.value : this.props.execCtx.output.rawOutput}
           fontSize={this.props.settings.fontSize}
           theme={this.props.settings.darkTheme ? "terminal" : "github"}
-          onChange={this.props.input ? this.onUserInput : undefined}
           setOptions={{ useWorker: false }}
         />
       </div >

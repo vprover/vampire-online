@@ -16,6 +16,7 @@ class Editor extends Component {
     super(props)
     this.state = {
       editor: undefined,
+      value: "",
       height: props.settings.orientation === "row" ? 550 : 300,
       width: props.settings.orientation === "row" ? 500 : 900,
       d: { width: 0, height: 0 }
@@ -30,14 +31,13 @@ class Editor extends Component {
     const syntax = this.props.execCtx.args["input_syntax"];
     axios.post(`${process.env.REACT_APP_API_HOST}/parse`, { clauses: val, inputSyntax: syntax })
       .then(res => {
-        console.log(res);
         this.state.editor.getSession().setAnnotations(this.getErrorAnnotations(res.data.error));
       });
   }
 
   onUserInput(value) {
     if (this.props.input) {
-      this.props.execCtx.updateInput(value);
+      this.setState({ value: value });
       this.callParseAPI(value);
     }
   }
@@ -56,6 +56,12 @@ class Editor extends Component {
         height: this.props.settings.orientation === "row" ? 550 : 300,
         width: this.props.settings.orientation === "row" ? 500 : 900,
       });
+    }
+    if (this.props.execCtx.input !== this.state.value
+      && this.props.execCtx.input !== prevProps.execCtx.input) {
+      this.setState({
+        value: this.props.execCtx.input
+      })
     }
   }
 
@@ -92,14 +98,15 @@ class Editor extends Component {
         >
           <AceEditor
             className={`${this.props.settings.darkTheme ? classes.borderDarkTheme : classes.borderLightTheme}`}
-            onLoad={(e) => this.setState({ editor: e })}
             height={`${this.state.height}px`}
             width={`${this.state.width}px`}
+            onLoad={(e) => this.setState({ editor: e })}
+            onChange={this.onUserInput}
+            onBlur={() => this.props.execCtx.updateInput(this.state.value)}
             readOnly={this.props.output}
-            value={this.props.input ? this.props.execCtx.input : this.props.execCtx.output.rawOutput}
+            value={this.props.input ? this.state.value : this.props.execCtx.output.rawOutput}
             fontSize={this.props.settings.fontSize}
             theme={this.props.settings.darkTheme ? "terminal" : "github"}
-            onChange={this.onUserInput}
             setOptions={{ useWorker: false }}
           />
         </Resizable>

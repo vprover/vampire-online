@@ -46,7 +46,6 @@ class RunButton extends React.Component {
       args: JSON.stringify(this.context.args)
     })
       .then(res => {
-        console.log(res);
         this.context.updateOutput(res.data);
         if (res.data.error) {
           if (Object.keys(res.data.error).length === 0) {

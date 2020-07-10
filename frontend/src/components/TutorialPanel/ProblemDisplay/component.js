@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
+import React from 'react';
 import ExecutionBar from '../../ExecutionBar/component';
 import { ExecutionContextProvider, ExecutionContext } from '../../../contexts/ExecutionContext';
-import Editor from '../Editor';
+import Editor from './Editor';
 
 
-const DemoProblemDisplay = (props) => {
+const ProblemDisplay = (props) => {
   const mainExecCtx = React.useContext(ExecutionContext);
   return (
     <div style={{ paddingLeft: "0.5rem", paddingRight: "0.5rem" }}>
@@ -13,7 +13,8 @@ const DemoProblemDisplay = (props) => {
           output: mainExecCtx.output,
           updateOutput: mainExecCtx.updateOutput
         }}
-        defaultInput={props.defaultInput} >
+        defaultInput={props.defaultInput || props.value}
+      >
         <ExecutionBar tutorial style={{ margin: "0.1rem" }} />
         <Editor input disableParsingErrors={props.disableParsingErrors} />
       </ExecutionContextProvider>
@@ -21,4 +22,4 @@ const DemoProblemDisplay = (props) => {
   )
 }
 
-export default DemoProblemDisplay;
+export default ProblemDisplay;

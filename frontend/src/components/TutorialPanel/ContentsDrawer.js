@@ -3,10 +3,9 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import { Drawer, List, ListItem, Button, IconButton, Typography, Divider, Link } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
-
 import { fade } from '@material-ui/core/styles/colorManipulator';
 
-const drawerWidth = 20;
+export const drawerWidth = 20;
 const useStyles = (theme) => {
   return ({
     drawer: {
@@ -23,10 +22,10 @@ const useStyles = (theme) => {
       top: 0,
       height: "100%",
       width: "1rem",
-      borderRadius: 2,
+      borderRadius: 0,
       padding: "0.1rem",
       backgroundColor: fade(theme.palette.secondary.main, 0.8),
-      zIndex: 3000,
+      zIndex: 2000,
       color: theme.palette.secondary.contrastText,
       '&:hover': {
         backgroundColor: theme.palette.secondary.main,
@@ -37,12 +36,6 @@ const useStyles = (theme) => {
 }
 
 class ContentsDrawer extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      opened: false
-    }
-  }
   render() {
     const { classes } = this.props;
     return (
@@ -51,23 +44,23 @@ class ContentsDrawer extends Component {
           // !this.state.opened &&
           <IconButton
             className={classes.drawerOpener}
-            onClick={() => this.setState(prevState => { return ({ opened: !prevState.opened }) })}
+            onClick={() => { if (this.props.open) { this.props.onClose() } else { this.props.onOpen() } }}
           >
             {
-              this.state.opened ? <ChevronLeftIcon /> : <ChevronRightIcon />
+              this.props.open ? <ChevronLeftIcon /> : <ChevronRightIcon />
             }
             {/* <ChevronRightIcon /> */}
           </IconButton>
         }
 
         <Drawer
-          // variant="permanent"
+          variant="persistent"
           className={classes.drawer}
           classes={{
             paper: classes.drawerPaper
           }}
-          onClose={() => this.setState({ opened: false })}
-          open={this.state.opened}
+          onClose={this.props.onClose}
+          open={this.props.open}
         >
           <Typography variant="h4" style={{ padding: "1rem" }}>
             Contents
@@ -76,12 +69,12 @@ class ContentsDrawer extends Component {
           <List>
             {
               this.props.contents.map(c =>
-                <ListItem><Link color="inherit" href={`#${c.id}`}>{c.name}</Link></ListItem>
+                <ListItem key={c.id}><Link color="inherit" href={`#${c.id}`}>{c.name}</Link></ListItem>
               )
             }
           </List>
         </Drawer>
-      </React.Fragment>
+      </React.Fragment >
     )
   }
 }

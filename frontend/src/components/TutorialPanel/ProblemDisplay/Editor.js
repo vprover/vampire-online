@@ -3,10 +3,10 @@ import AceEditor from 'react-ace';
 import 'ace-builds/src-noconflict/theme-github';
 import 'ace-builds/src-noconflict/theme-terminal';
 import { withStyles } from '@material-ui/core/styles';
-import useStyles from '../ExecutionPanel/Editor/EditorStyles';
+import useStyles from '../../ExecutionPanel/Editor/EditorStyles';
 import axios from 'axios';
-import { ExecutionContext } from '../../contexts/ExecutionContext';
-import { EditorSettingsContext } from '../../contexts/EditorSettingsContext';
+import { ExecutionContext } from '../../../contexts/ExecutionContext';
+import { EditorSettingsContext } from '../../../contexts/EditorSettingsContext';
 import { IconButton } from '@material-ui/core';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
@@ -30,7 +30,7 @@ class Editor extends Component {
     this.setState({
       value: this.props.execCtx.input,
       numberOfInputLines: this.getNumberOfLines(this.props.execCtx.input)
-    })
+    });
   }
 
   componentDidUpdate(prevProps) {

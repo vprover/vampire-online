@@ -24,7 +24,7 @@ export class ExecutionContextProvider extends Component {
     this.state = {
       input: this.props.defaultInput || "",
       output: {},
-      args: {},
+      args: this.props.defaultArgs || {},
       vampireVersion: "_latest",
       options: {
         withSections: [],
@@ -37,6 +37,7 @@ export class ExecutionContextProvider extends Component {
     this.updateOutput = this.updateOutput.bind(this);
     this.updateArg = this.updateArg.bind(this);
     this.removeArg = this.removeArg.bind(this);
+    this.clearArgs = this.clearArgs.bind(this);
   }
 
   componentDidMount() {
@@ -95,6 +96,12 @@ export class ExecutionContextProvider extends Component {
     this.setState(prevState => {
       delete prevState.args[name];
       return prevState;
+    });
+  }
+
+  clearArgs() {
+    this.setState({
+      args: {}
     });
   }
 

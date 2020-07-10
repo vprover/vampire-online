@@ -61,18 +61,16 @@ class OptionsInput extends React.Component {
 
   handlePasteOptionString(event) {
     const str = (event.clipboardData || window.clipboardData).getData('text');
-    console.log(`Pasted ${str}`);
     axios.post(`${process.env.REACT_APP_API_HOST}/string-strategy/decode`, {
       stringStrategy: str
     }).then(res => {
-      console.log(`Parsed to ${JSON.stringify(res.data)}`);
+      this.context.clearArgs();
       for (const [name, val] of Object.entries(res.data)) {
         this.context.updateArg(name, val);
       }
       const decodedArgNames = Object.keys(this.context.args);
       this.setState({
         selectedOptions: this.context.options.asArray.filter(o => decodedArgNames.includes(o.name) && !this.context.options.uiRestricted.includes(o.name)),
-        optionSuggestionsOpened: false,
       });
       this.props.enqueueSnackbar(`Options decoded`, { variant: "success" });
     }).catch(error => {

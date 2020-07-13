@@ -9,7 +9,7 @@ const RefreshInputButton = () => {
     <Tooltip title="Reset input">
       <IconButton
         color="inherit"
-        onClick={() => { execCtx.restoreInput() }}
+        onClick={() => { execCtx.restoreDefaults() }}
       >
         <RefreshIcon />
       </IconButton>

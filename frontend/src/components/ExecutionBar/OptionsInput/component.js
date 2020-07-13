@@ -25,7 +25,6 @@ class OptionsInput extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      feedback: undefined,
       selectedOptions: [],
       anchorEl: null,
       optionToEdit: null,
@@ -33,6 +32,20 @@ class OptionsInput extends React.Component {
     this.copyOptionsToClipBoard = this.copyOptionsToClipBoard.bind(this);
     this.handlePasteOptionString = this.handlePasteOptionString.bind(this);
     this.closePopover = this.closePopover.bind(this);
+  }
+
+  componentDidMount() {
+    this.previousContext = this.context;
+  }
+
+  componentDidUpdate() {
+    if (this.previousContext.args !== this.context.args || this.previousContext.options !== this.context.options) {
+      const argNames = Object.keys(this.context.args);
+      this.setState({
+        selectedOptions: this.context.options.asArray.filter(o => argNames.includes(o.name) && !this.context.options.uiRestricted.includes(o.name)),
+      })
+    }
+    this.previousContext = this.context;
   }
 
   copyToClipboard(str) {
@@ -87,7 +100,6 @@ class OptionsInput extends React.Component {
         [name, value] = element.split(" ");
         args[name] = value;
       });
-      console.log(args);
     }
     finally {
       return args;

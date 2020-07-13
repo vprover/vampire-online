@@ -12,9 +12,9 @@ export const ExecutionContext = React.createContext({
     uiRestricted: [],
   },
   updateInput: (newInput) => { },
-  restoreInput: () => { },
   updateOutput: (newOutput) => { },
   updateArg: (name, newVal) => { },
+  restoreDefaults: () => { },
   removeArg: (name) => { },
 });
 
@@ -33,7 +33,7 @@ export class ExecutionContextProvider extends Component {
       },
     }
     this.updateInput = this.updateInput.bind(this);
-    this.restoreInput = this.restoreInput.bind(this);
+    this.restoreDefaults = this.restoreDefaults.bind(this);
     this.updateOutput = this.updateOutput.bind(this);
     this.updateArg = this.updateArg.bind(this);
     this.removeArg = this.removeArg.bind(this);
@@ -71,9 +71,10 @@ export class ExecutionContextProvider extends Component {
     });
   }
 
-  restoreInput() {
+  restoreDefaults() {
     this.setState({
-      input: this.props.defaultInput
+      input: this.props.defaultInput,
+      args: this.props.defaultArgs,
     })
   }
 
@@ -109,10 +110,11 @@ export class ExecutionContextProvider extends Component {
     const baseValues = {
       ...this.state,
       updateInput: this.updateInput,
-      restoreInput: this.restoreInput,
+      restoreDefaults: this.restoreDefaults,
       updateOutput: this.updateOutput,
       updateArg: this.updateArg,
       removeArg: this.removeArg,
+      clearArgs: this.clearArgs,
     }
     return (
       <ExecutionContext.Provider

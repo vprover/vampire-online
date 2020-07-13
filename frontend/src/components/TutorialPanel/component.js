@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { BrowserRouter, Switch, Route, Link } from "react-router-dom";
 import { EditorSettingsContextProvider } from '../../contexts/EditorSettingsContext';
 import Editor from './ProblemDisplay/Editor';
 import { ExecutionContextProvider } from '../../contexts/ExecutionContext';
@@ -6,8 +7,9 @@ import ContentsDrawer, { drawerWidth } from './ContentsDrawer';
 import DemoTutorial, { md as demoMd } from './DemoTutorial';
 import ProblemDisplay from './ProblemDisplay/component';
 import { withStyles } from '@material-ui/core/styles';
-import Latex from 'react-latex';
 import ReactMarkdown from 'react-markdown';
+import axios from 'axios';
+// import toc from 'markdown-toc';
 
 const useStyles = theme => {
   return ({
@@ -35,8 +37,19 @@ class component extends Component {
     super(props);
     this.state = {
       drawerOpened: false,
+      sections: [],
     }
   }
+  componentDidMount() {
+    axios.get(`${process.env.REACT_APP_API_HOST}/tutorial`)
+      .then(res => {
+        this.setState({ sections: res.data });
+      })
+      .catch(error => {
+        console.log(`Could not fetch the tutorial ${error.message}`);
+      })
+  }
+
   render() {
     const { classes } = this.props;
     return (
@@ -60,9 +73,28 @@ class component extends Component {
               />
               <div className={!this.state.drawerOpened ? classes.content : classes.contentShift}>
                 {/* <DemoTutorial /> */}
-                <ReactMarkdown
-                  source={demoMd}
-                  renderers={{ code: ProblemDisplay }} />
+                <BrowserRouter>
+                  <Switch>
+                    {
+                      this.state.sections &&
+                      this.state.sections.map(section => {
+                        return (
+                          <Route
+                            path={`/tutorial/${section.name}`}
+                            key={section.name}
+                            component={() => <ReactMarkdown source={section.content} renderers={{ code: ProblemDisplay }} />}
+                          />
+                        )
+                      })
+                    }
+                    {
+                      this.state.sections && this.state.sections.length > 0 &&
+                      <Route
+                        component={() => <ReactMarkdown source={this.state.sections[0].content} renderers={{ code: ProblemDisplay }} />}
+                      />
+                    }
+                  </Switch>
+                </BrowserRouter>
               </div>
             </div>
 

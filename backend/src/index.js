@@ -3,6 +3,7 @@ const { execSync } = require("child_process");
 const cors = require('cors');
 const op = require('./options_utils/options_parser');
 const pbLib = require('./problem_library_retriever');
+const tutorial = require('./tutorial_retriever');
 
 const app = express();
 app.use(express.json());
@@ -111,6 +112,10 @@ app.get("/problem-library/:section/:problem", (req, res) => {
   else {
     res.status(400).send("Please specify a <problem> and its <section>.\n GET /problem-library/contents for a table of contents");
   }
+})
+
+app.get("/tutorial", (req, res) => {
+  res.status(200).json(tutorial.getTutorials());
 })
 
 app.listen(8080, () => {

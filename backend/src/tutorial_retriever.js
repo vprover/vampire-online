@@ -15,16 +15,17 @@ function getTutorials() {
   const sections = getSectionNames();
   sections.forEach(section => {
     const content = fs.readFileSync(path.join(tutorialDir, section), "utf8");
+    const name = section.slice(0, -3).replace(/[0-9]+[-_]/g, "");
     toc.push({
-      name: section.slice(0, -3),
+      name: name,
       headings: mdToc(content).json,
-  });
+    });
     data.push({
-      name: section.slice(0,-3),
+      name: name,
       content: content
     })
   })
-  
+
   return {
     toc: toc,
     sections: data,

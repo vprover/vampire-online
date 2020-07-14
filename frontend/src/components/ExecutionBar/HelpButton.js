@@ -57,7 +57,7 @@ class HelpButton extends Component {
           onClose={this.handlePopoverClose}
         >
 
-          <ButtonGroup color="secondary">
+          <ButtonGroup color="secondary" orientation="vertical">
 
             <Button className={classes.normalText} component={Link} to="/tutorial">
               Tutorial Mode

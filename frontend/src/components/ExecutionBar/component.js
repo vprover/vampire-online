@@ -36,7 +36,7 @@ const ExecutionBar = props => {
             props.tutorial
             && <RefreshInputButton />
           }
-          <EditorSettingsMenu hideOrientation />
+          <EditorSettingsMenu hideOrientation={props.tutorial} />
         </div>
       </Toolbar>
     </AppBar>

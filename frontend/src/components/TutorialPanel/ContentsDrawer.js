@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import { Drawer, List, ListItem, Button, IconButton, Typography, Divider, Link } from '@material-ui/core';
+import { Drawer, List, ListItem, IconButton, Typography, Divider, Link } from '@material-ui/core';
+import { HashLink } from 'react-router-hash-link';
 import { withStyles } from '@material-ui/core/styles';
 import { fade } from '@material-ui/core/styles/colorManipulator';
 
-export const drawerWidth = 20;
+export const drawerWidth = 16;
 const useStyles = (theme) => {
   return ({
     drawer: {
@@ -64,12 +65,31 @@ class ContentsDrawer extends Component {
         >
           <Typography variant="h4" style={{ padding: "1rem" }}>
             Contents
-              </Typography>
+          </Typography>
           <Divider />
-          <List>
+          <List disablePadding>
             {
-              this.props.contents.map(c =>
-                <ListItem key={c.id}><Link color="inherit" href={`#${c.id}`}>{c.name}</Link></ListItem>
+              this.props.toc.map((s, idx) => {
+                const path = `/tutorial/${s.name}`;
+                return (
+                  <ListItem key={idx} disableGutters>
+                    <List disablePadding>
+                      {
+                        s.headings.map((h, idx) => {
+                          const indent = `${(h.lvl - 1) * 0.6}rem`;
+                          return (
+                            <ListItem key={idx}>
+                              <Link color="inherit" to={`${path}#${h.slug}`} component={HashLink}>
+                                <Typography variant={`h${h.lvl + 5}`} style={{ marginLeft: indent }}>{h.content}</Typography>
+                              </Link>
+                            </ListItem>
+                          )
+                        })
+                      }
+                    </List>
+                  </ListItem>
+                )
+              }
               )
             }
           </List>
@@ -77,6 +97,15 @@ class ContentsDrawer extends Component {
       </React.Fragment >
     )
   }
+}
+
+export const Heading = (props) => {
+  const slug = props.children[0].props.value.replace(/\s+/g, "-").toLowerCase();
+  return (
+    <Typography variant={`h${props.level + 3}`} id={slug} style={{ marginTop: "0.8rem" }}>
+      {props.children}
+    </Typography>
+  )
 }
 
 export default withStyles(useStyles)(ContentsDrawer);

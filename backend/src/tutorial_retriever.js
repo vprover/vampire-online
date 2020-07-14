@@ -1,5 +1,6 @@
 const path = require('path');
 const fs = require('fs');
+const mdToc = require('markdown-toc');
 
 const tutorialDir = path.join(__dirname, '..', 'tutorial');
 
@@ -10,15 +11,24 @@ function getSectionNames() {
 }
 
 function getTutorials() {
-  let data = [];
+  let data = [], toc = [];
   const sections = getSectionNames();
   sections.forEach(section => {
+    const content = fs.readFileSync(path.join(tutorialDir, section), "utf8");
+    toc.push({
+      name: section.slice(0, -3),
+      headings: mdToc(content).json,
+  });
     data.push({
       name: section.slice(0,-3),
-      content: fs.readFileSync(path.join(tutorialDir, section), "utf8")
+      content: content
     })
   })
-  return data;
+  
+  return {
+    toc: toc,
+    sections: data,
+  }
 }
 
 exports.getTutorials = getTutorials;

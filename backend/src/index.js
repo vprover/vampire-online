@@ -1,11 +1,19 @@
 const express = require("express");
-const { execSync } = require("child_process");
+const util = require('util');
+const { execSync } = require('child_process');
+const exec = util.promisify(require('child_process').exec);
 const cors = require('cors');
 const op = require('./options_utils/options_parser');
 const pbLib = require('./problem_library_retriever');
 const tutorial = require('./tutorial_retriever');
 
 const app = express();
+const vampireVersion = "_latest";
+// Load the options on startup to avoid future calls to vampire
+const vampireOptionSections = op.toJSON(getStrVampireOptions());
+const vampireOptions = op.toOptionArray(vampireOptionSections);
+const shortNameToNameMap = op.extractShortNameToNameMap(vampireOptionSections);
+
 app.use(express.json());
 app.use(cors());
 
@@ -24,21 +32,15 @@ app.use((req, res, next) => {
   }
 })
 
-const vampireVersion = "_latest";
-// Load the options on startup to avoid future calls to vampire
-const vampireOptionSections = op.toJSON(getStrVampireOptions());
-const vampireOptions = op.toOptionArray(vampireOptionSections);
-const shortNameToNameMap = op.extractShortNameToNameMap(vampireOptionSections);
-
-app.post("/solve", (req, res) => {
+app.post("/solve", async (req, res) => {
   console.log(`Solve: ${req.body.clauses}`);
-  res.status(200).json(vampireSolve(req.body.clauses, req.body.args));
+  res.status(200).json(await vampireSolve(req.body.clauses, req.body.args));
   console.log(`Finished solving`);
 })
 
-app.post("/parse", (req, res) => {
+app.post("/parse", async (req, res) => {
   console.log(`Parse: ${req.body.clauses}`);
-  res.status(200).json(vampireParse(req.body.clauses, req.body.inputSyntax || "tptp"));
+  res.status(200).json(await vampireParse(req.body.clauses, req.body.inputSyntax || "tptp"));
   console.log(`Finished parsing`);
 })
 
@@ -67,9 +69,9 @@ app.post("/string-strategy/decode", (req, res) => {
   }
 })
 
-app.post("/string-strategy/encode", (req, res) => {
+app.post("/string-strategy/encode", async (req, res) => {
   console.log(`Encoding ${req.body.args}`);
-  const result = vampireEncode(req.body.args);
+  const result = await vampireEncode(req.body.args);
   if (result) {
     res.status(200).json(result);
   }
@@ -145,9 +147,9 @@ function argsToString(args) {
   return str;
 }
 
-function vampireParse(clauses, inputSyntax) {
+async function vampireParse(clauses, inputSyntax) {
   try {
-    execSync(`echo '${clauses}' | ./vampire-executables/vampire${vampireVersion} --input_syntax ${inputSyntax} --mode output`)
+    await exec(`echo '${clauses}' | ./vampire-executables/vampire${vampireVersion} --input_syntax ${inputSyntax} --mode output`);
     return {
       error: {}
     }
@@ -157,12 +159,12 @@ function vampireParse(clauses, inputSyntax) {
   }
 }
 
-function vampireSolve(clauses, args) {
+async function vampireSolve(clauses, args) {
   try {
     const stringArgs = argsToString(args);
-    const solution = execSync(`echo '${clauses}' | ./vampire-executables/vampire${vampireVersion} ${stringArgs}`).toString()
+    const solution = await exec(`echo '${clauses}' | ./vampire-executables/vampire${vampireVersion} ${stringArgs}`);
     return {
-      rawOutput: `${solution}`
+      rawOutput: `${solution.stdout}`
     };
   }
   catch (error) {
@@ -188,14 +190,14 @@ function getStrVampireOptions() {
   }
 }
 
-function vampireEncode(args) {
+async function vampireEncode(args) {
   try {
     const argsStr = argsToString(args);
-    const encoding = execSync(`./vampire-executables/vampire${vampireVersion} ${argsStr} --mode output --encode on `).toString();
-    return encoding.replace(/encode=on:?/, "");
+    const encoding = await exec(`./vampire-executables/vampire${vampireVersion} ${argsStr} --mode output --encode on `);
+    return encoding.stdout.replace(/encode=on:?/, "");
   }
   catch (error) {
-    console.log(`An \x1b[31merror\x1b[0m occurred while encoding options:\n ${error.output}`);
+    console.log(`An \x1b[31merror\x1b[0m occurred while encoding options:\n ${error.stdout}`);
     return null;
   }
 }

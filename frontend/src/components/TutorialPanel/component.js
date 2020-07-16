@@ -40,7 +40,7 @@ class component extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      drawerOpened: false,
+      drawerOpened: true,
       tutorial: {},
     }
   }

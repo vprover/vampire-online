@@ -69,9 +69,9 @@ app.post("/string-strategy/decode", (req, res) => {
   }
 })
 
-app.post("/string-strategy/encode", async (req, res) => {
-  console.log(`Encoding ${req.body.args}`);
-  const result = await vampireEncode(req.body.args);
+app.post("/string-strategy/encode", (req, res) => {
+  console.log(`Encoding ${JSON.stringify(req.body.args)}`);
+  const result = vampireEncode(req.body.args);
   if (result) {
     res.status(200).json(result);
   }
@@ -190,11 +190,11 @@ function getStrVampireOptions() {
   }
 }
 
-async function vampireEncode(args) {
+function vampireEncode(args) {
   try {
     const argsStr = argsToString(args);
-    const encoding = await exec(`./vampire-executables/vampire${vampireVersion} ${argsStr} --mode output --encode on `);
-    return encoding.stdout.replace(/encode=on:?/, "");
+    const encoding = execSync(`./vampire-executables/vampire${vampireVersion} ${argsStr} --mode output --encode on`).toString();
+    return encoding.replace(/encode=on:?/, "");
   }
   catch (error) {
     console.log(`An \x1b[31merror\x1b[0m occurred while encoding options:\n ${error.stdout}`);

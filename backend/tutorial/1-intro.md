@@ -5,6 +5,7 @@
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin tincidunt quis ex at tempus. Donec tincidunt neque et bibendum placerat. Fusce purus tellus, vestibulum sit amet sem nec, finibus laoreet dui. Integer at lectus sodales, rutrum purus et, porta ex. Maecenas consequat lacus est, malesuada tincidunt nulla vulputate a. Etiam nec neque orci. Duis gravida iaculis tincidunt. Quisque sit amet odio pharetra, elementum odio et, ornare nisl. Fusce diam libero, vestibulum quis nisl nec, condimentum varius dui.  
 
 Donec nunc quam, rutrum pulvinar imperdiet eget, pellentesque sed nibh. Aenean in tristique urna. Quisque semper libero justo, eget aliquet mi mattis eu. Donec vel scelerisque arcu. Integer odio libero, viverra a nunc sed, congue porta massa. Vivamus finibus tellus aliquam, hendrerit mi sed, eleifend orci. Nullam sed elit non felis semper ultrices. Sed id congue dui, a varius erat. Duis ut est posuere sem blandit feugiat. Praesent euismod egestas metus, ut rhoncus lorem pharetra eu. Fusce a molestie massa. In commodo risus et libero vestibulum interdum. Nam ultricies nulla mi, non pellentesque quam ultricies non. Maecenas finibus quam ipsum, vulputate iaculis elit malesuada et. Nulla luctus, libero eu consequat sollicitudin, sem nisi scelerisque nunc, et posuere libero elit in lacus. Suspendisse ut magna id augue tincidunt pellentesque.  
+
 ```
 --time_limit 6 --mode portfolio
 fof(one,axiom, ![X] : (rich(X) => happy(X))).
@@ -17,7 +18,7 @@ We could deliberately give erroneous input and disable parsing in the editor if 
 
 Integer nec pellentesque tortor, eget consequat justo. Praesent sit amet velit dui. Donec euismod elit sagittis dui commodo auctor. Vivamus faucibus tellus at diam congue, porta dignissim augue tristique. Nam nisl eros, commodo nec sem id, dapibus interdum turpis. Cras ut interdum nisl, sit amet imperdiet quam. Mauris fermentum, sem quis dignissim pharetra, tellus nulla efficitur odio, eget volutpat elit ex vitae nibh. Vivamus semper et tellus sit amet dignissim. Phasellus risus elit, accumsan sed enim at, varius rutrum leo.
 
-```
+```noparse
 fof(one,axiom, ![X] : (rich(X => happy(X))).
 fof(two,conjecture, rich(giles)).
 fof(three, conjecture, happy(giles)).

@@ -35,10 +35,10 @@ const ProblemDisplay = (props) => {
           updateOutput: mainExecCtx.updateOutput
         }}
         defaultInput={props.defaultInput || problem}
-        defaultArgs={props.defaultArgs || args }
+        defaultArgs={props.defaultArgs || args}
       >
         <ExecutionBar tutorial style={{ margin: "0.1rem" }} />
-        <Editor input disableParsingErrors={props.disableParsingErrors} />
+        <Editor input disableParsingErrors={props.language === 'noparse'} />
       </ExecutionContextProvider>
     </div>
   )

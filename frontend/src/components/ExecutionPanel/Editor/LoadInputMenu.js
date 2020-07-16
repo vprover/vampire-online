@@ -55,7 +55,7 @@ const UploadProblemFileButton = props => {
           const reader = new FileReader();
           const extension = event.target.files[0].name.split('.').pop().toLowerCase();
           reader.onload = (event => {
-            updateInput(event.target.result);
+            updateInput(event.target.result.replace("\r\n", "\n"));
             if (extension === "smt2") updateArg("input_syntax", "smtlib2");
             else updateArg("input_syntax", "tptp");
           });

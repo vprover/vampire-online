@@ -59,9 +59,7 @@ class Editor extends Component {
     }
     if (this.props.execCtx.input !== this.state.value
       && this.props.execCtx.input !== prevProps.execCtx.input) {
-      this.setState({
-        value: this.props.execCtx.input
-      })
+      this.onUserInput(this.props.execCtx.input);
     }
   }
 

@@ -87,7 +87,7 @@ class OptionsInput extends React.Component {
       });
       this.props.enqueueSnackbar(`Options decoded`, { variant: "success" });
     }).catch(error => {
-      this.props.enqueueSnackbar(`Could not decode string strategy, ${error.message}`, { variant: "error" });
+      this.props.enqueueSnackbar(<>Could not decode string strategy<br />{error.response.data}</>, { variant: "error", autoHideDuration: 10000 });
     });
   }
 
@@ -127,7 +127,10 @@ class OptionsInput extends React.Component {
           fullWidth
           value={this.state.selectedOptions}
           options={this.context.options.asArray.filter(o => !o.restriction && !this.context.options.uiRestricted.includes(o.name))}
-          onChange={(event, newVal) => this.setState({ selectedOptions: newVal })}
+          onChange={(event, newVal) => {
+            this.setState({ selectedOptions: newVal });
+            if (newVal.length === 0) this.context.clearArgs();
+          }}
           getOptionSelected={(option, value) => option.name === value.name || option === value}
           getOptionLabel={option => option.name}
           // renderOption={option => (<React.Fragment>{option.name}</React.Fragment>)}

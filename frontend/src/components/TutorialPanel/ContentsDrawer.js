@@ -69,6 +69,7 @@ class ContentsDrawer extends Component {
           <Divider />
           <List disablePadding>
             {
+              this.props.toc &&
               this.props.toc.map((s, idx) => {
                 const path = `/tutorial/${s.name}`;
                 return (

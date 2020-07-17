@@ -15,7 +15,7 @@ const useStyles = theme => {
   return ({
     splitLayout: {
       position: "inherit",
-      width: "auto",
+      width: "100%",
     },
     content: {
       flexGrow: 1,
@@ -75,15 +75,12 @@ class component extends Component {
               >
 
                 <div style={{ padding: "1rem", display: "flex" }}>
-                  {
-                    this.state.tutorial.sections &&
-                    <ContentsDrawer
-                      open={this.state.drawerOpened}
-                      onOpen={() => this.setState({ drawerOpened: true })}
-                      onClose={() => this.setState({ drawerOpened: false })}
-                      toc={this.state.tutorial.toc}
-                    />
-                  }
+                  <ContentsDrawer
+                    open={this.state.drawerOpened}
+                    onOpen={() => this.setState({ drawerOpened: true })}
+                    onClose={() => this.setState({ drawerOpened: false })}
+                    toc={this.state.tutorial.toc}
+                  />
                   <div className={!this.state.drawerOpened ? classes.content : classes.contentShift}>
                     {/* <DemoTutorial /> */}
                     <Switch>

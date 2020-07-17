@@ -60,23 +60,33 @@ app.get("/options", (req, res) => {
 
 app.post("/string-strategy/decode", (req, res) => {
   console.log(`Decoding ${req.body.stringStrategy}`);
-  const result = vampireDecode(req.body.stringStrategy);
-  if (result) {
-    res.status(200).json(result)
+  try {
+    const result = vampireDecode(req.body.stringStrategy);
+    if (result) {
+      res.status(200).json(result)
+    }
+    else {
+      res.status(422).send("Invalid option string");
+    }
   }
-  else {
-    res.status(422).send("Invalid option string");
+  catch (error) {
+    res.status(422).send(error.message);
   }
 })
 
 app.post("/string-strategy/encode", (req, res) => {
   console.log(`Encoding ${JSON.stringify(req.body.args)}`);
-  const result = vampireEncode(req.body.args);
-  if (result) {
-    res.status(200).json(result);
+  try {
+    const result = vampireEncode(req.body.args);
+    if (result) {
+      res.status(200).json(result);
+    }
+    else {
+      res.status(422).send("Invalid options");
+    }
   }
-  else {
-    res.status(422).send("Invalid options");
+  catch (error) {
+    res.status(422).send(error.message);
   }
 })
 
@@ -198,7 +208,7 @@ function vampireEncode(args) {
   }
   catch (error) {
     console.log(`An \x1b[31merror\x1b[0m occurred while encoding options:\n ${error.stdout}`);
-    return null;
+    throw Error(error.stdout);
   }
 }
 
@@ -208,9 +218,13 @@ const saValues = vampireOptionSections.find(section => section.name.toLowerCase(
 
 function vampireDecode(stringStrategy) {
   const strStructure = /(?<sa>[a-z]+)(?<s>[+-][0-9]+)_(?<awr>[0-9:]+)_(?<args>[\w:=.]*)_(?<t>[0-9]+)/g;
-  const strategyParts = strStructure.exec(stringStrategy).groups;
+  const regexRes = strStructure.exec(stringStrategy);
+  if (regexRes == undefined || regexRes == null) throw Error("Input does not follow strategy pattern <sa><s>_<awr>_<arg1=val1:arg2=val2...>_<t>");
+  const strategyParts = regexRes.groups;
+  const sa = saValues.find(v => v.startsWith(strategyParts.sa));
+  if (sa == undefined || sa == null) throw Error(`${strategyParts.sa} is not a valid saturation algorithm`);
   let args = {
-    "saturation_algorithm": saValues.find(v => v.startsWith(strategyParts.sa)),
+    "saturation_algorithm": sa,
     "selection": strategyParts.s,
     "age_weight_ratio": strategyParts.awr,
     "time_limit": strategyParts.t / 10.0
@@ -220,6 +234,5 @@ function vampireDecode(stringStrategy) {
     args[`${shortNameToNameMap[name] ? shortNameToNameMap[name] : name}`] = val;
   })
   // Validate the decoded args
-  // return vampireEncode(args) === optionString ? args : null;
-  return args;
+  return vampireEncode(args).length === stringStrategy.length ? args : null;
 }

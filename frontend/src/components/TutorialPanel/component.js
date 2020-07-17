@@ -13,25 +13,29 @@ import axios from 'axios';
 
 const useStyles = theme => {
   return ({
-    splitLayout: {
+    splitLayoutPaneContent: {
       position: "inherit",
       width: "100%",
+      '& > .layout-pane.layout-pane-primary': {
+        flexGrow: 1,
+        transition: theme.transitions.create('margin', {
+          easing: theme.transitions.easing.sharp,
+          duration: theme.transitions.duration.leavingScreen,
+        }),
+        marginLeft: 0,
+      }
     },
-    content: {
-      flexGrow: 1,
-      transition: theme.transitions.create('margin', {
-        easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.leavingScreen,
-      }),
-      marginLeft: `-${drawerWidth}rem`,
-    },
-    contentShift: {
-      flexGrow: 1,
-      transition: theme.transitions.create('margin', {
-        easing: theme.transitions.easing.easeOut,
-        duration: theme.transitions.duration.enteringScreen,
-      }),
-      marginLeft: 0,
+    splitLayoutPaneContentShift: {
+      position: "inherit",
+      width: "100%",
+      '& > .layout-pane.layout-pane-primary': {
+        flexGrow: 1,
+        transition: theme.transitions.create('margin', {
+          easing: theme.transitions.easing.easeOut,
+          duration: theme.transitions.duration.enteringScreen,
+        }),
+        marginLeft: `${drawerWidth}rem`,
+      }
     },
   })
 }
@@ -65,51 +69,49 @@ class component extends Component {
             <div
               style={{ display: "flex", justifyContent: "space-between", overflow: "hidden", width: "100%", height: "95vh" }}
             >
+              <ContentsDrawer
+                open={this.state.drawerOpened}
+                onOpen={() => this.setState({ drawerOpened: true })}
+                onClose={() => this.setState({ drawerOpened: false })}
+                toc={this.state.tutorial.toc}
+              />
+
               <SplitterLayout
-                customClassName={classes.splitLayout}
+                customClassName={!this.state.drawerOpened ? classes.splitLayoutPaneContent : classes.splitLayoutPaneContentShift}
                 primaryIndex={0}
                 percentage
                 primaryMinSize={45}
                 secondaryMinSize={30}
                 secondaryInitialSize={40}
               >
-
-                <div style={{ padding: "1rem", display: "flex" }}>
-                  <ContentsDrawer
-                    open={this.state.drawerOpened}
-                    onOpen={() => this.setState({ drawerOpened: true })}
-                    onClose={() => this.setState({ drawerOpened: false })}
-                    toc={this.state.tutorial.toc}
-                  />
-                  <div className={!this.state.drawerOpened ? classes.content : classes.contentShift}>
-                    {/* <DemoTutorial /> */}
-                    <Switch>
-                      {
-                        this.state.tutorial.sections &&
-                        this.state.tutorial.sections.map(section => {
-                          return (
-                            <Route
-                              path={`/tutorial/${section.name}`}
-                              key={section.name}
-                              component={() =>
-                                <ReactMarkdown
-                                  source={section.content}
-                                  renderers={{ code: ProblemDisplay, heading: Heading }}
-                                />}
-                            />
-                          )
-                        })
-                      }
-                      {
-                        this.state.tutorial.sections && this.state.tutorial.sections.length > 0 &&
-                        <Route
-                          component={() => <ReactMarkdown
-                            source={this.state.tutorial.sections[0].content}
-                            renderers={{ code: ProblemDisplay, heading: Heading }} />}
-                        />
-                      }
-                    </Switch>
-                  </div>
+                <div style={{ padding: "1rem", minWidth: "min-content" }}>
+                  {/* <DemoTutorial /> */}
+                  <Switch>
+                    {
+                      this.state.tutorial.sections &&
+                      this.state.tutorial.sections.map(section => {
+                        return (
+                          <Route
+                            path={`/tutorial/${section.name}`}
+                            key={section.name}
+                            component={() =>
+                              <ReactMarkdown
+                                source={section.content}
+                                renderers={{ code: ProblemDisplay, heading: Heading }}
+                              />}
+                          />
+                        )
+                      })
+                    }
+                    {
+                      this.state.tutorial.sections && this.state.tutorial.sections.length > 0 &&
+                      <Route
+                        component={() => <ReactMarkdown
+                          source={this.state.tutorial.sections[0].content}
+                          renderers={{ code: ProblemDisplay, heading: Heading }} />}
+                      />
+                    }
+                  </Switch>
                 </div>
                 <div style={{ overflowY: "auto", padding: "1rem", height: "95%" }}>
                   <Editor output />

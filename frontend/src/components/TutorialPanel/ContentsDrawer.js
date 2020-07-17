@@ -12,6 +12,7 @@ const useStyles = (theme) => {
     drawer: {
       width: `${drawerWidth}rem`,
       flexShrink: 0,
+      position: "fixed"
     },
     drawerPaper: {
       marginLeft: "1rem",

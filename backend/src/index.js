@@ -6,6 +6,7 @@ const cors = require('cors');
 const op = require('./options_utils/options_parser');
 const pbLib = require('./problem_library_retriever');
 const tutorial = require('./tutorial_retriever');
+const jwt = require('./jwt_handler');
 
 const app = express();
 const vampireVersion = "_latest";
@@ -22,6 +23,7 @@ app.use((req, res, next) => {
   if (req.body.args) {
     let args = req.body.args;
     try { args = JSON.parse(args); }
+    catch (e) { }
     finally {
       req.body.args = args;
       next();
@@ -30,6 +32,22 @@ app.use((req, res, next) => {
   else {
     next();
   }
+})
+
+app.use(jwt.validateToken);
+
+// Check args restrictions
+app.use((req, res, next) => {
+  if (req.body.args) {
+    try {
+      op.checkArgsRestrictions(req.body.args, req.headers['user-type']);
+      next();
+    }
+    catch (error) {
+      res.status(422).send(`Arg Restriction Error: ${error.message}`);
+    }
+  }
+  else next();
 })
 
 app.post("/solve", async (req, res) => {
@@ -135,8 +153,28 @@ app.get("/tutorial", (req, res) => {
   res.status(200).json(tutorial.getTutorials());
 })
 
+app.post("/accessTokens", (req, res) => {
+  if (req.headers['user-type'] === 'admin') {
+    try {
+      res.status(200).json(
+        req.body.map(tokenReq => jwt.issueToken(tokenReq))
+      )
+    }
+    catch (error) {
+      res.status(500).json(error);
+    }
+  }
+  else res.status(422).send("You must be an admin to generate tokens");
+})
+
 app.listen(8080, () => {
   console.log("Server running on port 8080");
+  console.log(`Access JWTs: 
+    ${JSON.stringify(
+    [
+      { userName: "admin", userType: "admin" },
+      { userName: "frontend", userType: "any" }
+    ].map(tokenReq => jwt.issueToken(tokenReq)))}`);
 })
 
 function parseErrorMessage(str) {

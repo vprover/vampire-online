@@ -126,7 +126,7 @@ class OptionsInput extends React.Component {
           multiple
           fullWidth
           value={this.state.selectedOptions}
-          options={this.context.options.asArray.filter(o => !o.restriction && !this.context.options.uiRestricted.includes(o.name))}
+          options={this.context.options.asArray.filter(o => !(o.restriction && o.restriction == true) && !this.context.options.uiRestricted.includes(o.name))}
           onChange={(event, newVal) => {
             this.setState({ selectedOptions: newVal });
             if (newVal.length === 0) this.context.clearArgs();

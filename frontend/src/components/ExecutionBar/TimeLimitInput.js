@@ -18,6 +18,32 @@ class TimeLimitInput extends React.Component {
     }
   }
 
+  componentDidUpdate() {
+    if (this.context.options.asArray.length !== 0 && this.restriction === undefined) {
+      this.restriction = this.context.options.asArray.find(o => o.name === 'time_limit').restriction || null;
+    }
+  }
+
+  isValid = (value) => {
+    const res = this.restriction;
+    let valid = true;
+    if (res) {
+      if (res.maxValue) valid = valid && value <= res.maxValue;
+      if (res.minValue) valid = valid && value >= res.minValue;
+    }
+    return valid;
+  }
+
+  getErrorMessage = () => {
+    const res = this.restriction;
+    if (res) {
+      if (res.maxValue && res.minValue) return `${res.minValue} <= Number <= ${res.maxValue}`;
+      if (res.maxValue) return `Number <= ${res.maxValue}`;
+      if (res.minValue) return `${res.minValue} <= Number`;
+    }
+    return undefined;
+  }
+
   render() {
     const { classes } = this.props;
     const timeLimit = this.context.args["time_limit"];
@@ -29,21 +55,18 @@ class TimeLimitInput extends React.Component {
           className={classes.textField}
           size="small"
           value={timeLimit && this.state.valid ? timeLimit : this.state.currentVal}
-          helperText={!this.state.valid ? "Number: 1 - 60" : ""}
+          helperText={!this.state.valid ? this.getErrorMessage() : undefined}
           onChange={e => {
-            const v = Number(e.target.value);
-            if (v && v > 0 && v <= 60) {
-              this.setState({ valid: true, currentVal: v });
-              this.context.updateArg("time_limit", v);
-            }
-            else {
-              this.setState({ valid: false, currentVal: e.target.value });
-            }
+            const val = e.target.value;
+            const valid = this.isValid(val !== '' ? val : "60");
+            this.setState({ currentVal: val, valid: valid });
+            if (valid) this.context.updateArg("time_limit", val);
           }}
           InputProps={{
             style: { color: "white" },
             // endAdornment: <InputAdornment position="end">Seconds</InputAdornment>,
           }}
+          onBlur={() => { if (this.state.currentVal === '') this.setState({ currentVal: 60 }) }}
         />
       </Box>
     )

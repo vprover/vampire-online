@@ -20,6 +20,24 @@ const Option = props => {
   const classes = useStyles();
   const { name, shortName, description, values, restriction } = props.option;
   const defaultVal = props.option.default;
+
+  const getRestrictionMsg = (restriction) => {
+    if (restriction == true) return < Typography color="error"> This option is not available online. </Typography>
+    if (restriction.maxValue) {
+      if (restriction.minValue) {
+        if (restriction.maxValue === restriction.minValue) {
+          return < Typography color="error"> This option is restricted to {restriction.maxValue} online. </Typography>
+        }
+        else {
+          return < Typography color="error"> This option is restricted between {restriction.minValue} and {restriction.maxValue} online. </Typography>
+        }
+      }
+      else {
+        return < Typography color="error"> This option is restricted at most {restriction.maxValue} online. </Typography>
+      }
+    }
+  }
+
   return (
     <Card className={classes.optionCard}>
       <CardContent>
@@ -56,9 +74,7 @@ const Option = props => {
         }
         {
           restriction &&
-          <Typography color="error">
-            This option is not available online.
-            </Typography>
+          getRestrictionMsg(restriction)
         }
       </CardContent>
     </Card>

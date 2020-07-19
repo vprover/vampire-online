@@ -47,10 +47,15 @@ app.post("/parse", async (req, res) => {
 app.get("/options", (req, res) => {
   if (vampireOptionSections) {
     if (req.query.sections && req.query.sections === "true") {
-      res.status(200).json(vampireOptionSections);
+      res.status(200).json(vampireOptionSections.map(sec => {
+        return {
+          name: sec.name,
+          options: op.appendRestrictions(req.headers["user-type"], sec.options)
+        }
+      }));
     }
     else {
-      res.status(200).json(vampireOptions);
+      res.status(200).json(op.appendRestrictions(req.headers["user-type"], vampireOptions));
     }
   }
   else {

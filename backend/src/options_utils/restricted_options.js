@@ -1,5 +1,13 @@
 const restriction_policies = [
   {
+    userType: "sudo",
+    options: {
+      latex_output: true,
+      ltb_directory: true,
+      include: true,
+    }
+  },
+  {
     userType: "any",
     options: {
       time_limit: {
@@ -18,22 +26,5 @@ const restriction_policies = [
   }
 ]
 
-function appendRestrictions(userType, options) {
-  let restricted = restriction_policies.find(rp => rp.userType === userType);
-  if (!restricted) restricted = restriction_policies.find(rp => rp.userType === "any");
-
-  return options.map(option => {
-    if (restricted.options[option.name]) {
-      return {
-        ...option,
-        restriction: restricted.options[option.name]
-      }
-    }
-    else {
-      return { ...option }
-    }
-  });
-}
-
-exports.appendRestrictions = appendRestrictions;
+exports.restriction_policies = restriction_policies;
 

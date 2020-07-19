@@ -1,8 +1,4 @@
-const { appendRestrictions } = require('./restricted_options');
-// const { stringOptions } = require('./options');
-// console.log(stringOptions);
-// console.log(appendRestrictions('any', getSections(stringOptions)[0].options));
-// console.log(getSections(stringOptions));
+const { restriction_policies } = require('./restricted_options');
 
 function getSections(str) {
   const regex = /[*]+\n[*]+\s+(?<name>[a-zA-Z\s]+)\s+[*]+\n[*]+\n{2}(?<content>[^]*?(?=[*]{10,}|$))/g;
@@ -31,7 +27,7 @@ function getOptions(section) {
       values: opt.values ? opt.values.replace(/\s+/g, " ").split(",") : null
     })
   }
-  return appendRestrictions('any', options);
+  return options;
 }
 
 function extractShortNameToNameMap(optionsJSON) {
@@ -46,6 +42,25 @@ function extractShortNameToNameMap(optionsJSON) {
   return mapping;
 }
 
+function appendRestrictions(userType, options) {
+  userType = userType || "any";
+  let restricted = restriction_policies.find(rp => rp.userType === userType);
+  if (!restricted) restricted = restriction_policies.find(rp => rp.userType === "any");
+
+  return options.map(option => {
+    if (restricted.options[option.name]) {
+      return {
+        ...option,
+        restriction: restricted.options[option.name]
+      }
+    }
+    else {
+      return { ...option }
+    }
+  });
+}
+
 exports.toJSON = (str) => { return str ? getSections(str) : null };
 exports.extractShortNameToNameMap = extractShortNameToNameMap;
 exports.toOptionArray = (sections => sections.reduce((arr, section) => arr.concat(section.options), []));
+exports.appendRestrictions = appendRestrictions;

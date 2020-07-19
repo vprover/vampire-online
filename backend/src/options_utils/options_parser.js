@@ -60,7 +60,23 @@ function appendRestrictions(userType, options) {
   });
 }
 
+function checkArgsRestrictions(args, userType) {
+  userType = userType || "any";
+  let restricted = restriction_policies.find(rp => rp.userType === userType);
+  if (!restricted) restricted = restriction_policies.find(rp => rp.userType === "any");
+
+  Object.keys(args)
+    .filter(key => restricted.options[key] !== undefined)
+    .forEach(key => {
+      const res = restricted.options[key];
+      if (res == true) throw Error(`${key} is not available as an arg in the online API`);
+      if (res.maxValue && args[key] > res.maxValue) throw Error(`${key} should be <= ${res.maxValue}`);
+      if (res.minValue && args[key] < res.minValue) throw Error(`${key} should be >= ${res.minValue}`);
+    });
+}
+
 exports.toJSON = (str) => { return str ? getSections(str) : null };
 exports.extractShortNameToNameMap = extractShortNameToNameMap;
 exports.toOptionArray = (sections => sections.reduce((arr, section) => arr.concat(section.options), []));
 exports.appendRestrictions = appendRestrictions;
+exports.checkArgsRestrictions = checkArgsRestrictions;

@@ -1,16 +1,16 @@
 const restriction_policies = [
   {
     userType: "sudo",
-    time_limit: {
-      minValue: 0,
-    },
-    memory_limit: {
-      minValue: 0,
-    },
-    cores: {
-      minValue: 0,
-    },
     options: {
+      time_limit: {
+        minValue: 0,
+      },
+      memory_limit: {
+        minValue: 0,
+      },
+      cores: {
+        minValue: 0,
+      },
       latex_output: true,
       ltb_directory: true,
       include: true,

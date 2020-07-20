@@ -7,6 +7,7 @@ const op = require('./options_utils/options_parser');
 const pbLib = require('./problem_library_retriever');
 const tutorial = require('./tutorial_retriever');
 const jwt = require('./jwt_handler');
+const pbUpl = require('./problem_uploader');
 
 const app = express();
 const vampireVersion = "_latest";
@@ -40,7 +41,7 @@ app.use(jwt.validateToken);
 app.use((req, res, next) => {
   if (req.body.args) {
     try {
-      op.checkArgsRestrictions(req.body.args, req.headers['user-type']);
+      op.checkArgsRestrictions(req.body.args, req.user.userType);
       next();
     }
     catch (error) {
@@ -68,12 +69,12 @@ app.get("/options", (req, res) => {
       res.status(200).json(vampireOptionSections.map(sec => {
         return {
           name: sec.name,
-          options: op.appendRestrictions(req.headers["user-type"], sec.options)
+          options: op.appendRestrictions(req.user.userType, sec.options)
         }
       }));
     }
     else {
-      res.status(200).json(op.appendRestrictions(req.headers["user-type"], vampireOptions));
+      res.status(200).json(op.appendRestrictions(req.user.userType, vampireOptions));
     }
   }
   else {
@@ -153,8 +154,8 @@ app.get("/tutorial", (req, res) => {
   res.status(200).json(tutorial.getTutorials());
 })
 
-app.post("/accessTokens", (req, res) => {
-  if (req.headers['user-type'] === 'admin') {
+app.post("/access-tokens", (req, res) => {
+  if (req.user.userType === 'admin') {
     try {
       res.status(200).json(
         req.body.map(tokenReq => jwt.issueToken(tokenReq))
@@ -166,6 +167,8 @@ app.post("/accessTokens", (req, res) => {
   }
   else res.status(422).send("You must be an admin to generate tokens");
 })
+
+app.post("/upload-problem", pbUpl.upload);
 
 app.listen(8080, () => {
   console.log("Server running on port 8080");

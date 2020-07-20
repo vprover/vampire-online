@@ -13,18 +13,18 @@ function validateToken(req, res, next) {
   const bearerHeader = req.headers['authorization'];
   // if (bearerHeader === undefined) res.status(403).send("Please add a 'Bearer <JWT>' authorization header");
   if (bearerHeader === undefined) {
-    req.headers['user-type'] = "any";
+    req.user = { userType: "any", userName: "" };
     next();
   }
   else {
     try {
       const token = bearerHeader.split(' ')[1];
       const payload = jwt.verify(token, privateKey);
-      req.headers['user-type'] = payload.userType;
+      req.user = payload;
       next();
     }
     catch (error) {
-      req.headers['user-type'] = "any";
+      req.user = { userType: "any", userName: "" };
       next();
       // res.status(403).send("Please use a valid JWT");
     }

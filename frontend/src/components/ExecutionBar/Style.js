@@ -66,9 +66,13 @@ const useStyles = theme => {
     },
     closeButton: {
       position: 'absolute',
-      right: theme.spacing(1),
-      top: theme.spacing(1),
+      right: theme.spacing(1.2),
+      top: theme.spacing(0.8),
       color: theme.palette.grey[500],
+      '&:hover': {
+        color: c,
+        backgroundColor: e
+      }
     },
     paper: {
       height: '90%',

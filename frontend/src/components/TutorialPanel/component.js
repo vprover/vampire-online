@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import { BrowserRouter, Switch, Route } from "react-router-dom";
+import { BrowserRouter, Switch, Route, Link, Redirect } from "react-router-dom";
+import { IconButton, Button } from '@material-ui/core';
+import CloseIcon from '@material-ui/icons/Close';
 import { EditorSettingsContextProvider } from '../../contexts/EditorSettingsContext';
 import Editor from './ProblemDisplay/Editor';
 import { ExecutionContextProvider } from '../../contexts/ExecutionContext';
@@ -37,6 +39,16 @@ const useStyles = theme => {
         marginLeft: `${drawerWidth}rem`,
       }
     },
+    closeButton: {
+      position: 'absolute',
+      right: theme.spacing(0.2),
+      top: theme.spacing(0.2),
+      color: theme.palette.grey[500],
+      '&:hover': {
+        color: theme.palette.primary.contrastText,
+        backgroundColor: theme.palette.error.main,
+      }
+    },
   })
 }
 
@@ -65,7 +77,6 @@ class component extends Component {
     return (
       <EditorSettingsContextProvider>
         <ExecutionContextProvider>
-          <BrowserRouter>
             <div
               style={{ display: "flex", justifyContent: "space-between", overflow: "hidden", width: "100%", height: "95vh" }}
             >
@@ -94,7 +105,7 @@ class component extends Component {
                           <Route
                             path={`/tutorial/${section.name}`}
                             key={section.name}
-                            component={() =>
+                            render={() =>
                               <ReactMarkdown
                                 source={section.content}
                                 renderers={{ code: ProblemDisplay, heading: Heading }}
@@ -105,11 +116,7 @@ class component extends Component {
                     }
                     {
                       this.state.tutorial.sections && this.state.tutorial.sections.length > 0 &&
-                      <Route
-                        component={() => <ReactMarkdown
-                          source={this.state.tutorial.sections[0].content}
-                          renderers={{ code: ProblemDisplay, heading: Heading }} />}
-                      />
+                      <Redirect to={`/tutorial/${this.state.tutorial.sections[0].name}`} />
                     }
                   </Switch>
                 </div>
@@ -118,7 +125,9 @@ class component extends Component {
                 </div>
               </SplitterLayout>
             </div>
-          </BrowserRouter>
+            <IconButton aria-label="close" className={classes.closeButton} component={Link} to="/">
+              <CloseIcon />
+            </IconButton>
         </ExecutionContextProvider>
       </EditorSettingsContextProvider >
     )

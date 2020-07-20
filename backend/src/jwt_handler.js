@@ -11,7 +11,11 @@ const options = {
 // Validate authorization token and get user type from token
 function validateToken(req, res, next) {
   const bearerHeader = req.headers['authorization'];
-  if (bearerHeader === undefined) res.status(403).send("Please add a 'Bearer <JWT>' authorization header");
+  // if (bearerHeader === undefined) res.status(403).send("Please add a 'Bearer <JWT>' authorization header");
+  if (bearerHeader === undefined) {
+    req.headers['user-type'] = "any";
+    next();
+  }
   else {
     try {
       const token = bearerHeader.split(' ')[1];
@@ -20,7 +24,9 @@ function validateToken(req, res, next) {
       next();
     }
     catch (error) {
-      res.status(403).send("Please use a valid JWT");
+      req.headers['user-type'] = "any";
+      next();
+      // res.status(403).send("Please use a valid JWT");
     }
   }
 }

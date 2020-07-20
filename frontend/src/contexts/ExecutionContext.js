@@ -108,8 +108,10 @@ export class ExecutionContextProvider extends Component {
   }
 
   clearArgs() {
+    let newArgs = {}
+    this.state.options.uiRestricted.forEach(arg => newArgs[arg] = this.state.args[arg]);
     this.setState({
-      args: {}
+      args: newArgs
     });
   }
 

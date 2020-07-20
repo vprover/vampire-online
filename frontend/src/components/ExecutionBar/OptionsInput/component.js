@@ -165,9 +165,6 @@ class OptionsInput extends React.Component {
           }
           }
         />
-
-        {`${this.state.anchorEl ? this.state.anchorEl.offsetWidth : ""}`}
-
         <Popover
           // style={{ width: this.state.anchorEl ? 3.5 * this.state.anchorEl.offsetWidth : "10rem" }}
           anchorEl={this.state.anchorEl}

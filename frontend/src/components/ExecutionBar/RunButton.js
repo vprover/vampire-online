@@ -6,6 +6,7 @@ import { grey } from '@material-ui/core/colors';
 import axios from 'axios';
 import { ExecutionContext } from '../../contexts/ExecutionContext';
 import { withSnackbar } from 'notistack';
+import SaveProblemDialog from './SaveProblemDialog';
 
 const useStyles = theme => ({
   buttonProgress: {
@@ -32,6 +33,11 @@ class RunButton extends React.Component {
     super(props);
     this.state = {
       loading: false,
+      shareProblemDialog: {
+        open: false,
+        clauses: "",
+        inputSyntax: "",
+      },
     }
     this.callSolveAPI = this.callSolveAPI.bind(this);
   }
@@ -41,15 +47,27 @@ class RunButton extends React.Component {
       loading: true
     });
 
+    const clauses = this.context.input;
+    const args = this.context.args;
+
     axios.post(`${process.env.REACT_APP_API_HOST}/solve`, {
-      clauses: this.context.input,
-      args: JSON.stringify(this.context.args)
+      clauses: clauses,
+      args: JSON.stringify(args)
     })
       .then(res => {
         this.context.updateOutput(res.data);
         if (res.data.error) {
           if (Object.keys(res.data.error).length === 0) {
             this.props.enqueueSnackbar("No solution was found", { variant: "warning" });
+            if (args["mode"] && args["mode"] === "portfolio" && args["time_limit"] >= 30) {
+              this.setState({
+                shareProblemDialog: {
+                  open: true,
+                  clauses: clauses,
+                  inputSyntax: args["input_syntax"],
+                }
+              });
+            }
           }
           else {
             switch (res.data.error.type) {
@@ -108,6 +126,10 @@ class RunButton extends React.Component {
           <CircularProgress />
         </Backdrop> */}
         {this.state.loading === true && <CircularProgress size={30} className={classes.buttonProgress} />}
+        <SaveProblemDialog
+          data={this.state.shareProblemDialog}
+          handleClose={() => this.setState({ shareProblemDialog: { open: false, clauses: "", inputSyntax: "" } })}
+        />
       </Box>
     );
   }

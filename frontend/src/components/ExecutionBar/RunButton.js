@@ -52,10 +52,20 @@ class RunButton extends React.Component {
             this.props.enqueueSnackbar("No solution was found", { variant: "warning" });
           }
           else {
-            this.props.enqueueSnackbar("Could not solve due to parsing error", { variant: "error" });
+            switch (res.data.error.type) {
+              case "parse_error":
+                this.props.enqueueSnackbar("Could not solve due to parsing error", { variant: "error" });
+                break;
+              case "user_error":
+                const hideTime = 1000 / 2.6 * res.data.error.text.split(/[\s_:]/).length;
+                this.props.enqueueSnackbar(<>Could not solve due to user error<br />{res.data.error.text}</>, { variant: "error", autoHideDuration: hideTime });
+              default:
+                break;
+            }
           }
           if (res.data.info) {
-            this.props.enqueueSnackbar(res.data.info, { variant: "info" });
+            const hideTime = 1000 / 2.6 * res.data.info.split(/[\s_:]/).length;
+            this.props.enqueueSnackbar(res.data.info, { variant: "info", autoHideDuration: hideTime });
           }
         }
         else {

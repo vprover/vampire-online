@@ -87,7 +87,9 @@ class OptionsInput extends React.Component {
       });
       this.props.enqueueSnackbar(`Options decoded`, { variant: "success" });
     }).catch(error => {
-      this.props.enqueueSnackbar(<>Could not decode string strategy<br />{error.response.data}</>, { variant: "error", autoHideDuration: 10000 });
+      const hideTime = 1000 / 2.6 * error.response.data.split(/[\s_:]/).length;
+      console.log(hideTime);
+      this.props.enqueueSnackbar(<>Could not decode string strategy<br />{error.response.data}</>, { variant: "error", autoHideDuration: hideTime });
     });
   }
 

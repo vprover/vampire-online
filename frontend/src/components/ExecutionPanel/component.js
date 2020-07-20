@@ -13,12 +13,22 @@ export default class ExecutionPanel extends React.Component {
     this.state = {
       alert: null
     }
+    this.getToken = this.getToken.bind(this);
+  }
+
+  getToken() {
+    try {
+      return this.props.location.search.match(/token=(?<token>[^&$]*)/).groups["token"];
+    }
+    catch (error) {
+      return undefined;
+    }
   }
 
   render() {
     return (
       <EditorSettingsContextProvider>
-        <ExecutionContextProvider>
+        <ExecutionContextProvider token={this.getToken()}>
           <React.Fragment>
 
             <ExecutionBar

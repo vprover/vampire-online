@@ -28,8 +28,8 @@ class TimeLimitInput extends React.Component {
     const res = this.restriction;
     let valid = true;
     if (res) {
-      if (res.maxValue) valid = valid && value <= res.maxValue;
-      if (res.minValue) valid = valid && value >= res.minValue;
+      if (typeof res.maxValue !== 'undefined') valid = valid && value <= res.maxValue;
+      if (typeof res.minValue !== 'undefined') valid = valid && value >= res.minValue;
     }
     return valid;
   }
@@ -37,9 +37,9 @@ class TimeLimitInput extends React.Component {
   getErrorMessage = () => {
     const res = this.restriction;
     if (res) {
-      if (res.maxValue && res.minValue) return `${res.minValue} <= Number <= ${res.maxValue}`;
-      if (res.maxValue) return `Number <= ${res.maxValue}`;
-      if (res.minValue) return `${res.minValue} <= Number`;
+      if (typeof res.maxValue !== 'undefined' && typeof res.minValue !== 'undefined') return `${res.minValue} <= Number <= ${res.maxValue}`;
+      if (typeof res.maxValue !== 'undefined') return `Number <= ${res.maxValue}`;
+      if (typeof res.minValue !== 'undefined') return `${res.minValue} <= Number`;
     }
     return undefined;
   }

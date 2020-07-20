@@ -14,8 +14,8 @@ export default class ValueSelector extends React.Component {
     const { restriction } = this.props.option;
     let valid = true;
     if (restriction) {
-      if (restriction.maxValue) valid = valid && value <= restriction.maxValue;
-      if (restriction.minValue) valid = valid && value >= restriction.minValue;
+      if (typeof restriction.maxValue !== 'undefined') valid = valid && value <= restriction.maxValue;
+      if (typeof restriction.minValue !== 'undefined') valid = valid && value >= restriction.minValue;
     }
     return valid;
   }
@@ -23,9 +23,9 @@ export default class ValueSelector extends React.Component {
   getErrorMessage = () => {
     const { restriction } = this.props.option;
     if (restriction) {
-      if (restriction.maxValue && restriction.minValue) return `${restriction.minValue} <= Number <= ${restriction.maxValue}`;
-      if (restriction.maxValue) return `Number <= ${restriction.maxValue}`;
-      if (restriction.minValue) return `${restriction.minValue} <= Number`;
+      if (typeof restriction.maxValue !== 'undefined' && typeof restriction.minValue !== 'undefined') return `${restriction.minValue} <= Number <= ${restriction.maxValue}`;
+      if (typeof restriction.maxValue !== 'undefined') return `Number <= ${restriction.maxValue}`;
+      if (typeof restriction.minValue !== 'undefined') return `${restriction.minValue} <= Number`;
     }
     return undefined;
   }

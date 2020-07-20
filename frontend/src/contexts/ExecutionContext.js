@@ -41,6 +41,13 @@ export class ExecutionContextProvider extends Component {
   }
 
   componentDidMount() {
+    if (this.props.token) {
+      axios.interceptors.request.use(config => {
+        config.headers.Authorization = `Bearer ${this.props.token}`;
+        return config;
+      })
+    }
+
     axios.get(`${process.env.REACT_APP_API_HOST}/options`, { sections: false })
       .then(res => this.setState(prevState => {
         return ({

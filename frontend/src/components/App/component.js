@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Snackbar } from '@material-ui/core';
+import { Container } from '@material-ui/core';
 import ExecutionPanel from '../ExecutionPanel/component';
 import TutorialPanel from '../TutorialPanel/component';
 import { createMuiTheme, ThemeProvider, responsiveFontSizes, makeStyles } from '@material-ui/core/styles';

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { BrowserRouter, Switch, Route, Link, Redirect } from "react-router-dom";
-import { IconButton, Button } from '@material-ui/core';
+import { Switch, Route, Link, Redirect } from "react-router-dom";
+import { IconButton } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import { EditorSettingsContextProvider } from '../../contexts/EditorSettingsContext';
 import Editor from './ProblemDisplay/Editor';
@@ -77,57 +77,57 @@ class component extends Component {
     return (
       <EditorSettingsContextProvider>
         <ExecutionContextProvider>
-            <div
-              style={{ display: "flex", justifyContent: "space-between", overflow: "hidden", width: "100%", height: "95vh" }}
-            >
-              <ContentsDrawer
-                open={this.state.drawerOpened}
-                onOpen={() => this.setState({ drawerOpened: true })}
-                onClose={() => this.setState({ drawerOpened: false })}
-                toc={this.state.tutorial.toc}
-              />
+          <div
+            style={{ display: "flex", justifyContent: "space-between", overflow: "hidden", width: "100%", height: "95vh" }}
+          >
+            <ContentsDrawer
+              open={this.state.drawerOpened}
+              onOpen={() => this.setState({ drawerOpened: true })}
+              onClose={() => this.setState({ drawerOpened: false })}
+              toc={this.state.tutorial.toc}
+            />
 
-              <SplitterLayout
-                customClassName={!this.state.drawerOpened ? classes.splitLayoutPaneContent : classes.splitLayoutPaneContentShift}
-                primaryIndex={0}
-                percentage
-                primaryMinSize={45}
-                secondaryMinSize={30}
-                secondaryInitialSize={40}
-              >
-                <div style={{ padding: "1rem", minWidth: "min-content" }}>
-                  {/* <DemoTutorial /> */}
-                  <Switch>
-                    {
-                      this.state.tutorial.sections &&
-                      this.state.tutorial.sections.map(section => {
-                        return (
-                          <Route
-                            path={`/tutorial/${section.name}`}
-                            key={section.name}
-                            render={() =>
-                              <ReactMarkdown
-                                source={section.content}
-                                renderers={{ code: ProblemDisplay, heading: Heading }}
-                              />}
-                          />
-                        )
-                      })
-                    }
-                    {
-                      this.state.tutorial.sections && this.state.tutorial.sections.length > 0 &&
-                      <Redirect to={`/tutorial/${this.state.tutorial.sections[0].name}`} />
-                    }
-                  </Switch>
-                </div>
-                <div style={{ overflowY: "auto", padding: "1rem", height: "95%" }}>
-                  <Editor output />
-                </div>
-              </SplitterLayout>
-            </div>
-            <IconButton aria-label="close" className={classes.closeButton} component={Link} to="/">
-              <CloseIcon />
-            </IconButton>
+            <SplitterLayout
+              customClassName={!this.state.drawerOpened ? classes.splitLayoutPaneContent : classes.splitLayoutPaneContentShift}
+              primaryIndex={0}
+              percentage
+              primaryMinSize={45}
+              secondaryMinSize={30}
+              secondaryInitialSize={40}
+            >
+              <div style={{ padding: "1rem", minWidth: "min-content" }}>
+                {/* <DemoTutorial /> */}
+                <Switch>
+                  {
+                    this.state.tutorial.sections &&
+                    this.state.tutorial.sections.map(section => {
+                      return (
+                        <Route
+                          path={`/tutorial/${section.name}`}
+                          key={section.name}
+                          render={() =>
+                            <ReactMarkdown
+                              source={section.content}
+                              renderers={{ code: ProblemDisplay, heading: Heading }}
+                            />}
+                        />
+                      )
+                    })
+                  }
+                  {
+                    this.state.tutorial.sections && this.state.tutorial.sections.length > 0 &&
+                    <Redirect to={`/tutorial/${this.state.tutorial.sections[0].name}`} />
+                  }
+                </Switch>
+              </div>
+              <div style={{ overflowY: "auto", padding: "1rem", height: "95%" }}>
+                <Editor output />
+              </div>
+            </SplitterLayout>
+          </div>
+          <IconButton aria-label="close" className={classes.closeButton} component={Link} to="/">
+            <CloseIcon />
+          </IconButton>
         </ExecutionContextProvider>
       </EditorSettingsContextProvider >
     )

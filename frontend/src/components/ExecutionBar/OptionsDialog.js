@@ -1,8 +1,7 @@
 import React from 'react';
-import { Dialog, DialogContent, IconButton, Tooltip, Typography, Button } from '@material-ui/core';
+import { Dialog, DialogContent, IconButton, Typography } from '@material-ui/core';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import CloseIcon from '@material-ui/icons/Close';
-import HelpIcon from '@material-ui/icons/Help';
 import OptionsExplorer from '../OptionsExplorer/component';
 import { withStyles } from '@material-ui/styles';
 import useStyles from './Style';

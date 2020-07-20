@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Tabs, Tab, Box } from '@material-ui/core';
 import OptionsSection from './OptionsSection';
-import axios from 'axios';
 import { withStyles } from '@material-ui/core/styles';
 import useStyles from './Styles';
 import { ExecutionContext } from '../../contexts/ExecutionContext';

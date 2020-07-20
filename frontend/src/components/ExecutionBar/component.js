@@ -3,7 +3,6 @@ import { AppBar, Toolbar } from "@material-ui/core";
 import RunButton from './RunButton';
 import TimeLimitInput from "./TimeLimitInput";
 import EditorSettingsMenu from "./EditorSettingsMenu";
-import OptionsDialog from "./OptionsDialog";
 import OptionsInput from "./OptionsInput/component";
 import InputLanguageSelector from "./InputLanguageSelector";
 import RefreshInputButton from "./RefreshInputButton";

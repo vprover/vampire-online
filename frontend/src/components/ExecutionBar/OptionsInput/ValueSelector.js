@@ -83,7 +83,7 @@ export default class ValueSelector extends React.Component {
               onClick={() => {
                 const val = document.getElementById("input-str-option").value;
                 if (this.state.valid) {
-                  this.context.updateArg(name,);
+                  this.context.updateArg(name, val);
                   this.props.closePopover();
                 }
               }}

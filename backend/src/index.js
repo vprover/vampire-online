@@ -178,16 +178,23 @@ app.listen(8080, () => {
 })
 
 function parseErrorMessage(str) {
-  const regex = /on line ([0-9]*)\n(.*)\n/ig;
-  let result = regex.exec(str);
+  const parsingErrorRegex = /on line ([0-9]*)\n(.*)\n/ig;
+  const userErrorRegex = /User error:\s+(.*)\n/ig;
+  let result = parsingErrorRegex.exec(str);
   if (result) {
     return {
+      type: "parse_error",
       line: result[1],
       text: result[2]
     };
   }
   else {
-    return {};
+    result = userErrorRegex.exec(str);
+    if (result) return {
+      type: "user_error",
+      text: result[1]
+    }
+    else return {};
   }
 }
 

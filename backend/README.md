@@ -26,7 +26,9 @@ The deployment instructions are present in the main readme of this project.
 ## Authorisation
 
 Accessing any endpoint is restricted by having a valid JSON Web Token.  
-Requests needs to set an authorisation header as such `Bearer <JWT>`.
+Requests needs to have an authorisation header as such `Bearer <JWT>`.
+
+The authorisation mechanism relies on the existence of `/backend/Keys/private.key` which contains a private RSA key. (A template is provided).
 
 ### Users
 

@@ -4,11 +4,23 @@ This is a web interface for [vampire](https://vprover.github.io/).
 
 ## Frontend
 
-React application created with create-react-app.
+React application created with create-react-app.  
+
+Uses .env files to store environment (local = `.env.local`| prod = `.env.production`) variables. (These files should be placed in the root folder of the frontend and **NOT** be checked in git, they are present in the .gitignore)
+
+Template files are provided.
+
+Set the following variables and remove `_template` from the filename
+
+* **REACT_APP_API_HOST** - URL to backend
+* **REACT_APP_API_DEFAULT_TOKEN** - JWT for userType="any" (when the server start it will print a frontend token, copy that one)
+
+Has default react-app readme in folder.
 
 ## Backend
 
-NodeJs/Express thin server making calls to a vampire binary.
+NodeJs/Express thin server making calls to a vampire binary.  
+Has detailed readme in folder.
 
 ## Deployment
 

@@ -49,18 +49,18 @@ app.use((req, res, next) => {
     }
   }
   else next();
-})
+});
 
 app.post("/solve", async (req, res) => {
-  console.log(`Solve: ${req.body.clauses}`);
+  // console.log(`Solve: ${req.body.clauses}`);
   res.status(200).json(await vampireSolve(req.body.clauses, req.body.args));
-  console.log(`Finished solving`);
+  // console.log(`Finished solving`);
 })
 
 app.post("/parse", async (req, res) => {
-  console.log(`Parse: ${req.body.clauses}`);
+  // console.log(`Parse: ${req.body.clauses}`);
   res.status(200).json(await vampireParse(req.body.clauses, req.body.inputSyntax || "tptp"));
-  console.log(`Finished parsing`);
+  // console.log(`Finished parsing`);
 })
 
 app.get("/options", (req, res) => {
@@ -83,7 +83,7 @@ app.get("/options", (req, res) => {
 })
 
 app.post("/string-strategy/decode", (req, res) => {
-  console.log(`Decoding ${req.body.stringStrategy}`);
+  // console.log(`Decoding ${req.body.stringStrategy}`);
   try {
     const result = vampireDecode(req.body.stringStrategy);
     if (result) {
@@ -99,7 +99,7 @@ app.post("/string-strategy/decode", (req, res) => {
 })
 
 app.post("/string-strategy/encode", (req, res) => {
-  console.log(`Encoding ${JSON.stringify(req.body.args)}`);
+  // console.log(`Encoding ${JSON.stringify(req.body.args)}`);
   try {
     const result = vampireEncode(req.body.args);
     if (result) {
@@ -120,7 +120,7 @@ app.get("/problem-library", (req, res) => {
   }
   catch (error) {
     res.status(500).send("Something went wrong!");
-    console.log(`Could not retrieve problem library contents ${error}`);
+    // console.log(`Could not retrieve problem library contents ${error}`);
   }
 })
 
@@ -177,7 +177,7 @@ app.listen(8080, () => {
     [
       { userName: "admin", userType: "admin" },
       { userName: "frontend", userType: "any" }
-    ].map(tokenReq => jwt.issueToken(tokenReq)))}`);
+    ].map(tokenReq => jwt.issueToken(tokenReq)), null, 4)}`);
 })
 
 function parseErrorMessage(str) {
@@ -231,7 +231,7 @@ async function vampireSolve(clauses, args) {
     };
   }
   catch (error) {
-    console.log(`An \x1b[31merror\x1b[0m occurred while solving\n: ${error.message}\n--stderr: ${error.stderr}\n--stdout: ${error.stdout}`);
+    // console.log(`An \x1b[31merror\x1b[0m occurred while solving\n: ${error.message}\n--stderr: ${error.stderr}\n--stdout: ${error.stdout}`);
     const parsedError = parseErrorMessage(error.stdout);
     const portfolioHint = Object.keys(parsedError).length === 0 && (!args["mode"] || args["mode"] !== "portfolio") ? "You can use mode: portfolio to check if vampire can find a solution." : undefined;
     return {
@@ -248,7 +248,7 @@ function getStrVampireOptions() {
     return str;
   }
   catch (error) {
-    console.log(`An \x1b[31merror\x1b[0m occurred while getting the options:\n ${error.message}`);
+    // console.log(`An \x1b[31merror\x1b[0m occurred while getting the options:\n ${error.message}`);
     return null;
   }
 }
@@ -260,7 +260,7 @@ function vampireEncode(args) {
     return encoding.replace(/encode=on:?/, "");
   }
   catch (error) {
-    console.log(`An \x1b[31merror\x1b[0m occurred while encoding options:\n ${error.stdout}`);
+    // console.log(`An \x1b[31merror\x1b[0m occurred while encoding options:\n ${error.stdout}`);
     throw Error(error.stdout);
   }
 }

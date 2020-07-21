@@ -257,7 +257,9 @@ function vampireEncode(args) {
   try {
     const argsStr = argsToString(args);
     const encoding = execSync(`./vampire-executables/vampire${vampireVersion} ${argsStr} --mode output --encode on`).toString();
-    return encoding.replace(/encode=on:?/, "");
+    return {
+      stringStrategy: encoding.replace(/encode=on:?/, "")
+    }
   }
   catch (error) {
     // console.log(`An \x1b[31merror\x1b[0m occurred while encoding options:\n ${error.stdout}`);

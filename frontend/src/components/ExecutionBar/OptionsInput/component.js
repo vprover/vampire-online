@@ -61,11 +61,10 @@ class OptionsInput extends React.Component {
   }
 
   copyOptionsToClipBoard() {
-    console.log(this.context.args);
     axios.post(`${process.env.REACT_APP_API_HOST}/string-strategy/encode`, {
       args: JSON.stringify(this.context.args)
     }).then(res => {
-      this.copyToClipboard(res.data);
+      this.copyToClipboard(res.data.stringStrategy);
       this.props.enqueueSnackbar(`Copied strategy to clipboard`, { variant: "success" });
     }).catch(error => {
       this.props.enqueueSnackbar(`Could not encode options, ${error.message}`, { variant: "error" });

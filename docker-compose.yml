@@ -13,6 +13,16 @@ services:
     image: "vladene/vampire-backend:${VAMPIRE_VERSION}"
     ports:
     - "8000:8080"
+    volumes: 
+      - type: bind
+        source: ~/vampire-online/uploaded_problems
+        target: /app/uploaded_problems
+      - type: bind
+        source: ~/vampire-online/tutorial
+        targe: /app/tutorial
+      - type: bind
+        source: ~/vampire-online/problem_library
+        target: /app/problem_library
     deploy:
       restart_policy:
         condition: on-failure

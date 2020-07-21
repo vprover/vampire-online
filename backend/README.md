@@ -4,7 +4,7 @@ This is a NodeJS/Express server providing a REST API for Vampire.
 
 It also has additional endpoints for use with the frontend application.
 
-## Running
+## Run
 
 This API is tightly coupled to Vampire, and vampire executable needs to be present on the machine running the server. To make things easy there is a dockerfile which builds the latest version of vampire (with z3) and hosts the server. You will need to have docker installed and run 
 ```
@@ -12,6 +12,16 @@ docker build --tag <name>:<tag> .
 docker run -p <local_machine_port>:8080/tcp <name>:<tag>
 ```
 *You could add `-d` to the run command to start the container in detached mode*
+
+## Deployment notes
+
+The tutorial and problem library rely on static data which is likely to be updated over time and its source location might change over time. We use container bind mounts (container dirs correspond to actual dirs on the host machine) to solve this. To check/update the mapping see *volumes* in `docker-compose.yml` in the project root.
+
+The host machine will need to be set-up such that those (source) folders exist and that they have the desired content. Maybe have a scheduled task updating them.
+
+A similar approach is taken for uploading problems. A scheduled task which backs up the files might be useful.
+
+The deployment instructions are present in the main readme of this project.
 
 ## Authorisation
 
@@ -30,6 +40,32 @@ On startup the server generates and outputs to stdout two JWTs
 
 1. admin
 2. frontend
+
+## Problem library
+
+It has a two-level file structure. Everything on the top level should be a directory whose name indicates a class of problems. The second level should consist of problem files only.
+
+```
+ - problem_library
+  | - short_problems
+    | - problem1.p
+    | - problem2.p
+  | - medium_problems
+    | - problem3.p
+    | - problem4.smt2
+  ...
+```
+
+## Tutorials
+
+Each tutorial page should be given as a separate markdown file.
+To specify their order please start the file's name with `<idx>-` or `<idx>_`. This order will be used when serving the pages to the frontend and when generating the table of contents.
+
+Other files/dirs are allowed (e.g. for storing images), but only top level markdowns will be send through the */tutorial* endpoint.
+
+Code/Problem samples are provided using markdown's code syntax. (code is placed between a pair of triple backquotes). If you would like to provide some default args along with the problem text write those args on the first line of the code section using standard vampire long name arg format, e.g. "--time_limit 6 --input_syntax smtlib2".
+
+In the frontend the editors displaying code have parsing enabled by default. If you would like to turn this off write "noparse" immediately after the opening triple quotes. (It may be useful for teaching tptp syntax.)
 
 ## Endpoints
 

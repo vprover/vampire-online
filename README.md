@@ -26,11 +26,14 @@ Both parts are deployed using docker containers.
 
 * Docker daemon
 * Docker compose
+* problem_library and tutorial content (please see **Deployment notes** in `/backend` for details)
 
 ### Steps
+
 If the images you wish to deploy are already available on a remote repository you may skip steps 1 and 2.
 
 **Assuming both frontend and backend will be deployed on the same machine.**  
+
 1. Build and tag the images
     ```
     docker build -t <image_name>:<release_tag> ./<frontend|backend>

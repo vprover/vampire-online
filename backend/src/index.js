@@ -170,6 +170,8 @@ app.post("/access-tokens", (req, res) => {
 
 app.post("/upload-problem", pbUpl.upload);
 
+app.get("/status", (req, res) => res.sendStatus(200));
+
 app.listen(8080, () => {
   console.log("Server running on port 8080");
   console.log(`Access JWTs: 

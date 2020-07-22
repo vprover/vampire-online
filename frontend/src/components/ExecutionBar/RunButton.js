@@ -91,9 +91,18 @@ class RunButton extends React.Component {
         }
       })
       .catch(error => {
-        let msg = error.response ? `Status ${error.response.status}: ` : "";
-        msg += error.message;
-        this.props.createAlert("error", msg);
+        const snackbarOptions = {
+          anchorOrigin: {
+            vertical: 'top',
+            horizontal: 'center',
+          },
+          variant: 'error',
+          persist: true,
+        }
+        this.props.enqueueSnackbar(`The server is down! Come back later.`, snackbarOptions);
+        // let msg = error.response ? `Status ${error.response.status}: ` : "";
+        // msg += error.message;
+        // this.props.createAlert("error", msg);
       })
       .finally(() => { this.setState({ loading: false }) })
   }

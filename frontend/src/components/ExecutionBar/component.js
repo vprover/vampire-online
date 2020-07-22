@@ -11,7 +11,7 @@ import HelpButton from "./HelpButton";
 const ExecutionBar = props => {
   const { style } = props;
   return (
-    <AppBar position="static" style={{ margin: "0.4em", ...style }}>
+    <AppBar position="static" style={{ margin: "0.4em", minWidth: "min-content",...style }}>
       <Toolbar>
         <RunButton
           createAlert={props.createAlert}

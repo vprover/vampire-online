@@ -1,4 +1,4 @@
-version: "3.0"
+version: "3.2"
 services: 
   frontend:
     image: "vladene/vampire-frontend:${VAMPIRE_VERSION}"
@@ -19,7 +19,7 @@ services:
         target: /app/uploaded_problems
       - type: bind
         source: ~/vampire-online/tutorial
-        targe: /app/tutorial
+        target: /app/tutorial
       - type: bind
         source: ~/vampire-online/problem_library
         target: /app/problem_library

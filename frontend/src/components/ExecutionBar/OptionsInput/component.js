@@ -26,6 +26,7 @@ class OptionsInput extends React.Component {
     super(props);
     this.state = {
       selectedOptions: [],
+      open: 'closed',
       anchorEl: null,
       optionToEdit: null,
     }
@@ -87,7 +88,6 @@ class OptionsInput extends React.Component {
       this.props.enqueueSnackbar(`Options decoded`, { variant: "success" });
     }).catch(error => {
       const hideTime = 1000 / 2.6 * error.response.data.split(/[\s_:]/).length;
-      console.log(hideTime);
       this.props.enqueueSnackbar(<>Could not decode string strategy<br />{error.response.data}</>, { variant: "error", autoHideDuration: hideTime });
     });
   }
@@ -124,6 +124,12 @@ class OptionsInput extends React.Component {
     return (
       <Box style={{ display: "flex", flexGrow: 2 }} mx="1.2rem" my="0.4rem">
         <Autocomplete
+          ref={this.autocompleteRef}
+          open={this.state.open === 'open'}
+          onOpen={() => this.setState(prevState => {
+            return prevState.open === 'force_closed' ? { open: 'closed' } : { open: 'open' }
+          })}
+          onClose={() => this.setState({ open: 'closed' })}
           multiple
           fullWidth
           value={this.state.selectedOptions}
@@ -158,7 +164,10 @@ class OptionsInput extends React.Component {
                 className={classes.textField}
                 variant="outlined"
                 placeholder="Vampire Options"
-                onPaste={e => { this.handlePasteOptionString(e); }}
+                onPaste={e => {
+                  this.handlePasteOptionString(e);
+                  this.setState({ open: 'force_closed' });
+                }}
               />
             )
           }

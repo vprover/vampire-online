@@ -32,7 +32,7 @@ export default class ExecutionPanel extends React.Component {
           <React.Fragment>
 
             <ExecutionBar
-              style={{ marginBottom: "1.5rem" }}
+              style={{ margin: "2rem", marginTop: "0.5rem" }}
               createAlert={(s, msg) => { this.setState({ alert: { severity: s, message: msg } }) }}
             />
 
@@ -52,7 +52,6 @@ export default class ExecutionPanel extends React.Component {
                       direction={value.settings.orientation}
                       justify="space-evenly"
                       alignItems="center"
-                      spacing={2}
                       style={{ paddingLeft: "4rem", paddingRight: "4rem" }}>
                       <Grid item>
                         <Editor input />

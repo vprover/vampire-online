@@ -11,7 +11,7 @@ const options = {
 // Validate authorization token and get user type from token
 function validateToken(req, res, next) {
   const bearerHeader = req.headers['authorization'];
-  if (bearerHeader === undefined) res.status(403).send("Please add a 'Bearer <JWT>' authorization header");
+  if (bearerHeader === undefined) res.status(403).send("Please add a 'Bearer JWT' authorization header");
   // if (bearerHeader === undefined) {
   //   req.user = { userType: "any", userName: "" };
   //   next();

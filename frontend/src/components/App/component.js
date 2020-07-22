@@ -30,7 +30,7 @@ const useStyle = makeStyles(theme => {
   return (
     {
       topContainer: {
-        padding: "1rem",
+        padding: "0.8rem",
         paddingLeft: "2rem",
         paddingRight: "2rem",
       }

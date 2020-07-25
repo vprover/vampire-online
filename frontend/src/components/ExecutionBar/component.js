@@ -1,21 +1,19 @@
 import React from "react";
 import { AppBar, Toolbar } from "@material-ui/core";
-import RunButton from './RunButton';
 import TimeLimitInput from "./TimeLimitInput";
 import EditorSettingsMenu from "./EditorSettingsMenu";
 import OptionsInput from "./OptionsInput/component";
 import InputLanguageSelector from "./InputLanguageSelector";
 import RefreshInputButton from "./RefreshInputButton";
 import HelpButton from "./HelpButton";
+import ExecButtonsGroup from "./ExecButtonsGroup/component";
 
 const ExecutionBar = props => {
   const { style } = props;
   return (
     <AppBar position="static" style={{ minWidth: "min-content", width: "auto", ...style }}>
       <Toolbar>
-        <RunButton
-          createAlert={props.createAlert}
-        />
+        <ExecButtonsGroup />
         <OptionsInput
           createAlert={props.createAlert}
           tutorial={props.tutorial}

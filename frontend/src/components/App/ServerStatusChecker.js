@@ -10,6 +10,7 @@ const withServerStatusChecking = Component => {
     },
     variant: 'error',
     persist: true,
+    preventDuplicate: true,
   }
   return withSnackbar(class extends React.Component {
 

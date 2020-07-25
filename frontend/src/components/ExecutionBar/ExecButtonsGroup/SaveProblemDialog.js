@@ -11,9 +11,9 @@ class SaveProblemDialog extends React.Component {
 
   sendProblem = () => {
     axios.post(`${process.env.REACT_APP_API_HOST}/upload-problem`, {
-      clauses: this.props.data.clauses,
+      clauses: this.props.clauses,
       description: document.getElementById("problem-description").value,
-      inputSyntax: this.props.data.inputSyntax,
+      inputSyntax: this.props.inputSyntax,
     })
       .then(res => {
         this.props.enqueueSnackbar("Thank you for sharing your problem!", { variant: "success" });
@@ -26,7 +26,7 @@ class SaveProblemDialog extends React.Component {
   render() {
     return (
       <Dialog
-        open={this.props.data.open}
+        open={this.props.open}
         onClose={this.props.handleClose}
         aria-labelledby="save-problem-dialog-title"
         aria-describedby="save-problem-dialog-description"

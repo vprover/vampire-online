@@ -3,7 +3,6 @@ import ExecutionBar from '../../ExecutionBar/component';
 import { ExecutionContextProvider, ExecutionContext } from '../../../contexts/ExecutionContext';
 import Editor from './Editor';
 
-
 const ProblemDisplay = (props) => {
   const mainExecCtx = React.useContext(ExecutionContext);
   let [argsStr, ...problem] = props.value.split("\n");
@@ -32,7 +31,8 @@ const ProblemDisplay = (props) => {
       <ExecutionContextProvider
         overrideValues={{
           output: mainExecCtx.output,
-          updateOutput: mainExecCtx.updateOutput
+          updateOutput: mainExecCtx.updateOutput,
+          solverSocket: mainExecCtx.solverSocket,
         }}
         defaultInput={props.defaultInput || problem}
         defaultArgs={props.defaultArgs || args}

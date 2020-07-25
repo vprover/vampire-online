@@ -1,7 +1,7 @@
 const express = require("express");
 const util = require('util');
-const { execSync } = require('child_process');
-const exec = util.promisify(require('child_process').exec);
+const { execSync, exec, spawn } = require('child_process');
+const execPromise = util.promisify(exec);
 const cors = require('cors');
 const op = require('./options_utils/options_parser');
 const pbLib = require('./problem_library_retriever');
@@ -10,6 +10,9 @@ const jwt = require('./jwt_handler');
 const pbUpl = require('./problem_uploader');
 
 const app = express();
+const http = require('http').createServer(app);
+const io = require('socket.io')(http, { path: "/solver" });
+
 const vampireVersion = "_latest";
 // Load the options on startup to avoid future calls to vampire
 const vampireOptionSections = op.toJSON(getStrVampireOptions());
@@ -35,7 +38,7 @@ app.use((req, res, next) => {
   }
 })
 
-app.use(jwt.validateToken);
+app.use(jwt.validateTokenHTTP);
 
 // Check args restrictions
 app.use((req, res, next) => {
@@ -172,14 +175,79 @@ app.post("/upload-problem", pbUpl.upload);
 
 app.get("/status", (req, res) => res.sendStatus(200));
 
-app.listen(8080, () => {
+io.use(jwt.validateTokenWS)
+
+io.on('connection', socket => {
+
+  socket.on('solve', data => {
+
+    let { clauses, args } = data;
+    try { args = JSON.parse(args); }
+    catch (e) { }
+
+    if (clauses === undefined || clauses === null) socket.emit('solve_error', 'A `clauses` field must be provided');
+    if (args === undefined || clauses === null) socket.emit('solve_error', 'An `args` field must be provided');
+
+    try {
+      op.checkArgsRestrictions(args, socket.user.userType);
+    }
+    catch (error) {
+      socket.emit('solve_error', `Arg Restriction Error: ${error.message}`);
+      return;
+    }
+
+    socket.emit('started_solving');
+
+    const stringArgs = argsToString(args);
+
+    const solveProcess = spawn(`./vampire-executables/vampire${vampireVersion}`, stringArgs.split(' '));
+    solveProcess.output = "";
+
+    solveProcess.on('close', (code, signal) => {
+      if (code !== 0) {
+        if (code === 3) solveProcess.output = solveProcess.output.split("\n").slice(1).join("\n")
+        const parsedError = parseErrorMessage(solveProcess.output);
+        const portfolioHint = Object.keys(parsedError).length === 0 && (!args["mode"] || args["mode"] !== "portfolio") ? "You can use mode: portfolio to check if vampire can find a solution." : undefined;
+        socket.emit('output', {
+          rawOutput: `${solveProcess.output}`,
+          error: parsedError,
+          info: portfolioHint
+        });
+      }
+      else {
+        socket.emit('output', { rawOutput: solveProcess.output });
+      }
+      socket.emit('stopped_solving', { code, signal });
+      socket.solveProcess = undefined;
+    });
+
+    solveProcess.stdout.on('data', data => {
+      solveProcess.output += data.toString();
+      socket.emit('output', { rawOutput: solveProcess.output });
+    });
+
+    solveProcess.stdin.write(clauses);
+    solveProcess.stdin.end();
+
+    socket.solveProcess = solveProcess;
+  });
+
+  socket.on('stop', () => {
+    if (socket.solveProcess) {
+      socket.solveProcess.kill('SIGINT');
+      socket.solveProcess = undefined;
+    }
+  });
+})
+
+http.listen(8080, () => {
   console.log("Server running on port 8080");
   console.log(`Access JWTs: 
     ${JSON.stringify(
     [
       { userName: "admin", userType: "admin" },
       { userName: "frontend", userType: "any" }
-    ].map(tokenReq => jwt.issueToken(tokenReq)), null, 4)}`);
+    ].map(tokenReq => jwt.issueToken(tokenReq)), null, 2)}`);
 })
 
 function parseErrorMessage(str) {
@@ -214,7 +282,7 @@ function argsToString(args) {
 
 async function vampireParse(clauses, inputSyntax) {
   try {
-    await exec(`echo '${clauses}' | ./vampire-executables/vampire${vampireVersion} --input_syntax ${inputSyntax} --mode output`);
+    await execPromise(`echo '${clauses}' | ./vampire-executables/vampire${vampireVersion} --input_syntax ${inputSyntax} --mode output`);
     return {
       error: {}
     }
@@ -227,7 +295,7 @@ async function vampireParse(clauses, inputSyntax) {
 async function vampireSolve(clauses, args) {
   try {
     const stringArgs = argsToString(args);
-    const solution = await exec(`echo '${clauses}' | ./vampire-executables/vampire${vampireVersion} ${stringArgs}`);
+    const solution = await execPromise(`echo '${clauses}' | ./vampire-executables/vampire${vampireVersion} ${stringArgs}`);
     return {
       rawOutput: `${solution.stdout}`
     };

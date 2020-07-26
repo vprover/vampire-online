@@ -13,7 +13,7 @@ const ExecutionBar = props => {
   return (
     <AppBar position="static" style={{ minWidth: "min-content", width: "auto", ...style }}>
       <Toolbar>
-        <ExecButtonsGroup />
+        <ExecButtonsGroup hidePortfolioBtn={props.tutorial} />
         <OptionsInput
           createAlert={props.createAlert}
           tutorial={props.tutorial}

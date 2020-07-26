@@ -6,7 +6,6 @@ import { createMuiTheme, ThemeProvider, responsiveFontSizes, makeStyles } from '
 import { SnackbarProvider } from 'notistack';
 import { blue, red } from '@material-ui/core/colors';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
-import withServerStatusChecking from './ServerStatusChecker';
 
 const theme = responsiveFontSizes(
   createMuiTheme({
@@ -39,7 +38,6 @@ const useStyle = makeStyles(theme => {
 
 const App = props => {
   const classes = useStyle();
-  const ServerStatusCheckingContainer = withServerStatusChecking(Container);
   return (
     <ThemeProvider theme={theme}>
       <SnackbarProvider
@@ -49,7 +47,7 @@ const App = props => {
           horizontal: 'left',
         }}
       >
-        <ServerStatusCheckingContainer
+        <Container
           className={classes.topContainer}
           maxWidth="xl"
         >
@@ -59,7 +57,7 @@ const App = props => {
               <Route path="/tutorial" component={TutorialPanel} />
             </Switch>
           </BrowserRouter>
-        </ServerStatusCheckingContainer>
+        </Container>
       </SnackbarProvider>
     </ThemeProvider>
   );

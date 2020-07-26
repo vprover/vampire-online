@@ -13,13 +13,17 @@ const useStyles = makeStyles(theme => ({
     color: "black",
     borderRadius: "4px",
     marginLeft: "10px",
+    minWidth: "unset",
     backgroundColor: grey[50],
-    "&:disabled": {
-      backgroundColor: grey[300],
-    },
-    "&:hover": {
-      backgroundColor: grey['A100'],
+    '&:disabled': {
+      backgroundColor: grey[400],
     }
+  },
+  runButton: {
+    color: theme.palette.success.main,
+  },
+  stopButton: {
+    color: theme.palette.error.main,
   },
   buttonProgress: {
     color: theme.palette.secondary.main,
@@ -37,8 +41,8 @@ const RunButton = (props) => {
     <Box position="relative">
       <Button
         variant="contained"
-        className={classes.button}
-        endIcon={<PlayArrowIcon />}
+        className={`${classes.button}`}
+        endIcon={<PlayArrowIcon className={classes.runButton} />}
         disabled={props.running === true}
         onClick={props.run}>
         Run
@@ -51,27 +55,33 @@ const RunButton = (props) => {
 const StopButton = (props) => {
   const classes = useStyles();
   return (
-    <IconButton
+    <Button
       variant="contained"
-      className={classes.button}
-      style={{ padding: "6px" }}
+      className={`${classes.button}`}
+      disabled={props.disabled}
+      style={{ padding: "6px", color: "red" }}
       onClick={props.stop}
     >
-      <StopIcon />
-    </IconButton>
+      <StopIcon className={classes.stopButton} />
+    </Button>
   )
 }
 
-const RunPortfolioButton = () => {
+const RunPortfolioButton = (props) => {
   const classes = useStyles();
   return (
-    <IconButton
-      variant="contained"
-      className={classes.button}
-      style={{ padding: "6px" }}
-    >
-      <FastForwardIcon />
-    </IconButton>
+    <Box position="relative">
+      <Button
+        variant="contained"
+        className={classes.button}
+        endIcon={<FastForwardIcon />}
+        disabled={props.running === true}
+        onClick={props.run}
+      >
+        Portfolio
+      </Button>
+      {props.running === true && <CircularProgress size={30} className={classes.buttonProgress} />}
+    </Box>
   )
 }
 
@@ -82,6 +92,7 @@ class ExecButtonsGroup extends Component {
     super(props);
     this.state = {
       running: false,
+      runningPortfolio: false,
       dialogOpen: false,
       problemBeingRun: {
         clauses: "",
@@ -89,15 +100,32 @@ class ExecButtonsGroup extends Component {
       }
     }
     this.backupExecData = this.backupExecData.bind(this);
+    this.solve = this.solve.bind(this);
   }
 
-  backupExecData() {
+  backupExecData(clauses, args) {
     this.setState({
       problemBeingRun: {
-        clauses: this.context.input,
-        args: this.context.args
+        clauses,
+        args
       }
     })
+  }
+
+  solve(clauses, args) {
+    this.backupExecData(clauses, args);
+
+    if (this.context.solverSocket.runner) {
+      this.context.solverSocket.emit('stop');
+      setTimeout(() => {
+        this.context.solverSocket.runner = { setState: val => this.setState(val), args }
+        this.context.solverSocket.emit('solve', { clauses, args });
+      }, 800);
+    }
+    else {
+      this.context.solverSocket.runner = { setState: val => this.setState(val), args }
+      this.context.solverSocket.emit('solve', { clauses, args });
+    }
   }
 
   render() {
@@ -106,25 +134,33 @@ class ExecButtonsGroup extends Component {
         <RunButton
           running={this.state.running}
           run={() => {
-            this.backupExecData();
-            if (this.context.solverSocket.runner) {
-              this.context.solverSocket.emit('stop');
-              setTimeout(() => {
-                this.context.solverSocket.runner = { setState: val => this.setState(val), args: this.context.args }
-                this.context.solverSocket.emit('solve', { clauses: this.context.input, args: this.context.args });
-              }, 800);
-            }
-            else {
-              this.context.solverSocket.runner = { setState: val => this.setState(val), args: this.context.args }
-              this.context.solverSocket.emit('solve', { clauses: this.context.input, args: this.context.args });
-            }
+            this.setState({ running: true });
+            this.solve(this.context.input, this.context.args);
           }}
         />
         {
-          this.state.running &&
+          (this.state.running || this.state.runningPortfolio) &&
           <StopButton stop={() => { this.context.solverSocket.emit('stop') }} />
         }
-        <RunPortfolioButton />
+        <StopButton
+          disabled={!(this.state.running || this.state.runningPortfolio)}
+          stop={() => { this.context.solverSocket.emit('stop') }}
+        />
+        {
+          !this.props.hidePortfolioBtn &&
+          <RunPortfolioButton
+            running={this.state.runningPortfolio}
+            run={() => {
+              let args = Object.assign({}, this.context.args);
+              args['mode'] = 'portfolio'
+              if (!args['forced_options']) {
+                args['forced_options'] = Object.entries(args).filter(([key, value]) => !this.context.options.uiRestricted.includes(key)).map(([key, value]) => `${key}=${value}`).join(':');
+              }
+              this.setState({ runningPortfolio: true });
+              this.solve(this.context.input, args);
+            }}
+          />
+        }
         <SaveProblemDialog
           open={this.state.dialogOpen}
           clauses={this.state.problemBeingRun.clauses}

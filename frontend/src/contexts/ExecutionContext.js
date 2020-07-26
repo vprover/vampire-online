@@ -78,13 +78,12 @@ class ExecutionContextProvider extends Component {
     socket.on('solve_error', error => console.log(`Solve error ${error}`));
 
     socket.on('started_solving', () => {
-      if (socket.runner) socket.runner.setState({ running: true });
-      this.updateOutput({ rawOutput: "" });
+        this.updateOutput({ rawOutput: "" });
     });
 
     socket.on('stopped_solving', data => {
       const { code } = data;
-      if (socket.runner) socket.runner.setState({ running: false });
+      if (socket.runner) socket.runner.setState({ running: false, runningPortfolio: false });
       if (code === 0) {
         this.props.enqueueSnackbar("Problem solved", { variant: "success" });
       }

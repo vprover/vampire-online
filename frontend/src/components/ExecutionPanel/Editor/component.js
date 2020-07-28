@@ -17,8 +17,8 @@ class Editor extends Component {
     this.state = {
       editor: undefined,
       value: "",
-      height: props.settings.orientation === "row" ? 550 : 300,
-      width: props.settings.orientation === "row" ? 500 : 900,
+      height: props.settings.orientation === "row" ? 600 : 300,
+      width: props.settings.orientation === "row" ? 550 : 1000,
       d: { width: 0, height: 0 }
     }
     this.resize = this.resize.bind(this);
@@ -53,8 +53,8 @@ class Editor extends Component {
   componentDidUpdate(prevProps) {
     if (prevProps.settings.orientation !== this.props.settings.orientation) {
       this.setState({
-        height: this.props.settings.orientation === "row" ? 550 : 300,
-        width: this.props.settings.orientation === "row" ? 500 : 900,
+        height: this.props.settings.orientation === "row" ? 600 : 300,
+        width: this.props.settings.orientation === "row" ? 550 : 1000,
       });
     }
     if (this.props.execCtx.input !== this.state.value

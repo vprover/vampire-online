@@ -71,7 +71,7 @@ const RunPortfolioButton = (props) => {
   const classes = useStyles();
   return (
     <Box position="relative">
-      <Tooltip title="Delete">
+      <Tooltip title={<>Run using portfolio mode which <br /> tries lots of strategies on your problem.</>}>
         <Button
           variant="contained"
           className={classes.button}

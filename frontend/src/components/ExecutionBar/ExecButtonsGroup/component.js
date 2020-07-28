@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { ExecutionContext } from '../../../contexts/ExecutionContext';
-import { IconButton, makeStyles, Box, CircularProgress, Button } from '@material-ui/core';
+import { makeStyles, Box, CircularProgress, Button, Tooltip } from '@material-ui/core';
 import StopIcon from '@material-ui/icons/Stop';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import FastForwardIcon from '@material-ui/icons/FastForward';
@@ -29,7 +29,7 @@ const useStyles = makeStyles(theme => ({
     color: theme.palette.secondary.main,
     position: 'absolute',
     top: '50%',
-    left: '50%',
+    left: '60%',
     marginTop: -15,
     marginLeft: -15
   },
@@ -59,7 +59,7 @@ const StopButton = (props) => {
       variant="contained"
       className={`${classes.button}`}
       disabled={props.disabled}
-      style={{ padding: "6px", color: "red" }}
+      style={{ padding: "6px" }}
       onClick={props.stop}
     >
       <StopIcon className={classes.stopButton} />
@@ -71,15 +71,17 @@ const RunPortfolioButton = (props) => {
   const classes = useStyles();
   return (
     <Box position="relative">
-      <Button
-        variant="contained"
-        className={classes.button}
-        endIcon={<FastForwardIcon />}
-        disabled={props.running === true}
-        onClick={props.run}
-      >
-        Portfolio
-      </Button>
+      <Tooltip title="Delete">
+        <Button
+          variant="contained"
+          className={classes.button}
+          style={{ padding: "6px" }}
+          disabled={props.running === true}
+          onClick={props.run}
+        >
+          <FastForwardIcon />
+        </Button>
+      </Tooltip>
       {props.running === true && <CircularProgress size={30} className={classes.buttonProgress} />}
     </Box>
   )
@@ -138,10 +140,6 @@ class ExecButtonsGroup extends Component {
             this.solve(this.context.input, this.context.args);
           }}
         />
-        {
-          (this.state.running || this.state.runningPortfolio) &&
-          <StopButton stop={() => { this.context.solverSocket.emit('stop') }} />
-        }
         <StopButton
           disabled={!(this.state.running || this.state.runningPortfolio)}
           stop={() => { this.context.solverSocket.emit('stop') }}

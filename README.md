@@ -8,6 +8,8 @@ React application created with create-react-app.
 
 Uses .env files to store environment (local = `.env.local`| prod = `.env.production`) variables. (These files should be placed in the root folder of the frontend and **NOT** be checked in git, they are present in the .gitignore)
 
+There is a special config to allow websockets in the _nginx/nginx.conf_ file. Update the _proxy\_pass_ field under _location /solver_ to point to the backend solver.
+
 Template files are provided.
 
 Set the following variables and remove `_template` from the filename
